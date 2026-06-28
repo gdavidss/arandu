@@ -327,11 +327,21 @@ async function proxyMetabase(request, response) {
   const headers = new Headers(request.headers);
   headers.set("host", target.host);
 
-  // Attach the server-side Metabase session so editable question views are authenticated.
-  const session = await getMetabaseSession();
-  if (session) {
-    const existing = headers.get("cookie");
-    headers.set("cookie", `${existing ? existing + "; " : ""}metabase.SESSION=${session}`);
+  // Attach the server-side Metabase session so editable question views are authenticated —
+  // but NOT for public routes. The main dashboard is a public embed; attaching a session to
+  // /public/* or /api/public/* makes Metabase expect an authenticated (CSRF) flow and the
+  // public queries hang ("Carregando…"). Keep those anonymous; authenticate everything else.
+  const upstreamPath = target.pathname;
+  const isPublicRoute =
+    upstreamPath.startsWith("/public/") ||
+    upstreamPath.startsWith("/api/public/") ||
+    upstreamPath.startsWith("/api/embed/");
+  if (!isPublicRoute) {
+    const session = await getMetabaseSession();
+    if (session) {
+      const existing = headers.get("cookie");
+      headers.set("cookie", `${existing ? existing + "; " : ""}metabase.SESSION=${session}`);
+    }
   }
 
   const upstream = await fetch(target, {
