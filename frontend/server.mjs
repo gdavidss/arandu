@@ -123,26 +123,26 @@ const metabaseEmbedCleanup = `
     position: relative !important;
   }
   [data-testid="fixed-width-dashboard-tabs"]::before {
-    content: "Arandu";
+    content: "";
     position: absolute;
     left: 16px;
     top: 50%;
     transform: translateY(-100%);
-    font-family: inherit;
-    font-weight: 700;
-    font-size: 16px;
-    line-height: 1.05;
-    color: #0b5e3a; /* arandu green (from the constitution wordmark) */
+    width: 92px;
+    height: 28px;
+    background-image: url("/arandu-logo.png"); /* transparent Arandu wordmark */
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: contain;
     pointer-events: none;
-    white-space: nowrap;
   }
-  /* Subtitle under the wordmark. */
+  /* Subtitle under the logo. */
   [data-testid="fixed-width-dashboard-tabs"]::after {
     content: "Consulta Cívica";
     position: absolute;
-    left: 16px;
+    left: 17px;
     top: 50%;
-    transform: translateY(10%);
+    transform: translateY(20%);
     font-family: inherit;
     font-weight: 500;
     font-size: 10px;

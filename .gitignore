@@ -16,5 +16,5 @@ frontend/public/metabase-dashboards.json
 frontend/public/dashboard-data.json
 frontend/public/arandu-data.csv
 
-# Debug screenshots
-*.png
+# Debug screenshots (root only — keep committed assets like frontend/public/*.png)
+/*.png
