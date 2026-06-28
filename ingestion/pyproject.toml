@@ -1,0 +1,30 @@
+[project]
+name = "arandu-ingestion"
+version = "0.1.0"
+description = "Ingestion pipelines for arandu.ai"
+requires-python = ">=3.12"
+dependencies = [
+  "psycopg[binary]>=3.2.1",
+  "python-dateutil>=2.9.0",
+  "pyyaml>=6.0.2",
+  "requests>=2.32.3",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3.2",
+  "ruff>=0.6.8",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.setuptools.packages.find]
+include = ["arandu*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

@@ -1,0 +1,3525 @@
+sources:
+  bcb_sgs:
+    name: Sistema Gerenciador de Séries Temporais (SGS/BCData)
+    institution: Banco Central do Brasil
+    url: https://api.bcb.gov.br/dados/serie/bcdata.sgs.{codigo_serie}/dados?formato=json
+    license_or_terms: Open Data Commons Open Database License (ODbL), as listed in the BCB open-data portal
+    notes: Official BCB time-series API. NFSP series are below-the-line and must not be mixed with RTN above-the-line series.
+  tesouro_series:
+    name: Séries Temporais do Tesouro Nacional
+    institution: Secretaria do Tesouro Nacional
+    url: https://series-temporais.tesouro.gov.br/backend-series-temporais/rest/Public/SerieGrafico
+    license_or_terms: Tesouro Transparente public data terms / ODbL in CKAN metadata where listed
+    notes: Official Tesouro Transparente public API used by the Tesouro time-series application.
+  ibge_sidra:
+    name: SIDRA / Serviço de Dados IBGE
+    institution: Instituto Brasileiro de Geografia e Estatística
+    url: https://servicodados.ibge.gov.br/api/v3/agregados
+    license_or_terms: IBGE public API terms
+    notes: Generic connector for selected SIDRA aggregate URLs.
+  bcb_olinda_expectativas:
+    name: Expectativas de Mercado (Focus) — Olinda OData
+    institution: Banco Central do Brasil
+    url: https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata
+    license_or_terms: Open Data Commons Open Database License (ODbL), as listed in the BCB open-data portal
+    notes: >-
+      Public BCB Olinda OData service for the Focus survey. Distinct from SGS. Expectations
+      are survey medians/means, forward-looking; do not mix with realized (trailing) prints.
+  bcb_olinda_spi:
+    name: Estatísticas do SPI — Sistema de Pagamentos Instantâneos (Pix)
+    institution: Banco Central do Brasil
+    url: https://olinda.bcb.gov.br/olinda/servico/SPI/versao/v1/odata/PixLiquidadosAtual
+    license_or_terms: Open Data Commons Open Database License (ODbL), as listed in the BCB open-data portal
+    notes: >-
+      Public BCB Olinda OData service for the SPI, the settlement system behind Pix. The
+      PixLiquidadosAtual resource is a daily series of Pix transactions settled in the SPI
+      from Pix launch (2020-11). Pix is not published in SGS. Daily counts (Quantidade) and
+      values (Total, R$ thousands) are aggregated to calendar months by this connector;
+      count and value are different units and are kept as separate series.
+  bcb_olinda_mpv:
+    name: Estatísticas de Meios de Pagamentos — Olinda OData (MPV_DadosAbertos)
+    institution: Banco Central do Brasil
+    url: https://olinda.bcb.gov.br/olinda/servico/MPV_DadosAbertos/versao/v1/odata/
+    license_or_terms: Open Data Commons Open Database License (ODbL), as listed in the BCB open-data portal
+    notes: >-
+      Public BCB Olinda OData service for retail payment-instrument statistics. The monthly
+      resource MeiosdePagamentosMensalDA covers Pix, TED, boleto, cheque (and the now-extinct
+      DOC/TEC) with quantidade (em milhares) and valor (R$ milhões) per instrument. The
+      quarterly resource Quantidadeetransacoesdecartoes covers card transactions by função
+      (crédito/débito/pré-pago). The MPV Pix figures include Pix settled both inside and
+      outside the SPI, so they are a broader measure than the SPI-only series (bcb_olinda_spi)
+      and must not be mixed with it in the same chart. Count and value are different units.
+  bcb_olinda_pix:
+    name: Estatísticas do Pix — Olinda OData (Pix_DadosAbertos)
+    institution: Banco Central do Brasil
+    url: https://olinda.bcb.gov.br/olinda/servico/Pix_DadosAbertos/versao/v1/odata/
+    license_or_terms: Open Data Commons Open Database License (ODbL), as listed in the BCB open-data portal
+    notes: >-
+      Public BCB Olinda OData service with Pix statistics from the DICT (Diretório de
+      Identificadores de Contas Transacionais — the Pix key directory). The
+      PixUsuariosCadastradosDICT resource is a monthly end-of-month stock of users registered
+      in the DICT, split into pessoa física, pessoa jurídica and total. This is a stock of
+      registered users, a different concept from Pix transaction volume/value.
+  comexstat:
+    name: Comex Stat — Estatísticas de Comércio Exterior
+    institution: Ministério do Desenvolvimento, Indústria, Comércio e Serviços (MDIC/SECEX)
+    url: https://api-comexstat.mdic.gov.br/general
+    license_or_terms: Dados abertos do Governo Federal (MDIC/SECEX), uso público
+    notes: >-
+      API pública POST/JSON do Comex Stat (SECEX/MDIC). Valores FOB em US$ (convertidos
+      para US$ milhões neste projeto). Base SECEX por país de destino/origem; conceito
+      distinto da balança comercial em base Balanço de Pagamentos do BCB (SGS 22707-22709).
+  rfb_cnae:
+    name: Arrecadação por Divisão Econômica da CNAE
+    institution: Secretaria Especial da Receita Federal do Brasil (RFB)
+    url: https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/dados-abertos/receitadata/arrecadacao/arrecadacao-por-divisao-economica-da-cnae
+    license_or_terms: Dados abertos da Receita Federal (ReceitaData), uso público
+    notes: >-
+      Planilha XLSX de dados abertos da RFB com a receita administrada pela RFB por divisão
+      econômica da CNAE, uma aba por ano (2011 em diante). Atualizada periodicamente pela RFB
+      (o nome do arquivo carrega o último ano coberto). A divisão 92 ("Atividades de
+      exploração de jogos de azar e apostas") capta o mercado regulado de apostas de quota
+      fixa a partir de 2025, quando passou a incidir tributação federal sobre o setor. É
+      tributo arrecadado das empresas (não o GGR nem o volume apostado). Não há série pública
+      de GGR/volume de apostas em API estável (a SPA/MF publica apenas apresentações
+      periódicas em PDF, e o SIGAP é uma API de envio de dados pelos operadores, não de
+      consulta pública).
+  bcb_estudo_apostas:
+    name: Estudo Especial 119 — Análise técnica sobre o mercado de apostas online no Brasil
+    institution: Banco Central do Brasil
+    url: https://www.bcb.gov.br/conteudo/relatorioinflacao/EstudosEspeciais/EE119_Analise_tecnica_sobre_o_mercado_de_apostas_online_no_Brasil_e_o_perfil_dos_apostadores.pdf
+    license_or_terms: Publicação oficial do Banco Central do Brasil (uso público com citação da fonte)
+    notes: >-
+      Estudo especial pontual (não é série temporal) publicado pelo BCB em 2024, com
+      estimativas das transferências via Pix para empresas de jogos de azar e apostas em
+      agosto de 2024 e o perfil dos apostadores. Os números aqui registrados são transcritos
+      literalmente da tabela "Comparativo entre apostas online e loterias" (média mensal em
+      2024, R$ bilhões) do estudo. Por ser um levantamento único, NÃO é atualizado pelo cron
+      diário; o gráfico que o usa é rotulado como estimativa pontual de ago/2024. As
+      estimativas de Pix→bets do BCB não constituem série mensal oficial e não devem ser
+      transformadas em uma.
+  spa_panorama:
+    name: Panorama do mercado regulado de apostas de quota fixa
+    institution: Secretaria de Prêmios e Apostas (SPA) — Ministério da Fazenda
+    url: https://www.gov.br/fazenda/pt-br/composicao/orgaos/secretaria-de-premios-e-apostas
+    license_or_terms: Apresentações oficiais da SPA/MF publicadas no portal gov.br (uso público com citação da fonte)
+    notes: >-
+      Apresentações periódicas (Panoramas) da SPA/MF com indicadores do mercado regulado de
+      apostas de quota fixa: GGR, destinações legais (12%), CPFs únicos e contas ativas. São
+      retratos acumulados de período (1º semestre/2025 e ano de 2025), publicados em PDF — NÃO
+      há API/CSV/XLSX estável com série mensal. Por isso os números aqui são registrados como
+      pontos de snapshot, transcritos literalmente das apresentações, e os gráficos que os
+      usam são rotulados como acumulados de período (não série temporal atualizada pelo cron).
+      Não existe série oficial de GGR/volume mensal em formato aberto e estável.
+  lei_14790:
+    name: Lei nº 14.790/2023 — destinação da arrecadação das apostas de quota fixa
+    institution: Presidência da República (Casa Civil)
+    url: https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/l14790.htm
+    license_or_terms: Legislação federal, domínio público
+    notes: >-
+      Texto legal que define a destinação estatutária da parcela da arrecadação das apostas de
+      quota fixa (Art. 30), repartida entre esporte, turismo, segurança pública, educação,
+      seguridade social, saúde e demais. As fatias aqui registradas são os percentuais legais
+      transcritos literalmente da lei (somam 100%). É a estrutura legal de alocação — não uma
+      série temporal nem valores efetivamente executados.
+  entain_market:
+    name: Estimativa de mercado de apostas (Entain)
+    institution: Entain plc (operadora de apostas) — estimativa de mercado
+    url: https://www.infomoney.com.br/esportes/brasil-deve-terminar-2025-como-o-5o-maior-mercado-de-apostas-do-mundo/
+    license_or_terms: Estimativa de mercado reportada pela imprensa; uso com citação da fonte
+    notes: >-
+      Estimativa do tamanho do mercado brasileiro de apostas em 2022, quando o setor ainda não
+      era regulado: GGR (receita bruta de jogo) de US$ 1,5 bilhão, 10ª maior do mundo, segundo a
+      Entain. Convertida para reais ao câmbio médio de 2022 (~R$ 5,16/US$): ~R$ 7,7 bi. É uma
+      estimativa de operadora para o mercado não regulado — NÃO é número oficial nem série
+      temporal; serve apenas como ponto de comparação histórico frente ao GGR oficial de 2025.
+  ecb:
+    name: Taxas de câmbio de referência do Banco Central Europeu (BCE)
+    institution: European Central Bank (via Frankfurter)
+    url: https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html
+    license_or_terms: ECB reference rates, uso público com citação da fonte
+    notes: >-
+      Taxas de câmbio de referência diárias (dias úteis) do BCE, acessadas pela API pública
+      Frankfurter. Usadas para moedas que o BCB não publica em reais — em especial o iuan
+      chinês (CNY): a PTAX do BCB cobre apenas ~10 moedas e o SGS não tem série BRL/CNY. A
+      cotação aqui é a paridade direta (ex.: base CNY, símbolo BRL = R$ por iuan), derivada
+      das taxas de referência do BCE; é referência de fechamento do BCE, não a PTAX do BCB.
+
+series:
+  - series_id: bcb_sgs_selic_target
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "432"
+    name: Selic target set by Copom
+    description: Taxa Selic meta definida pelo Copom.
+    unit: percent per year
+    frequency: daily
+    concept: policy rate
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: stock / target rate
+    source_url: https://dadosabertos.bcb.gov.br/dataset/432-taxa-de-juros---selic-meta-definida-pelo-copom
+    start_date: "1996-01-01"
+
+  - series_id: bcb_sgs_ipca_monthly
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "433"
+    name: IPCA monthly variation
+    description: Índice Nacional de Preços ao Consumidor Amplo, monthly percent change.
+    unit: percent month over month
+    frequency: monthly
+    concept: consumer inflation
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly flow / percent change
+    source_url: https://dadosabertos.bcb.gov.br/dataset/433-indice-nacional-de-precos-ao-consumidor-amplo-ipca
+    start_date: "1996-01-01"
+
+  - series_id: bcb_sgs_ipca_12m
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "13522"
+    name: IPCA accumulated in 12 months
+    description: IPCA accumulated percent change over 12 months.
+    unit: percent over 12 months
+    frequency: monthly
+    concept: consumer inflation
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: accumulated in 12 months
+    source_url: https://dadosabertos.bcb.gov.br/dataset/13522-sgs
+    start_date: "1996-01-01"
+
+  - series_id: bcb_focus_ipca_12m_ahead
+    source_id: bcb_olinda_expectativas
+    connector: bcb_olinda_expectativas
+    source_series_code: "ExpectativasMercadoInflacao12Meses"
+    olinda_resource: ExpectativasMercadoInflacao12Meses
+    olinda_indicador: IPCA
+    olinda_field: Mediana
+    olinda_filters:
+      Suavizada: "S"
+      baseCalculo: 0
+    name: Focus IPCA expectation 12 months ahead (median, smoothed)
+    description: >-
+      Expectativa de mercado (Focus) para o IPCA acumulado nos próximos 12 meses, mediana
+      suavizada (baseCalculo 0). Indicador prospectivo, comparável horizonte a horizonte com
+      o IPCA realizado acumulado em 12 meses (SGS 13522). Resamplada para o último boletim de
+      cada mês.
+    unit: percent over next 12 months
+    frequency: monthly
+    concept: inflation expectation
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: survey median, smoothed, 12-months-ahead horizon
+    scope: Focus survey respondents
+    method: BCB Focus / Expectativas de Mercado
+    source_url: https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoInflacao12Meses?$format=json&$filter=Indicador%20eq%20'IPCA'
+    start_date: "1996-01-01"
+
+  - series_id: bcb_sgs_usd_brl_sale
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "1"
+    name: BRL/USD exchange rate, sale
+    description: Taxa de câmbio livre, dólar americano venda, daily.
+    unit: BRL per USD
+    frequency: daily
+    concept: exchange rate
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: daily stock / end-of-day quote
+    source_url: https://dadosabertos.bcb.gov.br/dataset/1-taxa-de-cambio---livre---dolar-americano-venda---diario
+    start_date: "1996-01-01"
+
+  - series_id: ecb_cny_brl
+    source_id: ecb
+    connector: ecb_fx
+    source_series_code: "CNY-BRL"
+    ecb_base: CNY
+    ecb_quote: BRL
+    name: BRL/CNY exchange rate (ECB reference)
+    description: Reais por iuan chinês (CNY), taxa de referência diária do BCE.
+    unit: BRL per CNY
+    frequency: daily
+    concept: exchange rate
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: daily stock / ECB reference rate (cross)
+    source_url: https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html
+    start_date: "2010-01-01"
+
+  - series_id: bcb_sgs_reer_ipca
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "11752"
+    name: Real effective exchange rate index (IPCA-deflated)
+    description: >-
+      Índice da taxa de câmbio efetiva real (cesta de moedas), deflacionado pelo IPCA.
+      Base junho/1994 = 100. Valores mais altos indicam moeda mais valorizada em termos reais.
+    unit: index, Jun/1994 = 100
+    frequency: monthly
+    concept: real effective exchange rate
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: index, IPCA-deflated, trade-weighted basket
+    scope: Effective (multilateral, currency basket)
+    source_url: https://api.bcb.gov.br/dados/serie/bcdata.sgs.11752/dados?formato=json
+    start_date: "1996-01-01"
+
+  - series_id: bcb_sgs_pib_monthly_brl
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "4380"
+    name: Monthly nominal GDP
+    description: PIB mensal em valores correntes estimado pelo Banco Central.
+    unit: BRL millions
+    frequency: monthly
+    concept: nominal GDP
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly nominal value
+    source_url: https://www.bcb.gov.br/content/publicacoes/notastecnicas/NT_52_202107.pdf
+    start_date: "1996-01-01"
+
+  - series_id: bcb_sgs_ibc_br_sa
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "24364"
+    name: IBC-Br index, seasonally adjusted
+    description: Índice de Atividade Econômica do Banco Central, com ajuste sazonal.
+    unit: index
+    frequency: monthly
+    concept: activity index
+    geography: Brazil
+    seasonal_adjustment: seasonally adjusted
+    transformation: index
+    source_url: https://www.bcb.gov.br/content/ri/relatorioinflacao/202506/rpm202506p.pdf
+    start_date: "1996-01-01"
+
+  - series_id: bcb_sgs_ibc_br_nsa
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "24363"
+    name: IBC-Br index, not seasonally adjusted
+    description: Índice de Atividade Econômica do Banco Central, sem ajuste sazonal (série original). Usado para a variação interanual (12 meses).
+    unit: index
+    frequency: monthly
+    concept: activity index
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: index
+    source_url: https://dadosabertos.bcb.gov.br/dataset/24363-indice-de-atividade-economica-do-banco-central---ibc-br
+    start_date: "1996-01-01"
+
+  - series_id: bcb_sgs_dbgg_pct_gdp
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "13762"
+    name: Gross General Government Debt (DBGG)
+    description: Dívida bruta do governo geral, methodology used from 2008.
+    unit: percent of GDP
+    frequency: monthly
+    concept: public debt
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: stock as percent of GDP
+    scope: General Government
+    source_url: https://dadosabertos.bcb.gov.br/dataset/13762-divida-bruta-do-governo-geral--pib---metodologia-utilizada-a-partir-de-2008
+    start_date: "1996-01-01"
+
+  - series_id: bcb_sgs_dlsp_pct_gdp
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "4513"
+    name: Net Public Sector Debt (DLSP)
+    description: Dívida líquida do setor público consolidado.
+    unit: percent of GDP
+    frequency: monthly
+    concept: public debt
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: stock as percent of GDP
+    scope: Consolidated Public Sector
+    source_url: https://dadosabertos.bcb.gov.br/dataset/4513-divida-liquida-do-setor-publico--pib---total---setor-publico-consolidado
+    start_date: "1996-01-01"
+
+  - series_id: bcb_sgs_nfsp_primary_12m_pct_gdp
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "5793"
+    name: NFSP primary result, 12 months
+    description: NFSP sem desvalorização cambial, resultado primário, total, setor público consolidado.
+    unit: percent of GDP
+    frequency: monthly
+    concept: primary result below-the-line
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: accumulated in 12 months
+    scope: Consolidated Public Sector
+    method: below-the-line NFSP
+    source_url: https://dadosabertos.bcb.gov.br/dataset/5793-nfsp-sem-desvalorizacao-cambial--pib---fluxo-acumulado-em-12-meses---resultado-primario---tota
+    start_date: "1996-01-01"
+
+  - series_id: bcb_sgs_nfsp_nominal_12m_pct_gdp
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "5727"
+    name: NFSP nominal result, 12 months
+    description: NFSP sem desvalorização cambial, resultado nominal, total, setor público consolidado.
+    unit: percent of GDP
+    frequency: monthly
+    concept: nominal result below-the-line
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: accumulated in 12 months
+    scope: Consolidated Public Sector
+    method: below-the-line NFSP
+    source_url: https://dadosabertos.bcb.gov.br/dataset/5727-nfsp-sem-desvalorizacao-cambial--pib---fluxo-acumulado-em-12-meses---resultado-nominal---total
+    start_date: "1996-01-01"
+
+  - series_id: bcb_sgs_nfsp_interest_12m_pct_gdp
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "5760"
+    name: NFSP nominal interest, 12 months
+    description: NFSP sem desvalorização cambial, juros nominais, total, setor público consolidado.
+    unit: percent of GDP
+    frequency: monthly
+    concept: nominal interest below-the-line
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: accumulated in 12 months
+    scope: Consolidated Public Sector
+    method: below-the-line NFSP
+    source_url: https://dadosabertos.bcb.gov.br/dataset/5760-nfsp-sem-desvalorizacao-cambial--pib---fluxo-acumulado-em-12-meses---juros-nominais---total---
+    start_date: "1996-01-01"
+
+  - series_id: bcb_sgs_nfsp_primary_monthly_brl
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "4649"
+    name: NFSP primary result, monthly
+    description: NFSP sem desvalorização cambial, fluxo mensal corrente, resultado primário, total, setor público consolidado.
+    unit: BRL millions
+    frequency: monthly
+    concept: primary result below-the-line
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly flow, nominal BRL
+    scope: Consolidated Public Sector
+    method: below-the-line NFSP
+    source_url: https://dadosabertos.bcb.gov.br/dataset/4649-nfsp-sem-desvalorizacao-cambial---fluxo-mensal-corrente---resultado-primario---total---setor-p
+    start_date: "1996-01-01"
+
+  - series_id: bcb_sgs_nfsp_nominal_monthly_brl
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "4583"
+    name: NFSP nominal result, monthly
+    description: NFSP sem desvalorização cambial, fluxo mensal corrente, resultado nominal, total, setor público consolidado.
+    unit: BRL millions
+    frequency: monthly
+    concept: nominal result below-the-line
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly flow, nominal BRL
+    scope: Consolidated Public Sector
+    method: below-the-line NFSP
+    source_url: https://dadosabertos.bcb.gov.br/dataset/4583-nfsp-sem-desvalorizacao-cambial---fluxo-mensal-corrente---resultado-nominal---total---setor-pu
+    start_date: "1996-01-01"
+
+  - series_id: bcb_sgs_nfsp_interest_monthly_brl
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "4616"
+    name: NFSP nominal interest, monthly
+    description: NFSP sem desvalorização cambial, fluxo mensal corrente, juros nominais, total, setor público consolidado.
+    unit: BRL millions
+    frequency: monthly
+    concept: nominal interest below-the-line
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly flow, nominal BRL
+    scope: Consolidated Public Sector
+    method: below-the-line NFSP
+    source_url: https://dadosabertos.bcb.gov.br/dataset/4616-nfsp-sem-desvalorizacao-cambial---fluxo-mensal-corrente---juros-nominais---total---setor-publi
+    start_date: "1996-01-01"
+
+  # --- Social & household wellbeing (indicadores que pressionam o dia a dia) ---
+  - series_id: bcb_sgs_endividamento_familias
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "29037"
+    name: Household debt to income
+    description: Endividamento das famílias com o Sistema Financeiro Nacional em relação à renda acumulada dos últimos doze meses.
+    unit: percent of 12-month income
+    frequency: monthly
+    concept: household indebtedness
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: stock of debt over trailing 12-month income
+    scope: Households
+    source_url: https://dadosabertos.bcb.gov.br/dataset/29037-endividamento-das-familias-com-o-sistema-financeiro-nacional-em-relacao-a-renda-acumulada-do
+    start_date: "1996-01-01"
+
+  - series_id: bcb_sgs_endividamento_familias_ex_hab
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "29038"
+    name: Household debt to income, excluding housing credit
+    description: Endividamento das famílias com o SFN exceto crédito habitacional, em relação à renda acumulada dos últimos doze meses.
+    unit: percent of 12-month income
+    frequency: monthly
+    concept: household indebtedness
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: stock of debt over trailing 12-month income
+    scope: Households
+    source_url: https://dadosabertos.bcb.gov.br/dataset/29038-endividamento-das-familias-com-o-sistema-financeiro-nacional-exceto-credito-habitacional-em-r
+    start_date: "1996-01-01"
+
+  - series_id: bcb_sgs_comprometimento_renda
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "29265"
+    name: Household debt-service to income (SFN)
+    description: >-
+      Comprometimento de renda das famílias com o serviço da dívida com o Sistema Financeiro
+      Nacional (juros + amortização), sem ajuste sazonal. Mede o fluxo mensal de pagamentos
+      como proporção da renda mensal das famílias (média móvel trimestral) — distinto do
+      endividamento (estoque da dívida sobre a renda de 12 meses).
+    unit: percent of monthly income
+    frequency: monthly
+    concept: household debt-service burden
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: debt-service flow over monthly income, 3-month moving average
+    scope: Households
+    source_url: https://api.bcb.gov.br/dados/serie/bcdata.sgs.29265/dados?formato=json
+    start_date: "2005-03-01"
+
+  - series_id: bcb_sgs_inadimplencia_total
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "21082"
+    name: Credit default rate, total
+    description: Inadimplência da carteira de crédito do SFN (atrasos acima de 90 dias), recursos livres e direcionados, total.
+    unit: percent of credit portfolio
+    frequency: monthly
+    concept: credit default rate
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: share of portfolio overdue more than 90 days
+    scope: Total (households and firms)
+    source_url: https://dadosabertos.bcb.gov.br/dataset/21082-inadimplencia-da-carteira-de-credito---total
+    start_date: "1996-01-01"
+
+  - series_id: bcb_sgs_inadimplencia_pf
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "21084"
+    name: Credit default rate, households
+    description: Inadimplência da carteira de crédito do SFN para pessoas físicas (atrasos acima de 90 dias).
+    unit: percent of credit portfolio
+    frequency: monthly
+    concept: credit default rate
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: share of household portfolio overdue more than 90 days
+    scope: Households (pessoas físicas)
+    source_url: https://dadosabertos.bcb.gov.br/dataset/21084-inadimplencia-da-carteira-de-credito---pessoas-fisicas---total
+    start_date: "1996-01-01"
+
+  - series_id: bcb_sgs_ipca_alimentacao
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "1635"
+    name: IPCA food and beverages, monthly
+    description: IPCA do grupo Alimentação e bebidas, variação mensal. Proxy de pressão de preços de alimentos sobre as famílias (não substitui pesquisas de insegurança alimentar do IBGE).
+    unit: percent month over month
+    frequency: monthly
+    concept: food inflation
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly flow / percent change
+    scope: Food and beverages group
+    source_url: https://dadosabertos.bcb.gov.br/dataset/1635-indice-nacional-de-precos-ao-consumidor-amplo-ipca---alimentacao-e-bebidas
+    start_date: "1996-01-01"
+  # TODO(fome): food-insecurity / hunger (INSAN, POF, PNAD-CA suplemento) is survey-based,
+  # annual/irregular, and has no clean public time-series API. Add via a SICONFI/IBGE
+  # microdata loader when a stable source is available — do not fabricate a series.
+
+  - series_id: bcb_sgs_ipca_nucleo_ma
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "4466"
+    name: IPCA core, trimmed means (smoothed), monthly
+    description: IPCA núcleo por médias aparadas com suavização, variação mensal. Núcleo de inflação acompanhado pelo Copom.
+    unit: percent month over month
+    frequency: monthly
+    concept: core inflation
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly flow / percent change
+    scope: IPCA trimmed-means core
+    source_url: https://dadosabertos.bcb.gov.br/dataset/4466-indice-nacional-de-precos-ao-consumidor-amplo-ipca---nucleo-por-medias-aparadas-com-suavizacao
+    start_date: "1996-01-01"
+
+  - series_id: bcb_sgs_ipca_servicos
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "10844"
+    name: IPCA services, monthly
+    description: IPCA do grupo Serviços, variação mensal. Inflação de serviços costuma ser mais inercial.
+    unit: percent month over month
+    frequency: monthly
+    concept: services inflation
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly flow / percent change
+    scope: Services
+    source_url: https://dadosabertos.bcb.gov.br/dataset/10844-indice-nacional-de-precos-ao-consumidor-amplo-ipca---servicos
+    start_date: "1996-01-01"
+
+  - series_id: bcb_sgs_salario_minimo
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "1619"
+    name: Minimum wage, nominal
+    description: Salário mínimo nominal vigente, valor mensal em reais correntes.
+    unit: BRL, nominal
+    frequency: monthly
+    concept: minimum wage
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly stock, nominal BRL
+    scope: National minimum wage
+    source_url: https://dadosabertos.bcb.gov.br/dataset/1619-salario-minimo
+    start_date: "1996-01-01"
+
+  - series_id: ibge_pnad_unemployment_rate
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "6381/4099"
+    name: PNAD Continuous unemployment rate
+    description: Taxa de desocupação das pessoas de 14 anos ou mais de idade, trimestre móvel.
+    unit: percent
+    frequency: moving quarter, monthly release
+    concept: unemployment rate
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: moving-quarter rate
+    scope: People aged 14 or older
+    method: PNAD Continuous
+    source_url: https://sidra.ibge.gov.br/tabela/6381
+    sidra_url: https://apisidra.ibge.gov.br/values/t/6381/n1/all/v/4099/p/all
+    sidra_period_key: D3C
+    start_date: "2012-03-01"
+
+  - series_id: ibge_pnad_real_average_income
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "6390/5933"
+    name: PNAD Continuous real average labor income
+    description: Rendimento médio mensal real habitual de todos os trabalhos das pessoas ocupadas.
+    unit: BRL, real
+    frequency: moving quarter, monthly release
+    concept: real labor income
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: real average monthly income
+    scope: Employed people aged 14 or older with labor income
+    method: PNAD Continuous
+    source_url: https://sidra.ibge.gov.br/tabela/6390
+    sidra_url: https://apisidra.ibge.gov.br/values/t/6390/n1/all/v/5933/p/all
+    sidra_period_key: D3C
+    start_date: "2012-03-01"
+
+  - series_id: ibge_pnad_real_labor_income_mass
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "6392/6293"
+    name: PNAD Continuous real labor income mass
+    description: Massa de rendimento mensal real habitual de todos os trabalhos das pessoas ocupadas.
+    unit: BRL millions, real
+    frequency: moving quarter, monthly release
+    concept: real labor income mass
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: real monthly income mass
+    scope: Employed people aged 14 or older with labor income
+    method: PNAD Continuous
+    source_url: https://sidra.ibge.gov.br/tabela/6392
+    sidra_url: https://apisidra.ibge.gov.br/values/t/6392/n1/all/v/6293/p/all
+    sidra_period_key: D3C
+    start_date: "2012-03-01"
+
+  - series_id: tesouro_rtn_receita_liquida
+    source_id: tesouro_series
+    connector: tesouro_series
+    source_series_code: "7960"
+    name: Governo Central net revenue
+    description: Receita Líquida (Receita Total - Transferências por Repartição de Receitas), RTN.
+    unit: BRL millions
+    frequency: monthly
+    concept: net revenue above-the-line
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly flow, nominal BRL
+    scope: Governo Central
+    method: RTN above-the-line
+    source_url: https://series-temporais.tesouro.gov.br/backend-series-temporais/rest/Public/SerieGrafico/Detalhes/7960
+
+  - series_id: tesouro_rtn_receita_total
+    source_id: tesouro_series
+    connector: tesouro_series
+    source_series_code: "7922"
+    name: Governo Central total revenue
+    description: Receita Total, RTN.
+    unit: BRL millions
+    frequency: monthly
+    concept: total revenue above-the-line
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly flow, nominal BRL
+    scope: Governo Central
+    method: RTN above-the-line
+    source_url: https://series-temporais.tesouro.gov.br/backend-series-temporais/rest/Public/SerieGrafico/Detalhes/7922
+
+  - series_id: tesouro_rtn_transferencias_reparticao
+    source_id: tesouro_series
+    connector: tesouro_series
+    source_series_code: "7961"
+    name: Transfers by revenue sharing
+    description: Transferências por Repartição de Receita, RTN.
+    unit: BRL millions
+    frequency: monthly
+    concept: intergovernmental transfers above-the-line
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly flow, nominal BRL
+    scope: Governo Central
+    method: RTN above-the-line
+    source_url: https://series-temporais.tesouro.gov.br/backend-series-temporais/rest/Public/SerieGrafico/Detalhes/7961
+
+  - series_id: tesouro_rtn_receita_administrada_rfb
+    source_id: tesouro_series
+    connector: tesouro_series
+    source_series_code: "7923"
+    name: Revenue administered by Receita Federal
+    description: Receita Administrada pela Receita Federal do Brasil, RTN.
+    unit: BRL millions
+    frequency: monthly
+    concept: tax revenue above-the-line
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly flow, nominal BRL
+    scope: Governo Central
+    method: RTN above-the-line
+    source_url: https://series-temporais.tesouro.gov.br/backend-series-temporais/rest/Public/SerieGrafico/Detalhes/7923
+
+  - series_id: tesouro_rtn_arrecadacao_rgps
+    source_id: tesouro_series
+    connector: tesouro_series
+    source_series_code: "7947"
+    name: RGPS net revenue
+    description: Arrecadação Líquida para o RGPS, RTN.
+    unit: BRL millions
+    frequency: monthly
+    concept: social security revenue above-the-line
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly flow, nominal BRL
+    scope: Governo Central / RGPS
+    method: RTN above-the-line
+    source_url: https://series-temporais.tesouro.gov.br/backend-series-temporais/rest/Public/SerieGrafico/Detalhes/7947
+
+  - series_id: tesouro_rtn_despesa_total
+    source_id: tesouro_series
+    connector: tesouro_series
+    source_series_code: "7970"
+    name: Governo Central total primary spending
+    description: Despesa total, RTN.
+    unit: BRL millions
+    frequency: monthly
+    concept: primary spending above-the-line
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly flow, nominal BRL
+    scope: Governo Central
+    method: RTN above-the-line
+    source_url: https://series-temporais.tesouro.gov.br/backend-series-temporais/rest/Public/SerieGrafico/Detalhes/7970
+
+  - series_id: tesouro_rtn_beneficios_previdenciarios
+    source_id: tesouro_series
+    connector: tesouro_series
+    source_series_code: "7971"
+    name: Social security benefits
+    description: Benefícios Previdenciários - Total, RTN.
+    unit: BRL millions
+    frequency: monthly
+    concept: social security spending above-the-line
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly flow, nominal BRL
+    scope: Governo Central / Previdência Social
+    method: RTN above-the-line
+    source_url: https://series-temporais.tesouro.gov.br/backend-series-temporais/rest/Public/SerieGrafico/Detalhes/7971
+
+  - series_id: tesouro_rtn_pessoal_encargos
+    source_id: tesouro_series
+    connector: tesouro_series
+    source_series_code: "7976"
+    name: Personnel and social charges
+    description: Pessoal e Encargos Sociais, RTN.
+    unit: BRL millions
+    frequency: monthly
+    concept: personnel spending above-the-line
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly flow, nominal BRL
+    scope: Governo Central
+    method: RTN above-the-line
+    source_url: https://series-temporais.tesouro.gov.br/backend-series-temporais/rest/Public/SerieGrafico/Detalhes/7976
+
+  - series_id: tesouro_rtn_outras_obrigatorias
+    source_id: tesouro_series
+    connector: tesouro_series
+    source_series_code: "7978"
+    name: Other mandatory spending
+    description: Outras Despesas Obrigatórias - Total, RTN.
+    unit: BRL millions
+    frequency: monthly
+    concept: mandatory spending above-the-line
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly flow, nominal BRL
+    scope: Governo Central
+    method: RTN above-the-line
+    source_url: https://series-temporais.tesouro.gov.br/backend-series-temporais/rest/Public/SerieGrafico/Detalhes/7978
+
+  - series_id: tesouro_rtn_resultado_primario_gc
+    source_id: tesouro_series
+    connector: tesouro_series
+    source_series_code: "8055"
+    name: Governo Central primary result
+    description: Resultado Primário - Governo Central, RTN.
+    unit: BRL millions
+    frequency: monthly
+    concept: primary result above-the-line
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly flow, nominal BRL
+    scope: Governo Central
+    method: RTN above-the-line
+    source_url: https://series-temporais.tesouro.gov.br/backend-series-temporais/rest/Public/SerieGrafico/Detalhes/8055
+
+  - series_id: tesouro_rtn_resultado_primario_tesouro
+    source_id: tesouro_series
+    connector: tesouro_series
+    source_series_code: "8056"
+    name: Tesouro Nacional primary result
+    description: Resultado Primário - Tesouro Nacional, RTN.
+    unit: BRL millions
+    frequency: monthly
+    concept: primary result above-the-line
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly flow, nominal BRL
+    scope: Governo Central / Tesouro Nacional
+    method: RTN above-the-line
+    source_url: https://series-temporais.tesouro.gov.br/backend-series-temporais/rest/Public/SerieGrafico/Detalhes/8056
+
+  - series_id: tesouro_rtn_resultado_previdencia
+    source_id: tesouro_series
+    connector: tesouro_series
+    source_series_code: "8057"
+    name: Previdência Social primary result
+    description: Resultado Primário - Previdência Social, RTN.
+    unit: BRL millions
+    frequency: monthly
+    concept: social security primary result above-the-line
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly flow, nominal BRL
+    scope: Governo Central / Previdência Social
+    method: RTN above-the-line
+    source_url: https://series-temporais.tesouro.gov.br/backend-series-temporais/rest/Public/SerieGrafico/Detalhes/8057
+
+  - series_id: tesouro_rtn_resultado_primario_bc
+    source_id: tesouro_series
+    connector: tesouro_series
+    source_series_code: "8060"
+    name: Banco Central primary result
+    description: Resultado Primário - Banco Central, RTN.
+    unit: BRL millions
+    frequency: monthly
+    concept: primary result above-the-line
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly flow, nominal BRL
+    scope: Governo Central / Banco Central
+    method: RTN above-the-line
+    source_url: https://series-temporais.tesouro.gov.br/backend-series-temporais/rest/Public/SerieGrafico/Detalhes/8060
+
+  # --- Setores produtivos: PIB por setor (índice de volume, Contas Nacionais Trimestrais) ---
+  # Tabela 1621: série encadeada do índice de volume trimestral COM ajuste sazonal (base
+  # média 1995 = 100), variável 584, classificação 11255 (setores e subsetores). Usada para
+  # o nível/tendência. Tabela 1620 (SEM ajuste sazonal, variável 583) é usada à parte para
+  # a variação interanual, pois é a base correta para comparar trimestre contra mesmo
+  # trimestre do ano anterior.
+  - series_id: ibge_cnt_volume_sa_agropecuaria
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "1621/584/90687"
+    name: GDP volume index, seasonally adjusted — Agriculture
+    description: Série encadeada do índice de volume trimestral com ajuste sazonal, Agropecuária (total).
+    unit: index, 1995 average = 100
+    frequency: quarterly
+    concept: real value added by sector
+    geography: Brazil
+    seasonal_adjustment: seasonally adjusted
+    transformation: chained volume index
+    scope: Agropecuária - total
+    method: Contas Nacionais Trimestrais
+    source_url: https://sidra.ibge.gov.br/tabela/1621
+    sidra_url: https://apisidra.ibge.gov.br/values/t/1621/n1/all/v/584/p/all/c11255/90687
+    sidra_period_key: D3C
+    start_date: "1996-01-01"
+
+  - series_id: ibge_cnt_volume_sa_industria
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "1621/584/90691"
+    name: GDP volume index, seasonally adjusted — Industry
+    description: Série encadeada do índice de volume trimestral com ajuste sazonal, Indústria (total).
+    unit: index, 1995 average = 100
+    frequency: quarterly
+    concept: real value added by sector
+    geography: Brazil
+    seasonal_adjustment: seasonally adjusted
+    transformation: chained volume index
+    scope: Indústria - total
+    method: Contas Nacionais Trimestrais
+    source_url: https://sidra.ibge.gov.br/tabela/1621
+    sidra_url: https://apisidra.ibge.gov.br/values/t/1621/n1/all/v/584/p/all/c11255/90691
+    sidra_period_key: D3C
+    start_date: "1996-01-01"
+
+  - series_id: ibge_cnt_volume_sa_servicos
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "1621/584/90696"
+    name: GDP volume index, seasonally adjusted — Services
+    description: Série encadeada do índice de volume trimestral com ajuste sazonal, Serviços (total).
+    unit: index, 1995 average = 100
+    frequency: quarterly
+    concept: real value added by sector
+    geography: Brazil
+    seasonal_adjustment: seasonally adjusted
+    transformation: chained volume index
+    scope: Serviços - total
+    method: Contas Nacionais Trimestrais
+    source_url: https://sidra.ibge.gov.br/tabela/1621
+    sidra_url: https://apisidra.ibge.gov.br/values/t/1621/n1/all/v/584/p/all/c11255/90696
+    sidra_period_key: D3C
+    start_date: "1996-01-01"
+
+  - series_id: ibge_cnt_volume_sa_pib
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "1621/584/90707"
+    name: GDP volume index, seasonally adjusted — GDP at market prices
+    description: Série encadeada do índice de volume trimestral com ajuste sazonal, PIB a preços de mercado.
+    unit: index, 1995 average = 100
+    frequency: quarterly
+    concept: real GDP
+    geography: Brazil
+    seasonal_adjustment: seasonally adjusted
+    transformation: chained volume index
+    scope: PIB a preços de mercado
+    method: Contas Nacionais Trimestrais
+    source_url: https://sidra.ibge.gov.br/tabela/1621
+    sidra_url: https://apisidra.ibge.gov.br/values/t/1621/n1/all/v/584/p/all/c11255/90707
+    sidra_period_key: D3C
+    start_date: "1996-01-01"
+
+  # Tabela 1620 (SEM ajuste sazonal, variável 583): base para variação interanual por setor.
+  - series_id: ibge_cnt_volume_nsa_agropecuaria
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "1620/583/90687"
+    name: GDP volume index, not seasonally adjusted — Agriculture
+    description: Série encadeada do índice de volume trimestral (sem ajuste sazonal), Agropecuária (total).
+    unit: index, 1995 average = 100
+    frequency: quarterly
+    concept: real value added by sector
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: chained volume index
+    scope: Agropecuária - total
+    method: Contas Nacionais Trimestrais
+    source_url: https://sidra.ibge.gov.br/tabela/1620
+    sidra_url: https://apisidra.ibge.gov.br/values/t/1620/n1/all/v/583/p/all/c11255/90687
+    sidra_period_key: D3C
+    start_date: "1996-01-01"
+
+  - series_id: ibge_cnt_volume_nsa_industria
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "1620/583/90691"
+    name: GDP volume index, not seasonally adjusted — Industry
+    description: Série encadeada do índice de volume trimestral (sem ajuste sazonal), Indústria (total).
+    unit: index, 1995 average = 100
+    frequency: quarterly
+    concept: real value added by sector
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: chained volume index
+    scope: Indústria - total
+    method: Contas Nacionais Trimestrais
+    source_url: https://sidra.ibge.gov.br/tabela/1620
+    sidra_url: https://apisidra.ibge.gov.br/values/t/1620/n1/all/v/583/p/all/c11255/90691
+    sidra_period_key: D3C
+    start_date: "1996-01-01"
+
+  - series_id: ibge_cnt_volume_nsa_servicos
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "1620/583/90696"
+    name: GDP volume index, not seasonally adjusted — Services
+    description: Série encadeada do índice de volume trimestral (sem ajuste sazonal), Serviços (total).
+    unit: index, 1995 average = 100
+    frequency: quarterly
+    concept: real value added by sector
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: chained volume index
+    scope: Serviços - total
+    method: Contas Nacionais Trimestrais
+    source_url: https://sidra.ibge.gov.br/tabela/1620
+    sidra_url: https://apisidra.ibge.gov.br/values/t/1620/n1/all/v/583/p/all/c11255/90696
+    sidra_period_key: D3C
+    start_date: "1996-01-01"
+
+  # --- Setores produtivos: indicadores mensais de volume com ajuste sazonal ---
+  # PIM-PF (indústria), PMC (varejo) e PMS (serviços), todos índice de volume com ajuste
+  # sazonal base 2022 = 100 — diretamente comparáveis entre si.
+  - series_id: ibge_pim_industria_geral_sa
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "8888/12607/129314"
+    name: Industrial production volume index, seasonally adjusted
+    description: PIM-PF — produção física industrial, indústria geral, número-índice com ajuste sazonal (2022 = 100).
+    unit: index, 2022 = 100
+    frequency: monthly
+    concept: industrial production volume
+    geography: Brazil
+    seasonal_adjustment: seasonally adjusted
+    transformation: volume index
+    scope: Indústria geral (CNAE 2.0)
+    method: Pesquisa Industrial Mensal — Produção Física (PIM-PF)
+    source_url: https://sidra.ibge.gov.br/tabela/8888
+    sidra_url: https://apisidra.ibge.gov.br/values/t/8888/n1/all/v/12607/p/all/c544/129314
+    sidra_period_key: D3C
+    start_date: "2002-01-01"
+
+  - series_id: ibge_pmc_varejo_volume_sa
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "8880/7170/56734"
+    name: Retail sales volume index, seasonally adjusted
+    description: PMC — volume de vendas no comércio varejista (restrito), número-índice com ajuste sazonal (2022 = 100).
+    unit: index, 2022 = 100
+    frequency: monthly
+    concept: retail sales volume
+    geography: Brazil
+    seasonal_adjustment: seasonally adjusted
+    transformation: volume index
+    scope: Comércio varejista (restrito)
+    method: Pesquisa Mensal de Comércio (PMC)
+    source_url: https://sidra.ibge.gov.br/tabela/8880
+    sidra_url: https://apisidra.ibge.gov.br/values/t/8880/n1/all/v/7170/p/all/c11046/56734
+    sidra_period_key: D3C
+    start_date: "2000-01-01"
+
+  - series_id: ibge_pms_servicos_volume_sa
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "8163/7168/56726/56703"
+    name: Services volume index, seasonally adjusted
+    description: PMS — volume de serviços, total, número-índice com ajuste sazonal (2022 = 100).
+    unit: index, 2022 = 100
+    frequency: monthly
+    concept: services volume
+    geography: Brazil
+    seasonal_adjustment: seasonally adjusted
+    transformation: volume index
+    scope: Total dos serviços
+    method: Pesquisa Mensal de Serviços (PMS)
+    source_url: https://sidra.ibge.gov.br/tabela/8163
+    sidra_url: https://apisidra.ibge.gov.br/values/t/8163/n1/all/v/7168/p/all/c11046/56726/c1274/56703
+    sidra_period_key: D3C
+    start_date: "2011-01-01"
+
+  # --- Setores produtivos: valor adicionado a preços correntes (Contas Nacionais Trimestrais) ---
+  # Tabela 1846, variável 585 (valor a preços correntes, R$ milhões), classificação c11255.
+  # Diferente das tabelas 1620/1621 (índices de volume): aqui são valores em reais correntes,
+  # cuja participação relativa (setor / total) é a composição honesta do PIB pela ótica da
+  # produção. Os três totais setoriais (Agro/Indústria/Serviços) somam o valor adicionado a
+  # preços básicos; usados em área 100% empilhada. Os subsetores de Indústria (90692-90695) e
+  # Serviços (90697-90703) somam exatamente o total de cada setor.
+  - series_id: ibge_va_corrente_agropecuaria
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "1846/585/90687"
+    name: Value added at current prices — Agriculture
+    description: Valor adicionado bruto a preços correntes, Agropecuária (total).
+    unit: BRL millions, current prices
+    frequency: quarterly
+    concept: value added by sector at current prices
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: nominal value at current prices
+    scope: Agropecuária - total
+    method: Contas Nacionais Trimestrais
+    source_url: https://sidra.ibge.gov.br/tabela/1846
+    sidra_url: https://apisidra.ibge.gov.br/values/t/1846/n1/all/v/585/p/all/c11255/90687
+    sidra_period_key: D3C
+    start_date: "1996-01-01"
+
+  - series_id: ibge_va_corrente_industria
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "1846/585/90691"
+    name: Value added at current prices — Industry
+    description: Valor adicionado bruto a preços correntes, Indústria (total).
+    unit: BRL millions, current prices
+    frequency: quarterly
+    concept: value added by sector at current prices
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: nominal value at current prices
+    scope: Indústria - total
+    method: Contas Nacionais Trimestrais
+    source_url: https://sidra.ibge.gov.br/tabela/1846
+    sidra_url: https://apisidra.ibge.gov.br/values/t/1846/n1/all/v/585/p/all/c11255/90691
+    sidra_period_key: D3C
+    start_date: "1996-01-01"
+
+  - series_id: ibge_va_corrente_servicos
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "1846/585/90696"
+    name: Value added at current prices — Services
+    description: Valor adicionado bruto a preços correntes, Serviços (total).
+    unit: BRL millions, current prices
+    frequency: quarterly
+    concept: value added by sector at current prices
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: nominal value at current prices
+    scope: Serviços - total
+    method: Contas Nacionais Trimestrais
+    source_url: https://sidra.ibge.gov.br/tabela/1846
+    sidra_url: https://apisidra.ibge.gov.br/values/t/1846/n1/all/v/585/p/all/c11255/90696
+    sidra_period_key: D3C
+    start_date: "1996-01-01"
+
+  # Subsetores da Indústria (somam o total 90691).
+  - series_id: ibge_va_corrente_ind_extrativa
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "1846/585/90692"
+    name: Value added at current prices — Extractive industry
+    description: Valor adicionado a preços correntes, Indústrias extrativas.
+    unit: BRL millions, current prices
+    frequency: quarterly
+    concept: value added by sub-sector at current prices
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: nominal value at current prices
+    scope: Indústria - indústrias extrativas
+    method: Contas Nacionais Trimestrais
+    source_url: https://sidra.ibge.gov.br/tabela/1846
+    sidra_url: https://apisidra.ibge.gov.br/values/t/1846/n1/all/v/585/p/all/c11255/90692
+    sidra_period_key: D3C
+    start_date: "1996-01-01"
+
+  - series_id: ibge_va_corrente_ind_transformacao
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "1846/585/90693"
+    name: Value added at current prices — Manufacturing
+    description: Valor adicionado a preços correntes, Indústrias de transformação.
+    unit: BRL millions, current prices
+    frequency: quarterly
+    concept: value added by sub-sector at current prices
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: nominal value at current prices
+    scope: Indústria - indústrias de transformação
+    method: Contas Nacionais Trimestrais
+    source_url: https://sidra.ibge.gov.br/tabela/1846
+    sidra_url: https://apisidra.ibge.gov.br/values/t/1846/n1/all/v/585/p/all/c11255/90693
+    sidra_period_key: D3C
+    start_date: "1996-01-01"
+
+  - series_id: ibge_va_corrente_ind_construcao
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "1846/585/90694"
+    name: Value added at current prices — Construction
+    description: Valor adicionado a preços correntes, Construção.
+    unit: BRL millions, current prices
+    frequency: quarterly
+    concept: value added by sub-sector at current prices
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: nominal value at current prices
+    scope: Indústria - construção
+    method: Contas Nacionais Trimestrais
+    source_url: https://sidra.ibge.gov.br/tabela/1846
+    sidra_url: https://apisidra.ibge.gov.br/values/t/1846/n1/all/v/585/p/all/c11255/90694
+    sidra_period_key: D3C
+    start_date: "1996-01-01"
+
+  - series_id: ibge_va_corrente_ind_eletricidade
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "1846/585/90695"
+    name: Value added at current prices — Electricity, gas, water and waste
+    description: >-
+      Valor adicionado a preços correntes, Eletricidade e gás, água, esgoto, atividades de
+      gestão de resíduos.
+    unit: BRL millions, current prices
+    frequency: quarterly
+    concept: value added by sub-sector at current prices
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: nominal value at current prices
+    scope: Indústria - eletricidade, gás, água e resíduos
+    method: Contas Nacionais Trimestrais
+    source_url: https://sidra.ibge.gov.br/tabela/1846
+    sidra_url: https://apisidra.ibge.gov.br/values/t/1846/n1/all/v/585/p/all/c11255/90695
+    sidra_period_key: D3C
+    start_date: "1996-01-01"
+
+  # Subsetores dos Serviços (somam o total 90696).
+  - series_id: ibge_va_corrente_serv_comercio
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "1846/585/90697"
+    name: Value added at current prices — Trade
+    description: Valor adicionado a preços correntes, Comércio.
+    unit: BRL millions, current prices
+    frequency: quarterly
+    concept: value added by sub-sector at current prices
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: nominal value at current prices
+    scope: Serviços - comércio
+    method: Contas Nacionais Trimestrais
+    source_url: https://sidra.ibge.gov.br/tabela/1846
+    sidra_url: https://apisidra.ibge.gov.br/values/t/1846/n1/all/v/585/p/all/c11255/90697
+    sidra_period_key: D3C
+    start_date: "1996-01-01"
+
+  - series_id: ibge_va_corrente_serv_transporte
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "1846/585/90698"
+    name: Value added at current prices — Transport, storage and mail
+    description: Valor adicionado a preços correntes, Transporte, armazenagem e correio.
+    unit: BRL millions, current prices
+    frequency: quarterly
+    concept: value added by sub-sector at current prices
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: nominal value at current prices
+    scope: Serviços - transporte, armazenagem e correio
+    method: Contas Nacionais Trimestrais
+    source_url: https://sidra.ibge.gov.br/tabela/1846
+    sidra_url: https://apisidra.ibge.gov.br/values/t/1846/n1/all/v/585/p/all/c11255/90698
+    sidra_period_key: D3C
+    start_date: "1996-01-01"
+
+  - series_id: ibge_va_corrente_serv_informacao
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "1846/585/90699"
+    name: Value added at current prices — Information and communication
+    description: Valor adicionado a preços correntes, Informação e comunicação.
+    unit: BRL millions, current prices
+    frequency: quarterly
+    concept: value added by sub-sector at current prices
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: nominal value at current prices
+    scope: Serviços - informação e comunicação
+    method: Contas Nacionais Trimestrais
+    source_url: https://sidra.ibge.gov.br/tabela/1846
+    sidra_url: https://apisidra.ibge.gov.br/values/t/1846/n1/all/v/585/p/all/c11255/90699
+    sidra_period_key: D3C
+    start_date: "1996-01-01"
+
+  - series_id: ibge_va_corrente_serv_financeiras
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "1846/585/90700"
+    name: Value added at current prices — Financial and insurance activities
+    description: >-
+      Valor adicionado a preços correntes, Atividades financeiras, de seguros e serviços
+      relacionados.
+    unit: BRL millions, current prices
+    frequency: quarterly
+    concept: value added by sub-sector at current prices
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: nominal value at current prices
+    scope: Serviços - atividades financeiras e de seguros
+    method: Contas Nacionais Trimestrais
+    source_url: https://sidra.ibge.gov.br/tabela/1846
+    sidra_url: https://apisidra.ibge.gov.br/values/t/1846/n1/all/v/585/p/all/c11255/90700
+    sidra_period_key: D3C
+    start_date: "1996-01-01"
+
+  - series_id: ibge_va_corrente_serv_imobiliarias
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "1846/585/90702"
+    name: Value added at current prices — Real estate activities
+    description: Valor adicionado a preços correntes, Atividades imobiliárias.
+    unit: BRL millions, current prices
+    frequency: quarterly
+    concept: value added by sub-sector at current prices
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: nominal value at current prices
+    scope: Serviços - atividades imobiliárias
+    method: Contas Nacionais Trimestrais
+    source_url: https://sidra.ibge.gov.br/tabela/1846
+    sidra_url: https://apisidra.ibge.gov.br/values/t/1846/n1/all/v/585/p/all/c11255/90702
+    sidra_period_key: D3C
+    start_date: "1996-01-01"
+
+  - series_id: ibge_va_corrente_serv_admin_publica
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "1846/585/90703"
+    name: Value added at current prices — Public administration, health and education
+    description: >-
+      Valor adicionado a preços correntes, Administração, saúde e educação públicas e
+      seguridade social.
+    unit: BRL millions, current prices
+    frequency: quarterly
+    concept: value added by sub-sector at current prices
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: nominal value at current prices
+    scope: Serviços - administração, saúde e educação públicas
+    method: Contas Nacionais Trimestrais
+    source_url: https://sidra.ibge.gov.br/tabela/1846
+    sidra_url: https://apisidra.ibge.gov.br/values/t/1846/n1/all/v/585/p/all/c11255/90703
+    sidra_period_key: D3C
+    start_date: "1996-01-01"
+
+  - series_id: ibge_va_corrente_serv_outros
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "1846/585/90701"
+    name: Value added at current prices — Other services
+    description: Valor adicionado a preços correntes, Outras atividades de serviços.
+    unit: BRL millions, current prices
+    frequency: quarterly
+    concept: value added by sub-sector at current prices
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: nominal value at current prices
+    scope: Serviços - outras atividades de serviços
+    method: Contas Nacionais Trimestrais
+    source_url: https://sidra.ibge.gov.br/tabela/1846
+    sidra_url: https://apisidra.ibge.gov.br/values/t/1846/n1/all/v/585/p/all/c11255/90701
+    sidra_period_key: D3C
+    start_date: "1996-01-01"
+
+  # --- Comércio exterior: balança comercial (Balanço de Pagamentos, BCB SGS) ---
+  - series_id: bcb_sgs_exportacoes_fob
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "22708"
+    name: Exports of goods (BoP), monthly
+    description: Exportação de bens — Balanço de Pagamentos, mensal.
+    unit: US$ millions
+    frequency: monthly
+    concept: exports of goods (balance of payments)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly flow, nominal US$
+    scope: Goods (balance of payments basis)
+    method: BCB Balance of Payments (BPM6)
+    source_url: https://dadosabertos.bcb.gov.br/dataset/22708-exportacao-de-bens---balanco-de-pagamentos---mensal
+    start_date: "1995-01-01"
+
+  - series_id: bcb_sgs_importacoes_fob
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "22709"
+    name: Imports of goods (BoP), monthly
+    description: Importação de bens — Balanço de Pagamentos, mensal.
+    unit: US$ millions
+    frequency: monthly
+    concept: imports of goods (balance of payments)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly flow, nominal US$
+    scope: Goods (balance of payments basis)
+    method: BCB Balance of Payments (BPM6)
+    source_url: https://dadosabertos.bcb.gov.br/dataset/22709-importacao-de-bens---balanco-de-pagamentos---mensal
+    start_date: "1995-01-01"
+
+  - series_id: bcb_sgs_balanca_comercial_saldo
+    source_id: bcb_sgs
+    connector: bcb_sgs
+    source_series_code: "22707"
+    name: Trade balance (BoP), monthly
+    description: Balança comercial (bens) — Balanço de Pagamentos, mensal, saldo (exportações menos importações).
+    unit: US$ millions
+    frequency: monthly
+    concept: trade balance (balance of payments)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly flow, nominal US$
+    scope: Goods (balance of payments basis)
+    method: BCB Balance of Payments (BPM6)
+    source_url: https://dadosabertos.bcb.gov.br/dataset/22707-balanca-comercial---balanco-de-pagamentos---mensal---saldo
+    start_date: "1995-01-01"
+
+  # --- Comércio exterior: comércio por parceiro (Comex Stat / SECEX, anual, FOB) ---
+  # Conceito SECEX por país (distinto da base Balanço de Pagamentos acima). Valores FOB
+  # convertidos para US$ milhões. "Demais" = soma de todos os países exceto os listados.
+  - series_id: comexstat_export_china
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/160"
+    comexstat_flow: export
+    comexstat_partner: China
+    name: Exports FOB to China (SECEX), yearly
+    description: Exportações brasileiras (FOB) para a China, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = China
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_export_india
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/361"
+    comexstat_flow: export
+    comexstat_partner: Índia
+    name: Exports FOB to India (SECEX), yearly
+    description: Exportações brasileiras (FOB) para a Índia, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = Índia
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_export_russia
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/676"
+    comexstat_flow: export
+    comexstat_partner: Rússia
+    name: Exports FOB to Russia (SECEX), yearly
+    description: Exportações brasileiras (FOB) para a Rússia, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = Rússia
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_export_africa_sul
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/756"
+    comexstat_flow: export
+    comexstat_partner: África do Sul
+    name: Exports FOB to South Africa (SECEX), yearly
+    description: Exportações brasileiras (FOB) para a África do Sul, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = África do Sul
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_export_eua
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/249"
+    comexstat_flow: export
+    comexstat_partner: Estados Unidos
+    name: Exports FOB to the United States (SECEX), yearly
+    description: Exportações brasileiras (FOB) para os Estados Unidos, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = Estados Unidos
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_export_argentina
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/063"
+    comexstat_flow: export
+    comexstat_partner: Argentina
+    name: Exports FOB to Argentina (SECEX), yearly
+    description: Exportações brasileiras (FOB) para a Argentina, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = Argentina
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_export_paises_baixos
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/111"
+    comexstat_flow: export
+    comexstat_partner: Países Baixos (Holanda)
+    name: Exports FOB to the Netherlands (SECEX), yearly
+    description: Exportações brasileiras (FOB) para os Países Baixos (Holanda), base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = Países Baixos
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_export_espanha
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/245"
+    comexstat_flow: export
+    comexstat_partner: Espanha
+    name: Exports FOB to Spain (SECEX), yearly
+    description: Exportações brasileiras (FOB) para a Espanha, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = Espanha
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_export_mexico
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/493"
+    comexstat_flow: export
+    comexstat_partner: México
+    name: Exports FOB to Mexico (SECEX), yearly
+    description: Exportações brasileiras (FOB) para o México, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = México
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_export_singapura
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/741"
+    comexstat_flow: export
+    comexstat_partner: Singapura
+    name: Exports FOB to Singapore (SECEX), yearly
+    description: Exportações brasileiras (FOB) para Singapura, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = Singapura
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_export_chile
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/158"
+    comexstat_flow: export
+    comexstat_partner: Chile
+    name: Exports FOB to Chile (SECEX), yearly
+    description: Exportações brasileiras (FOB) para o Chile, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = Chile
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_export_canada
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/149"
+    comexstat_flow: export
+    comexstat_partner: Canadá
+    name: Exports FOB to Canada (SECEX), yearly
+    description: Exportações brasileiras (FOB) para o Canadá, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = Canadá
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_export_alemanha
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/023"
+    comexstat_flow: export
+    comexstat_partner: Alemanha
+    name: Exports FOB to Germany (SECEX), yearly
+    description: Exportações brasileiras (FOB) para a Alemanha, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = Alemanha
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_export_japao
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/399"
+    comexstat_flow: export
+    comexstat_partner: Japão
+    name: Exports FOB to Japan (SECEX), yearly
+    description: Exportações brasileiras (FOB) para o Japão, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = Japão
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_export_coreia_sul
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/190"
+    comexstat_flow: export
+    comexstat_partner: Coreia do Sul
+    name: Exports FOB to South Korea (SECEX), yearly
+    description: Exportações brasileiras (FOB) para a Coreia do Sul, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = Coreia do Sul
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_export_demais
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/demais"
+    comexstat_flow: export
+    comexstat_partner: Demais
+    comexstat_named_partners: [China, Estados Unidos, Argentina, "Países Baixos (Holanda)", Espanha, Singapura, México, Chile, Canadá, Alemanha, Japão, "Coreia do Sul"]
+    name: Exports FOB to other countries (SECEX), yearly
+    description: >-
+      Exportações brasileiras (FOB) para os demais países (exceto os doze maiores parceiros:
+      China, EUA, Argentina, Países Baixos, Espanha, Singapura, México, Chile, Canadá,
+      Alemanha, Japão e Coreia do Sul), base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = demais países
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_import_china
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "import/160"
+    comexstat_flow: import
+    comexstat_partner: China
+    name: Imports FOB from China (SECEX), yearly
+    description: Importações brasileiras (FOB) da China, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: imports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = China
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_import_eua
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "import/249"
+    comexstat_flow: import
+    comexstat_partner: Estados Unidos
+    name: Imports FOB from the United States (SECEX), yearly
+    description: Importações brasileiras (FOB) dos Estados Unidos, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: imports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = Estados Unidos
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_import_argentina
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "import/063"
+    comexstat_flow: import
+    comexstat_partner: Argentina
+    name: Imports FOB from Argentina (SECEX), yearly
+    description: Importações brasileiras (FOB) da Argentina, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: imports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = Argentina
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_import_alemanha
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "import/023"
+    comexstat_flow: import
+    comexstat_partner: Alemanha
+    name: Imports FOB from Germany (SECEX), yearly
+    description: Importações brasileiras (FOB) da Alemanha, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: imports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = Alemanha
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_import_russia
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "import/676"
+    comexstat_flow: import
+    comexstat_partner: Rússia
+    name: Imports FOB from Russia (SECEX), yearly
+    description: Importações brasileiras (FOB) da Rússia, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: imports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = Rússia
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_import_india
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "import/361"
+    comexstat_flow: import
+    comexstat_partner: Índia
+    name: Imports FOB from India (SECEX), yearly
+    description: Importações brasileiras (FOB) da Índia, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: imports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = Índia
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_import_africa_sul
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "import/756"
+    comexstat_flow: import
+    comexstat_partner: África do Sul
+    name: Imports FOB from South Africa (SECEX), yearly
+    description: Importações brasileiras (FOB) da África do Sul, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: imports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = África do Sul
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_import_italia
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "import/386"
+    comexstat_flow: import
+    comexstat_partner: Itália
+    name: Imports FOB from Italy (SECEX), yearly
+    description: Importações brasileiras (FOB) da Itália, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: imports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = Itália
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_import_franca
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "import/275"
+    comexstat_flow: import
+    comexstat_partner: França
+    name: Imports FOB from France (SECEX), yearly
+    description: Importações brasileiras (FOB) da França, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: imports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = França
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_import_mexico
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "import/493"
+    comexstat_flow: import
+    comexstat_partner: México
+    name: Imports FOB from Mexico (SECEX), yearly
+    description: Importações brasileiras (FOB) do México, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: imports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = México
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_import_japao
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "import/399"
+    comexstat_flow: import
+    comexstat_partner: Japão
+    name: Imports FOB from Japan (SECEX), yearly
+    description: Importações brasileiras (FOB) do Japão, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: imports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = Japão
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_import_coreia_sul
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "import/190"
+    comexstat_flow: import
+    comexstat_partner: Coreia do Sul
+    name: Imports FOB from South Korea (SECEX), yearly
+    description: Importações brasileiras (FOB) da Coreia do Sul, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: imports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = Coreia do Sul
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_import_chile
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "import/158"
+    comexstat_flow: import
+    comexstat_partner: Chile
+    name: Imports FOB from Chile (SECEX), yearly
+    description: Importações brasileiras (FOB) do Chile, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: imports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = Chile
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_import_demais
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "import/demais"
+    comexstat_flow: import
+    comexstat_partner: Demais
+    comexstat_named_partners: [China, Estados Unidos, Alemanha, Argentina, Rússia, Índia, Itália, França, México, Japão, "Coreia do Sul", Chile]
+    name: Imports FOB from other countries (SECEX), yearly
+    description: >-
+      Importações brasileiras (FOB) dos demais países (exceto os doze maiores parceiros:
+      China, EUA, Alemanha, Argentina, Rússia, Índia, Itália, França, México, Japão,
+      Coreia do Sul e Chile), base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: imports of goods by partner (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), partner = demais países
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  # --- Comércio exterior: comércio com o bloco Mercosul (Comex Stat por bloco econômico) ---
+  # Breakout por bloco econômico (details=economicBlock), nome exato "Mercado Comum do Sul
+  # - Mercosul". O agrupamento da SECEX já reflete a composição do bloco ao longo do tempo
+  # (Venezuela suspensa desde 2016; Bolívia membro pleno a partir de 2024), então não há
+  # lista de membros nem resíduo. Blocos se sobrepõem (um país pode estar em vários), por
+  # isso só faz sentido isolar um bloco — não somam ao total.
+  - series_id: comexstat_export_mercosul
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/mercosul"
+    comexstat_flow: export
+    comexstat_block: Mercado Comum do Sul - Mercosul
+    name: Exports FOB to Mercosur bloc (SECEX), yearly
+    description: Exportações brasileiras (FOB) para o bloco Mercosul, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by economic bloc (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), economic bloc = Mercosul
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_import_mercosul
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "import/mercosul"
+    comexstat_flow: import
+    comexstat_block: Mercado Comum do Sul - Mercosul
+    name: Imports FOB from Mercosur bloc (SECEX), yearly
+    description: Importações brasileiras (FOB) do bloco Mercosul, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: imports of goods by economic bloc (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), economic bloc = Mercosul
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  # --- Comércio exterior: comércio com o bloco União Europeia (Comex Stat por bloco) ---
+  # Breakout por bloco econômico (details=economicBlock), nome exato "União Europeia - UE".
+  # Usado apenas na comparação de magnitude entre agrupamentos (BRICS x Mercosul x UE x EUA).
+  - series_id: comexstat_export_uniao_europeia
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/uniao-europeia"
+    comexstat_flow: export
+    comexstat_block: União Europeia - UE
+    name: Exports FOB to the European Union bloc (SECEX), yearly
+    description: Exportações brasileiras (FOB) para o bloco União Europeia - UE, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by economic bloc (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), economic bloc = União Europeia - UE
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_import_uniao_europeia
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "import/uniao-europeia"
+    comexstat_flow: import
+    comexstat_block: União Europeia - UE
+    name: Imports FOB from the European Union bloc (SECEX), yearly
+    description: Importações brasileiras (FOB) do bloco União Europeia - UE, base SECEX, total anual.
+    unit: US$ millions
+    frequency: yearly
+    concept: imports of goods by economic bloc (SECEX)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), economic bloc = União Europeia - UE
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+  # --- Comércio exterior: maiores commodities exportadas (Comex Stat por capítulo SH2) ---
+  # Exportações FOB por capítulo SH2 (details=chapter), base SECEX, total anual. Os dez
+  # maiores capítulos em valor mais um resíduo "Demais produtos" que soma todos os outros,
+  # de modo que o empilhamento reconstitui o total exportado. Códigos SH2 confirmados via
+  # API (ex.: 27 petróleo/combustíveis, 12 soja/oleaginosas, 26 minérios).
+  - series_id: comexstat_export_prod_comb_oleos_minerais
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/sh2/27"
+    comexstat_flow: export
+    comexstat_product_chapter: "27"
+    name: Exports FOB by product, SH2 chapter 27 (SECEX), yearly
+    description: Combustíveis minerais, óleos minerais e produtos da sua destilação (capítulo SH2 27, inclui óleos de petróleo).
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by product chapter (SECEX SH2)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), SH2 chapter 27
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_export_prod_graos_oleaginosas
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/sh2/12"
+    comexstat_flow: export
+    comexstat_product_chapter: "12"
+    name: Exports FOB by product, SH2 chapter 12 (SECEX), yearly
+    description: Sementes e frutos oleaginosos, grãos e plantas industriais (capítulo SH2 12, inclui soja em grão).
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by product chapter (SECEX SH2)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), SH2 chapter 12
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_export_prod_minerios
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/sh2/26"
+    comexstat_flow: export
+    comexstat_product_chapter: "26"
+    name: Exports FOB by product, SH2 chapter 26 (SECEX), yearly
+    description: Minérios, escórias e cinzas (capítulo SH2 26, inclui minério de ferro).
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by product chapter (SECEX SH2)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), SH2 chapter 26
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_export_prod_carnes
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/sh2/02"
+    comexstat_flow: export
+    comexstat_product_chapter: "02"
+    name: Exports FOB by product, SH2 chapter 02 (SECEX), yearly
+    description: Carnes e miudezas comestíveis (capítulo SH2 02).
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by product chapter (SECEX SH2)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), SH2 chapter 02
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_export_prod_acucares
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/sh2/17"
+    comexstat_flow: export
+    comexstat_product_chapter: "17"
+    name: Exports FOB by product, SH2 chapter 17 (SECEX), yearly
+    description: Açúcares e produtos de confeitaria (capítulo SH2 17).
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by product chapter (SECEX SH2)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), SH2 chapter 17
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_export_prod_maquinas_mecanicas
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/sh2/84"
+    comexstat_flow: export
+    comexstat_product_chapter: "84"
+    name: Exports FOB by product, SH2 chapter 84 (SECEX), yearly
+    description: Reatores nucleares, caldeiras, máquinas e aparelhos mecânicos (capítulo SH2 84).
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by product chapter (SECEX SH2)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), SH2 chapter 84
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_export_prod_ferro_aco
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/sh2/72"
+    comexstat_flow: export
+    comexstat_product_chapter: "72"
+    name: Exports FOB by product, SH2 chapter 72 (SECEX), yearly
+    description: Ferro fundido, ferro e aço (capítulo SH2 72).
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by product chapter (SECEX SH2)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), SH2 chapter 72
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_export_prod_veiculos
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/sh2/87"
+    comexstat_flow: export
+    comexstat_product_chapter: "87"
+    name: Exports FOB by product, SH2 chapter 87 (SECEX), yearly
+    description: Veículos automóveis, tratores e outros veículos terrestres (capítulo SH2 87).
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by product chapter (SECEX SH2)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), SH2 chapter 87
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_export_prod_cafe
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/sh2/09"
+    comexstat_flow: export
+    comexstat_product_chapter: "09"
+    name: Exports FOB by product, SH2 chapter 09 (SECEX), yearly
+    description: Café, chá, mate e especiarias (capítulo SH2 09).
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by product chapter (SECEX SH2)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), SH2 chapter 09
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_export_prod_celulose
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/sh2/47"
+    comexstat_flow: export
+    comexstat_product_chapter: "47"
+    name: Exports FOB by product, SH2 chapter 47 (SECEX), yearly
+    description: Pastas de madeira ou de outras matérias fibrosas celulósicas (capítulo SH2 47).
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by product chapter (SECEX SH2)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), SH2 chapter 47
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  - series_id: comexstat_export_prod_demais
+    source_id: comexstat
+    connector: comexstat
+    source_series_code: "export/sh2/demais"
+    comexstat_flow: export
+    comexstat_product_chapter: Demais
+    comexstat_named_chapters: ["27", "12", "26", "02", "17", "84", "72", "87", "09", "47"]
+    name: Exports FOB by product, other SH2 chapters (SECEX), yearly
+    description: >-
+      Exportações FOB dos demais capítulos SH2 (exceto os dez maiores listados), base
+      SECEX, total anual. Resíduo que completa o total exportado.
+    unit: US$ millions
+    frequency: yearly
+    concept: exports of goods by product chapter (SECEX SH2)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: yearly flow, nominal US$
+    scope: Goods (SECEX basis), demais capítulos SH2
+    method: MDIC/SECEX Comex Stat
+    source_url: https://comexstat.mdic.gov.br/
+    start_date: "2010-01-01"
+
+  # --- Consumo digital: pagamentos instantâneos (Pix) e penetração digital ---
+  # Pix liquidado no SPI (BCB Olinda), série diária desde o lançamento do Pix (nov/2020),
+  # agregada para meses-calendário completos. Quantidade e valor têm unidades distintas
+  # (contagem de transações vs. R$) e são duas séries separadas — nunca um eixo duplo.
+  - series_id: bcb_spi_pix_count_monthly
+    source_id: bcb_olinda_spi
+    connector: bcb_spi_pix
+    source_series_code: "SPI/PixLiquidadosAtual/Quantidade"
+    spi_aggregate: pix_count
+    name: Pix transactions settled in the SPI, monthly count
+    description: >-
+      Quantidade mensal de transações Pix liquidadas no SPI (soma dos dias do mês),
+      convertida para milhões de transações. Apenas meses completos.
+    unit: millions of transactions
+    frequency: monthly
+    concept: instant-payment transaction count
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: daily count summed to calendar month, in millions
+    scope: Pix settled in the SPI
+    method: BCB SPI / Estatísticas do Pix
+    source_url: https://olinda.bcb.gov.br/olinda/servico/SPI/versao/v1/odata/PixLiquidadosAtual?$format=json
+    start_date: "2020-11-01"
+
+  - series_id: bcb_spi_pix_value_monthly
+    source_id: bcb_olinda_spi
+    connector: bcb_spi_pix
+    source_series_code: "SPI/PixLiquidadosAtual/Total"
+    spi_aggregate: pix_value
+    name: Pix transactions settled in the SPI, monthly value
+    description: >-
+      Valor mensal das transações Pix liquidadas no SPI (soma dos dias do mês). A fonte
+      publica o valor em R$ mil; convertido para R$ bilhões. Apenas meses completos.
+    unit: BRL billions, nominal
+    frequency: monthly
+    concept: instant-payment transaction value
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: daily value summed to calendar month, in BRL billions
+    scope: Pix settled in the SPI
+    method: BCB SPI / Estatísticas do Pix
+    source_url: https://olinda.bcb.gov.br/olinda/servico/SPI/versao/v1/odata/PixLiquidadosAtual?$format=json
+    start_date: "2020-11-01"
+
+  # Penetração digital — PNAD Contínua TIC (IBGE/SIDRA), anual. Séries ANUAIS, não devem
+  # ser misturadas no mesmo gráfico com as séries mensais do Pix (frequência distinta).
+  # Domicílios com utilização da internet: tabela 7307, variável 9784 (distribuição
+  # percentual dos domicílios), situação Total (c1=6795), classe 688 = 48534 (Havia
+  # utilização de internet).
+  - series_id: ibge_tic_domicilios_internet
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "7307/9784"
+    name: Households with internet use (PNAD Continuous ICT)
+    description: >-
+      Percentual de domicílios particulares permanentes em que havia utilização da internet.
+      PNAD Contínua — Tecnologia da Informação e Comunicação (TIC).
+    unit: percent of households
+    frequency: yearly
+    concept: digital access (households)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: share of households with internet use
+    scope: Permanent private households
+    method: PNAD Continuous ICT supplement
+    source_url: https://sidra.ibge.gov.br/tabela/7307
+    sidra_url: https://apisidra.ibge.gov.br/values/t/7307/n1/all/v/9784/p/all/c1/6795/c688/48534
+    sidra_period_key: D3C
+    start_date: "2016-01-01"
+
+  # Pessoas de 10+ que usaram a internet nos últimos 3 meses: tabela 4752, variável 5000
+  # (%), situação Total (c1=6795), sexo Total (c2=6794). Indicador ODS 17.8.1.
+  - series_id: ibge_tic_pessoas_internet
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "4752/5000"
+    name: People aged 10+ who used the internet (PNAD Continuous ICT)
+    description: >-
+      Percentual de pessoas de 10 anos ou mais de idade que utilizaram a internet no período
+      de referência dos últimos três meses. PNAD Contínua TIC, indicador ODS 17.8.1.
+    unit: percent of people aged 10+
+    frequency: yearly
+    concept: digital access (individuals)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: share of people aged 10+ who used the internet
+    scope: People aged 10 or older
+    method: PNAD Continuous ICT supplement
+    source_url: https://sidra.ibge.gov.br/tabela/4752
+    sidra_url: https://apisidra.ibge.gov.br/values/t/4752/n1/all/v/5000/p/all/c1/6795/c2/6794
+    sidra_period_key: D3C
+    start_date: "2016-01-01"
+
+  # Pessoas de 10+ que tinham telefone móvel celular para uso pessoal: tabela 6863,
+  # variável 5039 (%), sexo Total (c2=6794), situação Total (c1=6795). Indicador ODS 5.b.1.
+  - series_id: ibge_tic_pessoas_celular
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "6863/5039"
+    name: People aged 10+ with a personal mobile phone (PNAD Continuous ICT)
+    description: >-
+      Percentual de pessoas de 10 anos ou mais de idade que tinham telefone móvel celular
+      para uso pessoal. PNAD Contínua TIC, indicador ODS 5.b.1.
+    unit: percent of people aged 10+
+    frequency: yearly
+    concept: digital access (individuals)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: share of people aged 10+ with a personal mobile phone
+    scope: People aged 10 or older
+    method: PNAD Continuous ICT supplement
+    source_url: https://sidra.ibge.gov.br/tabela/6863
+    sidra_url: https://apisidra.ibge.gov.br/values/t/6863/n1/all/v/5039/p/all/c2/6794/c1/6795
+    sidra_period_key: D3C
+    start_date: "2016-01-01"
+
+  # --- Acesso / penetração: PNAD Contínua TIC (IBGE/SIDRA), anual ---
+  # Domicílios com microcomputador (sem tablet): tabela 7302, variável 9784 (distribuição
+  # percentual dos domicílios), situação Total (c1=6795), c687=48518 (Havia microcomputador).
+  - series_id: ibge_tic_domicilios_computador
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "7302/9784"
+    name: Households with a computer (PNAD Continuous ICT)
+    description: >-
+      Percentual de domicílios particulares permanentes em que havia microcomputador.
+      PNAD Contínua TIC.
+    unit: percent of households
+    frequency: yearly
+    concept: digital access (households)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: share of households with a computer
+    scope: Permanent private households
+    method: PNAD Continuous ICT supplement
+    source_url: https://sidra.ibge.gov.br/tabela/7302
+    sidra_url: https://apisidra.ibge.gov.br/values/t/7302/n1/all/v/9784/p/all/c1/6795/c687/48518
+    sidra_period_key: D3C
+    start_date: "2016-01-01"
+
+  # Acesso à internet por situação do domicílio (urbano/rural): tabela 7307, variável 9784,
+  # c688=48534 (Havia utilização de internet), c1=1 (Urbana) / c1=2 (Rural).
+  - series_id: ibge_tic_internet_urbana
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "7307/9784/c1=1"
+    name: Households with internet — urban (PNAD Continuous ICT)
+    description: >-
+      Percentual de domicílios urbanos em que havia utilização da internet. PNAD Contínua TIC.
+    unit: percent of households
+    frequency: yearly
+    concept: digital access (households)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: share of urban households with internet use
+    scope: Permanent private households, urban
+    method: PNAD Continuous ICT supplement
+    source_url: https://sidra.ibge.gov.br/tabela/7307
+    sidra_url: https://apisidra.ibge.gov.br/values/t/7307/n1/all/v/9784/p/all/c1/1/c688/48534
+    sidra_period_key: D3C
+    start_date: "2016-01-01"
+
+  - series_id: ibge_tic_internet_rural
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "7307/9784/c1=2"
+    name: Households with internet — rural (PNAD Continuous ICT)
+    description: >-
+      Percentual de domicílios rurais em que havia utilização da internet. PNAD Contínua TIC.
+    unit: percent of households
+    frequency: yearly
+    concept: digital access (households)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: share of rural households with internet use
+    scope: Permanent private households, rural
+    method: PNAD Continuous ICT supplement
+    source_url: https://sidra.ibge.gov.br/tabela/7307
+    sidra_url: https://apisidra.ibge.gov.br/values/t/7307/n1/all/v/9784/p/all/c1/2/c688/48534
+    sidra_period_key: D3C
+    start_date: "2016-01-01"
+
+  # Tipo de conexão à internet no domicílio: tabela 7313, variável 10630 (distribuição
+  # percentual dos domicílios com internet), c691=33336 (Banda larga fixa) / 33338 (Banda
+  # larga móvel). Denominador = domicílios com internet; as categorias se sobrepõem (um
+  # domicílio pode ter as duas), portanto somam mais de 100% — nunca usar em área empilhada.
+  - series_id: ibge_tic_conexao_fixa
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "7313/10630/33336"
+    name: Internet households using fixed broadband (PNAD Continuous ICT)
+    description: >-
+      Percentual dos domicílios com utilização da internet em que a conexão era por banda
+      larga fixa. PNAD Contínua TIC.
+    unit: percent of internet-using households
+    frequency: yearly
+    concept: digital access (connection type)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: share of internet households using fixed broadband
+    scope: Permanent private households with internet use
+    method: PNAD Continuous ICT supplement
+    source_url: https://sidra.ibge.gov.br/tabela/7313
+    sidra_url: https://apisidra.ibge.gov.br/values/t/7313/n1/all/v/10630/p/all/c691/33336
+    sidra_period_key: D3C
+    start_date: "2016-01-01"
+
+  - series_id: ibge_tic_conexao_movel
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "7313/10630/33338"
+    name: Internet households using mobile broadband (PNAD Continuous ICT)
+    description: >-
+      Percentual dos domicílios com utilização da internet em que a conexão era por banda
+      larga móvel. PNAD Contínua TIC.
+    unit: percent of internet-using households
+    frequency: yearly
+    concept: digital access (connection type)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: share of internet households using mobile broadband
+    scope: Permanent private households with internet use
+    method: PNAD Continuous ICT supplement
+    source_url: https://sidra.ibge.gov.br/tabela/7313
+    sidra_url: https://apisidra.ibge.gov.br/values/t/7313/n1/all/v/10630/p/all/c691/33338
+    sidra_period_key: D3C
+    start_date: "2016-01-01"
+
+  # Acesso à internet por Grandes Regiões (n2): tabela 7307, variável 9784, c688=48534,
+  # situação Total (c1=6795). Uma série por região para respeitar a unicidade (série, data).
+  - series_id: ibge_tic_internet_norte
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "7307/9784/n2=1"
+    name: Households with internet — North region (PNAD Continuous ICT)
+    description: >-
+      Percentual de domicílios da Região Norte em que havia utilização da internet.
+      PNAD Contínua TIC.
+    unit: percent of households
+    frequency: yearly
+    concept: digital access (households)
+    geography: Norte
+    seasonal_adjustment: not seasonally adjusted
+    transformation: share of households with internet use, North region
+    scope: Permanent private households
+    method: PNAD Continuous ICT supplement
+    source_url: https://sidra.ibge.gov.br/tabela/7307
+    sidra_url: https://apisidra.ibge.gov.br/values/t/7307/n2/1/v/9784/p/all/c1/6795/c688/48534
+    sidra_period_key: D3C
+    start_date: "2016-01-01"
+
+  - series_id: ibge_tic_internet_nordeste
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "7307/9784/n2=2"
+    name: Households with internet — Northeast region (PNAD Continuous ICT)
+    description: >-
+      Percentual de domicílios da Região Nordeste em que havia utilização da internet.
+      PNAD Contínua TIC.
+    unit: percent of households
+    frequency: yearly
+    concept: digital access (households)
+    geography: Nordeste
+    seasonal_adjustment: not seasonally adjusted
+    transformation: share of households with internet use, Northeast region
+    scope: Permanent private households
+    method: PNAD Continuous ICT supplement
+    source_url: https://sidra.ibge.gov.br/tabela/7307
+    sidra_url: https://apisidra.ibge.gov.br/values/t/7307/n2/2/v/9784/p/all/c1/6795/c688/48534
+    sidra_period_key: D3C
+    start_date: "2016-01-01"
+
+  - series_id: ibge_tic_internet_sudeste
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "7307/9784/n2=3"
+    name: Households with internet — Southeast region (PNAD Continuous ICT)
+    description: >-
+      Percentual de domicílios da Região Sudeste em que havia utilização da internet.
+      PNAD Contínua TIC.
+    unit: percent of households
+    frequency: yearly
+    concept: digital access (households)
+    geography: Sudeste
+    seasonal_adjustment: not seasonally adjusted
+    transformation: share of households with internet use, Southeast region
+    scope: Permanent private households
+    method: PNAD Continuous ICT supplement
+    source_url: https://sidra.ibge.gov.br/tabela/7307
+    sidra_url: https://apisidra.ibge.gov.br/values/t/7307/n2/3/v/9784/p/all/c1/6795/c688/48534
+    sidra_period_key: D3C
+    start_date: "2016-01-01"
+
+  - series_id: ibge_tic_internet_sul
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "7307/9784/n2=4"
+    name: Households with internet — South region (PNAD Continuous ICT)
+    description: >-
+      Percentual de domicílios da Região Sul em que havia utilização da internet.
+      PNAD Contínua TIC.
+    unit: percent of households
+    frequency: yearly
+    concept: digital access (households)
+    geography: Sul
+    seasonal_adjustment: not seasonally adjusted
+    transformation: share of households with internet use, South region
+    scope: Permanent private households
+    method: PNAD Continuous ICT supplement
+    source_url: https://sidra.ibge.gov.br/tabela/7307
+    sidra_url: https://apisidra.ibge.gov.br/values/t/7307/n2/4/v/9784/p/all/c1/6795/c688/48534
+    sidra_period_key: D3C
+    start_date: "2016-01-01"
+
+  - series_id: ibge_tic_internet_centro_oeste
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "7307/9784/n2=5"
+    name: Households with internet — Central-West region (PNAD Continuous ICT)
+    description: >-
+      Percentual de domicílios da Região Centro-Oeste em que havia utilização da internet.
+      PNAD Contínua TIC.
+    unit: percent of households
+    frequency: yearly
+    concept: digital access (households)
+    geography: Centro-Oeste
+    seasonal_adjustment: not seasonally adjusted
+    transformation: share of households with internet use, Central-West region
+    scope: Permanent private households
+    method: PNAD Continuous ICT supplement
+    source_url: https://sidra.ibge.gov.br/tabela/7307
+    sidra_url: https://apisidra.ibge.gov.br/values/t/7307/n2/5/v/9784/p/all/c1/6795/c688/48534
+    sidra_period_key: D3C
+    start_date: "2016-01-01"
+
+  # E-commerce: tabela 7391, variável 5000 (% das pessoas de 10+ que usaram a internet),
+  # finalidade c424=59941 (Comprar ou encomendar bens ou serviços). Coletado apenas a partir
+  # de 2022 (redesenho do questionário); anos anteriores retornam "-" e são descartados.
+  - series_id: ibge_tic_ecommerce
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: "7391/5000/59941"
+    name: Internet users who bought online (PNAD Continuous ICT)
+    description: >-
+      Percentual de pessoas de 10 anos ou mais que usaram a internet e a utilizaram para
+      comprar ou encomendar bens ou serviços. PNAD Contínua TIC (coletado a partir de 2022).
+    unit: percent of internet users (10+)
+    frequency: yearly
+    concept: digital use (e-commerce)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: share of internet users (10+) who bought online
+    scope: Internet users aged 10 or older
+    method: PNAD Continuous ICT supplement
+    source_url: https://sidra.ibge.gov.br/tabela/7391
+    sidra_url: https://apisidra.ibge.gov.br/values/t/7391/n1/all/v/5000/p/all/c424/59941
+    sidra_period_key: D3C
+    start_date: "2022-01-01"
+
+  # --- Pagamentos digitais: instrumentos de pagamento de varejo (BCB Olinda MPV), mensal ---
+  # MeiosdePagamentosMensalDA: quantidade<Inst> em milhares, valor<Inst> em R$ milhões.
+  # Valores convertidos para R$ bilhões (/1000) e quantidades para milhões (/1000).
+  # O Pix do MPV inclui liquidação dentro E fora do SPI — medida mais ampla que a série
+  # bcb_spi_pix_* (somente SPI); não misturar as duas no mesmo gráfico.
+  - series_id: bcb_mpv_pix_value
+    source_id: bcb_olinda_mpv
+    connector: bcb_mpv_monthly
+    source_series_code: "MPV/MeiosdePagamentosMensalDA/valorPix"
+    mpv_field: valorPix
+    mpv_divisor: 1000
+    name: Pix transaction value (all settlement), monthly
+    description: >-
+      Valor mensal das transações Pix liquidadas dentro e fora do SPI. Fonte publica em
+      R$ milhões; convertido para R$ bilhões.
+    unit: BRL billions, nominal
+    frequency: monthly
+    concept: payment instrument transaction value
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly value, converted to BRL billions
+    scope: Pix settled inside and outside the SPI
+    method: BCB Estatísticas de Meios de Pagamentos
+    source_url: https://olinda.bcb.gov.br/olinda/servico/MPV_DadosAbertos/versao/v1/odata/
+    start_date: "2020-11-01"
+
+  - series_id: bcb_mpv_pix_count
+    source_id: bcb_olinda_mpv
+    connector: bcb_mpv_monthly
+    source_series_code: "MPV/MeiosdePagamentosMensalDA/quantidadePix"
+    mpv_field: quantidadePix
+    mpv_divisor: 1000
+    name: Pix transaction count (all settlement), monthly
+    description: >-
+      Quantidade mensal de transações Pix liquidadas dentro e fora do SPI. Fonte publica em
+      milhares; convertida para milhões de transações.
+    unit: millions of transactions
+    frequency: monthly
+    concept: payment instrument transaction count
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly count, converted to millions
+    scope: Pix settled inside and outside the SPI
+    method: BCB Estatísticas de Meios de Pagamentos
+    source_url: https://olinda.bcb.gov.br/olinda/servico/MPV_DadosAbertos/versao/v1/odata/
+    start_date: "2020-11-01"
+
+  - series_id: bcb_mpv_ted_value
+    source_id: bcb_olinda_mpv
+    connector: bcb_mpv_monthly
+    source_series_code: "MPV/MeiosdePagamentosMensalDA/valorTED"
+    mpv_field: valorTED
+    mpv_divisor: 1000
+    name: TED transaction value, monthly
+    description: >-
+      Valor mensal das transferências por TED. Fonte publica em R$ milhões; convertido para
+      R$ bilhões.
+    unit: BRL billions, nominal
+    frequency: monthly
+    concept: payment instrument transaction value
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly value, converted to BRL billions
+    scope: Transferência Eletrônica Direta (TED)
+    method: BCB Estatísticas de Meios de Pagamentos
+    source_url: https://olinda.bcb.gov.br/olinda/servico/MPV_DadosAbertos/versao/v1/odata/
+    start_date: "2002-04-01"
+
+  - series_id: bcb_mpv_ted_count
+    source_id: bcb_olinda_mpv
+    connector: bcb_mpv_monthly
+    source_series_code: "MPV/MeiosdePagamentosMensalDA/quantidadeTED"
+    mpv_field: quantidadeTED
+    mpv_divisor: 1000
+    name: TED transaction count, monthly
+    description: >-
+      Quantidade mensal de transferências por TED. Fonte publica em milhares; convertida
+      para milhões de transações.
+    unit: millions of transactions
+    frequency: monthly
+    concept: payment instrument transaction count
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly count, converted to millions
+    scope: Transferência Eletrônica Direta (TED)
+    method: BCB Estatísticas de Meios de Pagamentos
+    source_url: https://olinda.bcb.gov.br/olinda/servico/MPV_DadosAbertos/versao/v1/odata/
+    start_date: "2002-04-01"
+
+  - series_id: bcb_mpv_boleto_value
+    source_id: bcb_olinda_mpv
+    connector: bcb_mpv_monthly
+    source_series_code: "MPV/MeiosdePagamentosMensalDA/valorBoleto"
+    mpv_field: valorBoleto
+    mpv_divisor: 1000
+    name: Boleto transaction value, monthly
+    description: >-
+      Valor mensal dos boletos interbancários liquidados. Fonte publica em R$ milhões;
+      convertido para R$ bilhões.
+    unit: BRL billions, nominal
+    frequency: monthly
+    concept: payment instrument transaction value
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly value, converted to BRL billions
+    scope: Boletos interbancários (CIP-SILOC)
+    method: BCB Estatísticas de Meios de Pagamentos
+    source_url: https://olinda.bcb.gov.br/olinda/servico/MPV_DadosAbertos/versao/v1/odata/
+    start_date: "2002-04-01"
+
+  - series_id: bcb_mpv_boleto_count
+    source_id: bcb_olinda_mpv
+    connector: bcb_mpv_monthly
+    source_series_code: "MPV/MeiosdePagamentosMensalDA/quantidadeBoleto"
+    mpv_field: quantidadeBoleto
+    mpv_divisor: 1000
+    name: Boleto transaction count, monthly
+    description: >-
+      Quantidade mensal de boletos interbancários liquidados. Fonte publica em milhares;
+      convertida para milhões de transações.
+    unit: millions of transactions
+    frequency: monthly
+    concept: payment instrument transaction count
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly count, converted to millions
+    scope: Boletos interbancários (CIP-SILOC)
+    method: BCB Estatísticas de Meios de Pagamentos
+    source_url: https://olinda.bcb.gov.br/olinda/servico/MPV_DadosAbertos/versao/v1/odata/
+    start_date: "2002-04-01"
+
+  - series_id: bcb_mpv_cheque_value
+    source_id: bcb_olinda_mpv
+    connector: bcb_mpv_monthly
+    source_series_code: "MPV/MeiosdePagamentosMensalDA/valorCheque"
+    mpv_field: valorCheque
+    mpv_divisor: 1000
+    name: Cheque transaction value, monthly
+    description: >-
+      Valor mensal dos cheques interbancários compensados. Fonte publica em R$ milhões;
+      convertido para R$ bilhões.
+    unit: BRL billions, nominal
+    frequency: monthly
+    concept: payment instrument transaction value
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly value, converted to BRL billions
+    scope: Cheques interbancários (Compe)
+    method: BCB Estatísticas de Meios de Pagamentos
+    source_url: https://olinda.bcb.gov.br/olinda/servico/MPV_DadosAbertos/versao/v1/odata/
+    start_date: "2002-04-01"
+
+  - series_id: bcb_mpv_cheque_count
+    source_id: bcb_olinda_mpv
+    connector: bcb_mpv_monthly
+    source_series_code: "MPV/MeiosdePagamentosMensalDA/quantidadeCheque"
+    mpv_field: quantidadeCheque
+    mpv_divisor: 1000
+    name: Cheque transaction count, monthly
+    description: >-
+      Quantidade mensal de cheques interbancários compensados. Fonte publica em milhares;
+      convertida para milhões de transações.
+    unit: millions of transactions
+    frequency: monthly
+    concept: payment instrument transaction count
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: monthly count, converted to millions
+    scope: Cheques interbancários (Compe)
+    method: BCB Estatísticas de Meios de Pagamentos
+    source_url: https://olinda.bcb.gov.br/olinda/servico/MPV_DadosAbertos/versao/v1/odata/
+    start_date: "2002-04-01"
+
+  # Cartões por função (BCB Olinda MPV), trimestral. Transações nacionais agregadas por
+  # função. Valor em R$ -> R$ bilhões (/1e9); quantidade -> milhões (/1e6). Frequência
+  # trimestral: nunca misturar com as séries mensais de instrumentos.
+  - series_id: bcb_mpv_cartao_credito_value
+    source_id: bcb_olinda_mpv
+    connector: bcb_mpv_cartoes
+    source_series_code: "MPV/Quantidadeetransacoesdecartoes/Credito/valor"
+    mpv_funcao: Crédito
+    mpv_field: valorTransacoesNacionais
+    mpv_divisor: 1000000000
+    name: Credit card transaction value (national), quarterly
+    description: >-
+      Valor trimestral das transações nacionais com cartão de crédito, somado entre
+      bandeiras/produtos. Fonte em R$; convertido para R$ bilhões.
+    unit: BRL billions, nominal
+    frequency: quarterly
+    concept: card transaction value
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: quarterly value, summed by função, converted to BRL billions
+    scope: Cartão de crédito, transações nacionais
+    method: BCB Estatísticas de Meios de Pagamentos
+    source_url: https://olinda.bcb.gov.br/olinda/servico/MPV_DadosAbertos/versao/v1/odata/
+    start_date: "2011-01-01"
+
+  - series_id: bcb_mpv_cartao_debito_value
+    source_id: bcb_olinda_mpv
+    connector: bcb_mpv_cartoes
+    source_series_code: "MPV/Quantidadeetransacoesdecartoes/Debito/valor"
+    mpv_funcao: Débito
+    mpv_field: valorTransacoesNacionais
+    mpv_divisor: 1000000000
+    name: Debit card transaction value (national), quarterly
+    description: >-
+      Valor trimestral das transações nacionais com cartão de débito, somado entre
+      bandeiras/produtos. Fonte em R$; convertido para R$ bilhões.
+    unit: BRL billions, nominal
+    frequency: quarterly
+    concept: card transaction value
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: quarterly value, summed by função, converted to BRL billions
+    scope: Cartão de débito, transações nacionais
+    method: BCB Estatísticas de Meios de Pagamentos
+    source_url: https://olinda.bcb.gov.br/olinda/servico/MPV_DadosAbertos/versao/v1/odata/
+    start_date: "2011-01-01"
+
+  - series_id: bcb_mpv_cartao_credito_count
+    source_id: bcb_olinda_mpv
+    connector: bcb_mpv_cartoes
+    source_series_code: "MPV/Quantidadeetransacoesdecartoes/Credito/qtd"
+    mpv_funcao: Crédito
+    mpv_field: qtdTransacoesNacionais
+    mpv_divisor: 1000000
+    name: Credit card transaction count (national), quarterly
+    description: >-
+      Quantidade trimestral de transações nacionais com cartão de crédito, somada entre
+      bandeiras/produtos; convertida para milhões de transações.
+    unit: millions of transactions
+    frequency: quarterly
+    concept: card transaction count
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: quarterly count, summed by função, converted to millions
+    scope: Cartão de crédito, transações nacionais
+    method: BCB Estatísticas de Meios de Pagamentos
+    source_url: https://olinda.bcb.gov.br/olinda/servico/MPV_DadosAbertos/versao/v1/odata/
+    start_date: "2011-01-01"
+
+  - series_id: bcb_mpv_cartao_debito_count
+    source_id: bcb_olinda_mpv
+    connector: bcb_mpv_cartoes
+    source_series_code: "MPV/Quantidadeetransacoesdecartoes/Debito/qtd"
+    mpv_funcao: Débito
+    mpv_field: qtdTransacoesNacionais
+    mpv_divisor: 1000000
+    name: Debit card transaction count (national), quarterly
+    description: >-
+      Quantidade trimestral de transações nacionais com cartão de débito, somada entre
+      bandeiras/produtos; convertida para milhões de transações.
+    unit: millions of transactions
+    frequency: quarterly
+    concept: card transaction count
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: quarterly count, summed by função, converted to millions
+    scope: Cartão de débito, transações nacionais
+    method: BCB Estatísticas de Meios de Pagamentos
+    source_url: https://olinda.bcb.gov.br/olinda/servico/MPV_DadosAbertos/versao/v1/odata/
+    start_date: "2011-01-01"
+
+  # Usuários cadastrados no DICT (chaves Pix), mensal (BCB Olinda Pix_DadosAbertos).
+  # Estoque de usuários PF, PJ e total; convertido para milhões de usuários.
+  - series_id: bcb_pix_usuarios_pf
+    source_id: bcb_olinda_pix
+    connector: pix_dict_usuarios
+    source_series_code: "Pix/PixUsuariosCadastradosDICT/PF"
+    dict_field: qtdUsuariosPessoaFisica
+    name: Pix DICT users — individuals (PF)
+    description: >-
+      Estoque mensal de usuários pessoa física cadastrados no DICT (diretório de chaves Pix);
+      convertido para milhões de usuários.
+    unit: millions of users
+    frequency: monthly
+    concept: registered Pix users (stock)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: end-of-month stock, in millions
+    scope: DICT-registered users, pessoa física
+    method: BCB Estatísticas do Pix (DICT)
+    source_url: https://olinda.bcb.gov.br/olinda/servico/Pix_DadosAbertos/versao/v1/odata/
+    start_date: "2020-11-01"
+
+  - series_id: bcb_pix_usuarios_pj
+    source_id: bcb_olinda_pix
+    connector: pix_dict_usuarios
+    source_series_code: "Pix/PixUsuariosCadastradosDICT/PJ"
+    dict_field: qtdUsuariosPessoaJuridica
+    name: Pix DICT users — businesses (PJ)
+    description: >-
+      Estoque mensal de usuários pessoa jurídica cadastrados no DICT (diretório de chaves
+      Pix); convertido para milhões de usuários.
+    unit: millions of users
+    frequency: monthly
+    concept: registered Pix users (stock)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: end-of-month stock, in millions
+    scope: DICT-registered users, pessoa jurídica
+    method: BCB Estatísticas do Pix (DICT)
+    source_url: https://olinda.bcb.gov.br/olinda/servico/Pix_DadosAbertos/versao/v1/odata/
+    start_date: "2020-11-01"
+
+  - series_id: bcb_pix_usuarios_total
+    source_id: bcb_olinda_pix
+    connector: pix_dict_usuarios
+    source_series_code: "Pix/PixUsuariosCadastradosDICT/Total"
+    dict_field: qtdUsuariosCadastradosDICTTotal
+    name: Pix DICT users — total
+    description: >-
+      Estoque mensal total de usuários cadastrados no DICT (diretório de chaves Pix);
+      convertido para milhões de usuários.
+    unit: millions of users
+    frequency: monthly
+    concept: registered Pix users (stock)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: end-of-month stock, in millions
+    scope: DICT-registered users, total
+    method: BCB Estatísticas do Pix (DICT)
+    source_url: https://olinda.bcb.gov.br/olinda/servico/Pix_DadosAbertos/versao/v1/odata/
+    start_date: "2020-11-01"
+  # TODO(anatel): acessos de banda larga fixa / telefonia móvel da Anatel não têm API JSON
+  # pública estável e simples (dados.gov.br exige credencial; downloads PDA são ZIPs de
+  # microdados). Não adicionado para evitar scraper frágil — o tipo de conexão (fixa/móvel)
+  # já é coberto pela PNAD-C TIC (tabela 7313). Adicionar quando houver série oficial estável.
+  # TODO(pix-pf-pj-fluxo): Pix por tipo de pagador (PAG_PFPJ) está em
+  # Pix_DadosAbertos/EstatisticasTransacoesPix, mas exige o parâmetro Database (um período por
+  # chamada) e é altamente desagregado; deixado de fora por ser frágil/pesado. O recorte PF/PJ
+  # de usuários cadastrados (DICT) já oferece a dimensão PF vs PJ de forma limpa.
+
+  # --- Apostas (bets): tributação federal do setor de jogos de azar e apostas ---
+  - series_id: rfb_cnae_apostas_arrecadacao
+    source_id: rfb_cnae
+    connector: rfb_cnae
+    source_series_code: "92"
+    rfb_cnae_division: "92"
+    name: Federal tax revenue from gambling and betting (CNAE 92)
+    description: >-
+      Receita administrada pela Receita Federal arrecadada da divisão econômica 92 da CNAE
+      ("Atividades de exploração de jogos de azar e apostas"), soma das linhas tributárias
+      de primeiro nível (IRPJ, CSLL, Cofins, PIS/Pasep, IRRF, etc.) por ano. Capta o mercado
+      regulado de apostas de quota fixa (bets) a partir de 2025, quando passou a incidir
+      tributação federal sobre o setor — daí o salto frente aos anos anteriores. É o tributo
+      pago pelas empresas do setor, não o GGR nem o volume apostado.
+    unit: BRL millions
+    frequency: annual
+    concept: federal tax revenue by economic activity
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: annual sum of top-level tax lines, nominal BRL
+    scope: CNAE division 92 (jogos de azar e apostas)
+    method: RFB receita administrada por divisão econômica da CNAE
+    source_url: https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/dados-abertos/receitadata/arrecadacao/arrecadacao-por-divisao-economica-da-cnae
+    start_date: "2011-01-01"
+
+  # --- Apostas (bets): estimativa pontual do BCB de movimentação via Pix (ago/2024) ---
+  # Levantamento único do Estudo Especial 119 do BCB. NÃO é série mensal — é um retrato de
+  # agosto/2024. As três séries abaixo são as três colunas da tabela "Comparativo entre
+  # apostas online e loterias" (média mensal em 2024, R$ bilhões), transcritas literalmente,
+  # uma série por categoria (raw.observations é chaveada por série+data). O gráfico que as usa
+  # é rotulado como estimativa pontual e não é atualizado pelo cron diário.
+  - series_id: bets_bcb_pix_loterias_ago2024
+    source_id: bcb_estudo_apostas
+    connector: static_table
+    source_series_code: "EE119-loterias"
+    name: BCB estimate — monthly lottery Pix inflows (Aug/2024)
+    description: >-
+      Estimativa do BCB (Estudo Especial 119) para a média mensal em 2024 dos valores das
+      loterias da Caixa (R$ bilhões), agosto/2024. Categoria "Loterias" da tabela comparativa
+      do estudo. Estimativa pontual — não é série temporal.
+    unit: BRL billions
+    frequency: one-off estimate
+    concept: estimated monthly gambling inflows (BCB special study)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: published point estimate, monthly average 2024, nominal BRL
+    scope: Loterias Caixa (média mensal 2024)
+    method: BCB Estudo Especial 119 (estimativa via Pix / dados de loteria da Caixa)
+    source_url: https://www.bcb.gov.br/conteudo/relatorioinflacao/EstudosEspeciais/EE119_Analise_tecnica_sobre_o_mercado_de_apostas_online_no_Brasil_e_o_perfil_dos_apostadores.pdf
+    static_observations:
+      - date: "2024-08-01"
+        value: "1.9"
+        note: "Tabela 'Comparativo entre apostas online e loterias', coluna Loterias, R$ bi"
+
+  - series_id: bets_bcb_pix_cnae92_ago2024
+    source_id: bcb_estudo_apostas
+    connector: static_table
+    source_series_code: "EE119-cnae92"
+    name: BCB estimate — monthly betting Pix inflows, CNAE 92 firms (Aug/2024)
+    description: >-
+      Estimativa do BCB (Estudo Especial 119) para a média mensal em 2024 das transferências
+      Pix recebidas por empresas de jogos de azar e apostas registradas no CNAE 92 (R$
+      bilhões), agosto/2024. Categoria "Jogos de azar e apostas (CNAE 92x)" da tabela do
+      estudo. Estimativa pontual — não é série temporal.
+    unit: BRL billions
+    frequency: one-off estimate
+    concept: estimated monthly betting inflows (BCB special study)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: published point estimate, monthly average 2024, nominal BRL
+    scope: Empresas no CNAE 92 (média mensal 2024)
+    method: BCB Estudo Especial 119 (estimativa de recebimentos via Pix)
+    source_url: https://www.bcb.gov.br/conteudo/relatorioinflacao/EstudosEspeciais/EE119_Analise_tecnica_sobre_o_mercado_de_apostas_online_no_Brasil_e_o_perfil_dos_apostadores.pdf
+    static_observations:
+      - date: "2024-08-01"
+        value: "0.3"
+        note: "Tabela comparativa, coluna Jogos de azar e apostas (CNAE 92x), R$ bi"
+
+  - series_id: bets_bcb_pix_outros_ago2024
+    source_id: bcb_estudo_apostas
+    connector: static_table
+    source_series_code: "EE119-outros"
+    name: BCB estimate — monthly betting Pix inflows, non-CNAE-92 firms (Aug/2024)
+    description: >-
+      Estimativa do BCB (Estudo Especial 119) para a média mensal em 2024 das transferências
+      Pix recebidas por empresas de apostas que NÃO se classificam no CNAE 92 (R$ bilhões),
+      agosto/2024 — a maior parte da movimentação. Categoria "Jogos de azar e apostas (outros
+      CNAEs)" da tabela do estudo. Estimativa pontual — não é série temporal.
+    unit: BRL billions
+    frequency: one-off estimate
+    concept: estimated monthly betting inflows (BCB special study)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: published point estimate, monthly average 2024, nominal BRL
+    scope: Empresas de apostas fora do CNAE 92 (média mensal 2024)
+    method: BCB Estudo Especial 119 (estimativa de recebimentos via Pix)
+    source_url: https://www.bcb.gov.br/conteudo/relatorioinflacao/EstudosEspeciais/EE119_Analise_tecnica_sobre_o_mercado_de_apostas_online_no_Brasil_e_o_perfil_dos_apostadores.pdf
+    static_observations:
+      - date: "2024-08-01"
+        value: "20.8"
+        note: "Tabela comparativa, coluna Jogos de azar e apostas (outros CNAEs), R$ bi"
+
+  # --- Apostas (bets): SPA/MF Panoramas — GGR, destinações, CPFs e contas (snapshots 2025) ---
+  # Valores transcritos literalmente das apresentações da SPA/MF (1º Panorama, ago/2025; 2º
+  # Panorama, jan/2026). São retratos acumulados de período, NÃO série temporal. Cada figura é
+  # uma série de ponto único (raw.observations é chaveada por série+data).
+  - series_id: bets_market_2022_est
+    source_id: entain_market
+    connector: static_table
+    source_series_code: "ENTAIN-GGR-2022"
+    name: Brazil betting market GGR estimate, 2022 (Entain)
+    description: >-
+      Estimativa do GGR (receita bruta de jogo) do mercado brasileiro de apostas em 2022,
+      mercado ainda não regulado: US$ 1,5 bi (Entain), ~R$ 7,7 bi ao câmbio médio de 2022.
+      Estimativa de operadora, não oficial; ponto de comparação histórico com o GGR de 2025.
+    unit: BRL billions
+    frequency: period snapshot
+    concept: gross gaming revenue (GGR) estimate, unregulated betting market
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: annual estimate, nominal BRL (converted from USD at 2022 average FX)
+    scope: Mercado de apostas (não regulado, estimativa de operadora)
+    method: Entain (estimativa de mercado), convertido USD→BRL ao câmbio médio de 2022
+    source_url: https://www.infomoney.com.br/esportes/brasil-deve-terminar-2025-como-o-5o-maior-mercado-de-apostas-do-mundo/
+    static_observations:
+      - date: "2022-12-31"
+        value: "7.7"
+        note: "Entain: GGR Brasil 2022 US$ 1,5 bi (10º do mundo); ~R$ 7,7 bi ao câmbio médio de 2022"
+
+  - series_id: spa_ggr_h1_2025
+    source_id: spa_panorama
+    connector: static_table
+    source_series_code: "SPA-GGR-H1-2025"
+    name: SPA — GGR, 1st semester 2025
+    description: >-
+      Receita bruta de jogo (GGR) do mercado regulado de apostas de quota fixa no 1º semestre
+      de 2025 (R$ bilhões), acumulado. Fonte: SPA/MF, 1º Panorama Semestral (ago/2025).
+    unit: BRL billions
+    frequency: period snapshot
+    concept: gross gaming revenue (GGR), regulated betting market
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: accumulated period total, nominal BRL
+    scope: Mercado regulado de apostas de quota fixa
+    method: SPA/MF Panorama (dados acumulados)
+    source_url: https://www.gov.br/fazenda/pt-br/composicao/orgaos/secretaria-de-premios-e-apostas
+    static_observations:
+      - date: "2025-06-30"
+        value: "17.4"
+        note: "1º Panorama Semestral SPA/MF (ago/2025): GGR do semestre R$ 17,4 bi"
+
+  - series_id: spa_ggr_ano_2025
+    source_id: spa_panorama
+    connector: static_table
+    source_series_code: "SPA-GGR-ANO-2025"
+    name: SPA — GGR, full-year 2025
+    description: >-
+      Receita bruta de jogo (GGR) do mercado regulado de apostas de quota fixa no ano de 2025
+      (R$ bilhões), acumulado. Fonte: SPA/MF, 2º Panorama (jan/2026): R$ 36.959.783.379,70.
+    unit: BRL billions
+    frequency: period snapshot
+    concept: gross gaming revenue (GGR), regulated betting market
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: accumulated period total, nominal BRL
+    scope: Mercado regulado de apostas de quota fixa
+    method: SPA/MF Panorama (dados acumulados)
+    source_url: https://www.gov.br/fazenda/pt-br/composicao/orgaos/secretaria-de-premios-e-apostas
+    static_observations:
+      - date: "2025-12-31"
+        value: "36.96"
+        note: "2º Panorama SPA/MF (jan/2026): GGR do período R$ 36.959.783.379,70"
+
+  - series_id: spa_destinacoes_ano_2025
+    source_id: spa_panorama
+    connector: static_table
+    source_series_code: "SPA-DEST-ANO-2025"
+    name: SPA — legal allocations (12%), full-year 2025
+    description: >-
+      Destinações legais (parcela de 12%) do mercado regulado de apostas de quota fixa no ano
+      de 2025 (R$ bilhões), acumulado. Fonte: SPA/MF, 2º Panorama (jan/2026): R$
+      4.532.797.794,92.
+    unit: BRL billions
+    frequency: period snapshot
+    concept: statutory 12% allocations, regulated betting market
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: accumulated period total, nominal BRL
+    scope: Mercado regulado de apostas de quota fixa
+    method: SPA/MF Panorama (dados acumulados)
+    source_url: https://www.gov.br/fazenda/pt-br/composicao/orgaos/secretaria-de-premios-e-apostas
+    static_observations:
+      - date: "2025-12-31"
+        value: "4.53"
+        note: "2º Panorama SPA/MF (jan/2026): destinações legais (12%) R$ 4.532.797.794,92"
+
+  - series_id: spa_contas_marcas_2025
+    source_id: spa_panorama
+    connector: static_table
+    source_series_code: "SPA-CONTAS-MARCAS-2025"
+    name: SPA — active accounts at brands/bets, 2025
+    description: >-
+      Total de contas ativas nas marcas/bets em 2025 (contagem), acumulado. Fonte: SPA/MF, 2º
+      Panorama (jan/2026): 100.775.427.
+    unit: count
+    frequency: period snapshot
+    concept: active betting accounts at brands
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: accumulated period stock
+    scope: Marcas/bets do mercado regulado
+    method: SPA/MF Panorama (dados acumulados)
+    source_url: https://www.gov.br/fazenda/pt-br/composicao/orgaos/secretaria-de-premios-e-apostas
+    static_observations:
+      - date: "2025-12-31"
+        value: "100775427"
+        note: "2º Panorama SPA/MF (jan/2026): total de contas ativas nas marcas/bets"
+
+  - series_id: spa_contas_operadores_2025
+    source_id: spa_panorama
+    connector: static_table
+    source_series_code: "SPA-CONTAS-OPER-2025"
+    name: SPA — active accounts at operators, 2025
+    description: >-
+      Total de contas ativas em operadores/empresas em 2025 (contagem), acumulado. Fonte:
+      SPA/MF, 2º Panorama (jan/2026): 87.671.439.
+    unit: count
+    frequency: period snapshot
+    concept: active betting accounts at operators
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: accumulated period stock
+    scope: Operadores/empresas do mercado regulado
+    method: SPA/MF Panorama (dados acumulados)
+    source_url: https://www.gov.br/fazenda/pt-br/composicao/orgaos/secretaria-de-premios-e-apostas
+    static_observations:
+      - date: "2025-12-31"
+        value: "87671439"
+        note: "2º Panorama SPA/MF (jan/2026): total de contas ativas em operadores/empresas"
+
+  - series_id: spa_cpfs_unicos_2025
+    source_id: spa_panorama
+    connector: static_table
+    source_series_code: "SPA-CPF-2025"
+    name: SPA — unique CPFs that bet, 2025
+    description: >-
+      Total de CPFs únicos que apostaram em 2025 (contagem de pessoas físicas distintas),
+      acumulado. Fonte: SPA/MF, 2º Panorama (jan/2026): 25.245.319.
+    unit: count
+    frequency: period snapshot
+    concept: unique bettors (distinct CPFs)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: accumulated period stock
+    scope: Apostadores únicos do mercado regulado
+    method: SPA/MF Panorama (dados acumulados)
+    source_url: https://www.gov.br/fazenda/pt-br/composicao/orgaos/secretaria-de-premios-e-apostas
+    static_observations:
+      - date: "2025-12-31"
+        value: "25245319"
+        note: "2º Panorama SPA/MF (jan/2026): total de CPFs únicos que apostaram"
+
+  # --- Apostas (bets): BCB EE119 — beneficiários do Bolsa Família e apostas (ago/2024) ---
+  # Estimativa pontual do BCB (Estudo Especial 119), transcrita literalmente. Não é série
+  # temporal. Pessoas em milhões e valores em R$ bilhões (snapshot ago/2024).
+  - series_id: bets_pbf_pessoas_total_ago2024
+    source_id: bcb_estudo_apostas
+    connector: static_table
+    source_series_code: "EE119-PBF-pessoas-total"
+    name: BCB — Bolsa Família beneficiaries who bet (people), Aug/2024
+    description: >-
+      Estimativa do BCB (EE 119) de beneficiários do Bolsa Família que enviaram recursos via
+      Pix a empresas de apostas em agosto/2024 (milhões de pessoas): 5 milhões no total.
+    unit: million people
+    frequency: one-off estimate
+    concept: Bolsa Família beneficiaries who bet (BCB special study)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: published point estimate
+    scope: Beneficiários do PBF (total)
+    method: BCB Estudo Especial 119 (estimativa via Pix)
+    source_url: https://www.bcb.gov.br/conteudo/relatorioinflacao/EstudosEspeciais/EE119_Analise_tecnica_sobre_o_mercado_de_apostas_online_no_Brasil_e_o_perfil_dos_apostadores.pdf
+    static_observations:
+      - date: "2024-08-01"
+        value: "5"
+        note: "EE119: 5 milhões de beneficiários do PBF enviaram recursos às bets via Pix"
+
+  - series_id: bets_pbf_pessoas_chefes_ago2024
+    source_id: bcb_estudo_apostas
+    connector: static_table
+    source_series_code: "EE119-PBF-pessoas-chefes"
+    name: BCB — Bolsa Família family heads who bet (people), Aug/2024
+    description: >-
+      Estimativa do BCB (EE 119) de chefes de família beneficiários do Bolsa Família que
+      apostaram via Pix em agosto/2024 (milhões de pessoas): 4 milhões (70% dos 5 milhões).
+    unit: million people
+    frequency: one-off estimate
+    concept: Bolsa Família family heads who bet (BCB special study)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: published point estimate
+    scope: Chefes de família do PBF (quem recebe o benefício)
+    method: BCB Estudo Especial 119 (estimativa via Pix)
+    source_url: https://www.bcb.gov.br/conteudo/relatorioinflacao/EstudosEspeciais/EE119_Analise_tecnica_sobre_o_mercado_de_apostas_online_no_Brasil_e_o_perfil_dos_apostadores.pdf
+    static_observations:
+      - date: "2024-08-01"
+        value: "4"
+        note: "EE119: 4 milhões (70%) são chefes de família"
+
+  - series_id: bets_pbf_valor_total_ago2024
+    source_id: bcb_estudo_apostas
+    connector: static_table
+    source_series_code: "EE119-PBF-valor-total"
+    name: BCB — value sent to bets by Bolsa Família beneficiaries, Aug/2024
+    description: >-
+      Estimativa do BCB (EE 119) do valor enviado via Pix às empresas de apostas por
+      beneficiários do Bolsa Família em agosto/2024 (R$ bilhões): R$ 3 bilhões (mediana de R$
+      100 por pessoa).
+    unit: BRL billions
+    frequency: one-off estimate
+    concept: value sent to bets by Bolsa Família beneficiaries (BCB special study)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: published point estimate, nominal BRL
+    scope: Beneficiários do PBF (total)
+    method: BCB Estudo Especial 119 (estimativa via Pix)
+    source_url: https://www.bcb.gov.br/conteudo/relatorioinflacao/EstudosEspeciais/EE119_Analise_tecnica_sobre_o_mercado_de_apostas_online_no_Brasil_e_o_perfil_dos_apostadores.pdf
+    static_observations:
+      - date: "2024-08-01"
+        value: "3"
+        note: "EE119: 5 mi de beneficiários enviaram R$ 3 bi (mediana R$ 100/pessoa)"
+
+  - series_id: bets_pbf_valor_chefes_ago2024
+    source_id: bcb_estudo_apostas
+    connector: static_table
+    source_series_code: "EE119-PBF-valor-chefes"
+    name: BCB — value sent to bets by Bolsa Família family heads, Aug/2024
+    description: >-
+      Estimativa do BCB (EE 119) do valor enviado via Pix às empresas de apostas por chefes de
+      família beneficiários do Bolsa Família em agosto/2024 (R$ bilhões): R$ 2 bilhões (67% do
+      total).
+    unit: BRL billions
+    frequency: one-off estimate
+    concept: value sent to bets by Bolsa Família family heads (BCB special study)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: published point estimate, nominal BRL
+    scope: Chefes de família do PBF (quem recebe o benefício)
+    method: BCB Estudo Especial 119 (estimativa via Pix)
+    source_url: https://www.bcb.gov.br/conteudo/relatorioinflacao/EstudosEspeciais/EE119_Analise_tecnica_sobre_o_mercado_de_apostas_online_no_Brasil_e_o_perfil_dos_apostadores.pdf
+    static_observations:
+      - date: "2024-08-01"
+        value: "2"
+        note: "EE119: chefes de família enviaram R$ 2 bi (67% do total)"
+
+  # --- Apostas (bets): destinação estatutária da arrecadação (Lei 14.790/2023, Art. 30) ---
+  # Percentuais legais transcritos literalmente da Lei nº 14.790/2023. Estrutura legal de
+  # alocação (somam 100%), não série temporal nem execução efetiva. Cada fatia é uma série.
+  - series_id: lei14790_dest_esporte
+    source_id: lei_14790
+    connector: static_table
+    source_series_code: "L14790-esporte"
+    name: Lei 14.790 — allocation share to sport
+    description: >-
+      Fatia legal da arrecadação das apostas de quota fixa destinada ao esporte (Lei
+      14.790/2023, Art. 30, inciso III): 36%.
+    unit: percent of allocation
+    frequency: statutory (legal structure)
+    concept: statutory allocation share of betting revenue
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: statutory percentage
+    scope: Destinação legal da arrecadação de apostas
+    method: Lei nº 14.790/2023, Art. 30
+    source_url: https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/l14790.htm
+    static_observations:
+      - date: "2023-12-29"
+        value: "36"
+        note: "Lei 14.790/2023, Art. 30, III: 36% para a área do esporte"
+
+  - series_id: lei14790_dest_turismo
+    source_id: lei_14790
+    connector: static_table
+    source_series_code: "L14790-turismo"
+    name: Lei 14.790 — allocation share to tourism
+    description: >-
+      Fatia legal destinada ao turismo (Lei 14.790/2023, Art. 30, inciso V): 28%.
+    unit: percent of allocation
+    frequency: statutory (legal structure)
+    concept: statutory allocation share of betting revenue
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: statutory percentage
+    scope: Destinação legal da arrecadação de apostas
+    method: Lei nº 14.790/2023, Art. 30
+    source_url: https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/l14790.htm
+    static_observations:
+      - date: "2023-12-29"
+        value: "28"
+        note: "Lei 14.790/2023, Art. 30, V: 28% para a área do turismo"
+
+  - series_id: lei14790_dest_seguranca
+    source_id: lei_14790
+    connector: static_table
+    source_series_code: "L14790-seguranca"
+    name: Lei 14.790 — allocation share to public security
+    description: >-
+      Fatia legal destinada à segurança pública (Lei 14.790/2023, Art. 30, inciso II): 13,6%.
+    unit: percent of allocation
+    frequency: statutory (legal structure)
+    concept: statutory allocation share of betting revenue
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: statutory percentage
+    scope: Destinação legal da arrecadação de apostas
+    method: Lei nº 14.790/2023, Art. 30
+    source_url: https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/l14790.htm
+    static_observations:
+      - date: "2023-12-29"
+        value: "13.6"
+        note: "Lei 14.790/2023, Art. 30, II: 13,60% para a segurança pública"
+
+  - series_id: lei14790_dest_educacao
+    source_id: lei_14790
+    connector: static_table
+    source_series_code: "L14790-educacao"
+    name: Lei 14.790 — allocation share to education
+    description: >-
+      Fatia legal destinada à educação (Lei 14.790/2023, Art. 30, inciso I): 10%.
+    unit: percent of allocation
+    frequency: statutory (legal structure)
+    concept: statutory allocation share of betting revenue
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: statutory percentage
+    scope: Destinação legal da arrecadação de apostas
+    method: Lei nº 14.790/2023, Art. 30
+    source_url: https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/l14790.htm
+    static_observations:
+      - date: "2023-12-29"
+        value: "10"
+        note: "Lei 14.790/2023, Art. 30, I: 10% para a área de educação"
+
+  - series_id: lei14790_dest_seguridade
+    source_id: lei_14790
+    connector: static_table
+    source_series_code: "L14790-seguridade"
+    name: Lei 14.790 — allocation share to social security
+    description: >-
+      Fatia legal destinada à seguridade social (Lei 14.790/2023, Art. 30, inciso IV-A): 10%.
+    unit: percent of allocation
+    frequency: statutory (legal structure)
+    concept: statutory allocation share of betting revenue
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: statutory percentage
+    scope: Destinação legal da arrecadação de apostas
+    method: Lei nº 14.790/2023, Art. 30
+    source_url: https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/l14790.htm
+    static_observations:
+      - date: "2023-12-29"
+        value: "10"
+        note: "Lei 14.790/2023, Art. 30, IV-A: 10% para a seguridade social"
+
+  - series_id: lei14790_dest_saude
+    source_id: lei_14790
+    connector: static_table
+    source_series_code: "L14790-saude"
+    name: Lei 14.790 — allocation share to health
+    description: >-
+      Fatia legal destinada à saúde (Lei 14.790/2023, Art. 30, inciso VI): 1%.
+    unit: percent of allocation
+    frequency: statutory (legal structure)
+    concept: statutory allocation share of betting revenue
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: statutory percentage
+    scope: Destinação legal da arrecadação de apostas
+    method: Lei nº 14.790/2023, Art. 30
+    source_url: https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/l14790.htm
+    static_observations:
+      - date: "2023-12-29"
+        value: "1"
+        note: "Lei 14.790/2023, Art. 30, VI: 1% para o Ministério da Saúde"
+
+  - series_id: lei14790_dest_sociedade_civil
+    source_id: lei_14790
+    connector: static_table
+    source_series_code: "L14790-sociedade-civil"
+    name: Lei 14.790 — allocation share to civil-society entities
+    description: >-
+      Fatia legal destinada a entidades da sociedade civil (Lei 14.790/2023, Art. 30, inciso
+      VII): 0,5%.
+    unit: percent of allocation
+    frequency: statutory (legal structure)
+    concept: statutory allocation share of betting revenue
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: statutory percentage
+    scope: Destinação legal da arrecadação de apostas
+    method: Lei nº 14.790/2023, Art. 30
+    source_url: https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/l14790.htm
+    static_observations:
+      - date: "2023-12-29"
+        value: "0.5"
+        note: "Lei 14.790/2023, Art. 30, VII: 0,50% a entidades da sociedade civil"
+
+  - series_id: lei14790_dest_funapol
+    source_id: lei_14790
+    connector: static_table
+    source_series_code: "L14790-funapol"
+    name: Lei 14.790 — allocation share to Funapol (Polícia Federal)
+    description: >-
+      Fatia legal destinada ao Funapol — Polícia Federal (Lei 14.790/2023, Art. 30, inciso
+      VIII): 0,5%.
+    unit: percent of allocation
+    frequency: statutory (legal structure)
+    concept: statutory allocation share of betting revenue
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: statutory percentage
+    scope: Destinação legal da arrecadação de apostas
+    method: Lei nº 14.790/2023, Art. 30
+    source_url: https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/l14790.htm
+    static_observations:
+      - date: "2023-12-29"
+        value: "0.5"
+        note: "Lei 14.790/2023, Art. 30, VIII: 0,50% para o Funapol (Polícia Federal)"
+
+  - series_id: lei14790_dest_abdi
+    source_id: lei_14790
+    connector: static_table
+    source_series_code: "L14790-abdi"
+    name: Lei 14.790 — allocation share to ABDI
+    description: >-
+      Fatia legal destinada à Agência Brasileira de Desenvolvimento Industrial — ABDI (Lei
+      14.790/2023, Art. 30, inciso IX): 0,4%.
+    unit: percent of allocation
+    frequency: statutory (legal structure)
+    concept: statutory allocation share of betting revenue
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: statutory percentage
+    scope: Destinação legal da arrecadação de apostas
+    method: Lei nº 14.790/2023, Art. 30
+    source_url: https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/l14790.htm
+    static_observations:
+      - date: "2023-12-29"
+        value: "0.4"
+        note: "Lei 14.790/2023, Art. 30, IX: 0,40% para a ABDI"
+

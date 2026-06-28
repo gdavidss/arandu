@@ -1,0 +1,176 @@
+:root {
+  color-scheme: light;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  background: #ffffff;
+}
+
+.dashboard-page,
+.graph-only {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  background: #ffffff;
+}
+
+.dashboard-page {
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+.download-btn {
+  position: fixed;
+  top: 8px;
+  right: 14px;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  color: #6b7280;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.download-btn:hover {
+  color: #1f2937;
+  background: #f0efed;
+}
+
+.download-btn::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  white-space: nowrap;
+  background: #1f2937;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1;
+  padding: 6px 8px;
+  border-radius: 4px;
+  opacity: 0;
+  transform: translateY(-2px);
+  pointer-events: none;
+  transition:
+    opacity 0.12s ease,
+    transform 0.12s ease;
+}
+
+.download-btn:hover::after,
+.download-btn:focus-visible::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.metabase-dashboard {
+  display: block;
+  width: 100%;
+  height: calc(100vh + 96px);
+  min-height: calc(100vh + 96px);
+  border: 0;
+  background: #ffffff;
+}
+
+.fallback {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: #4b5563;
+  font-size: 0.95rem;
+}
+
+/* Full-screen card zoom modal (opens the card's standalone question, which supports
+   native drag-to-zoom and tooltips). */
+.zoom-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  background: rgba(17, 24, 39, 0.55);
+  padding: 2vmin;
+}
+
+.zoom-modal {
+  position: relative;
+  width: 96vw;
+  height: 92vh;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.zoom-frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.zoom-close {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  color: #374151;
+  background: #ffffff;
+  border: 1px solid #d6d3cd;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.zoom-close:hover {
+  background: #f3f4f6;
+}
+
+.zoom-hint {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  max-width: 70%;
+  padding: 6px 12px;
+  font-size: 0.74rem;
+  line-height: 1.25;
+  color: #4b5563;
+  text-align: center;
+  background: rgba(251, 251, 250, 0.95);
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+@media (max-width: 640px) {
+  .download-btn {
+    width: 26px;
+    height: 26px;
+    top: 7px;
+    right: 8px;
+  }
+}

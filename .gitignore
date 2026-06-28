@@ -1,0 +1,20 @@
+.DS_Store
+.env
+.venv/
+.pytest_cache/
+.ruff_cache/
+__pycache__/
+*.pyc
+node_modules/
+dist/
+coverage/
+*.log
+*.tsbuildinfo
+
+# Generated dashboard artifacts (produced by `make seed-metabase` / export; instance-specific)
+frontend/public/metabase-dashboards.json
+frontend/public/dashboard-data.json
+frontend/public/arandu-data.csv
+
+# Debug screenshots
+*.png
