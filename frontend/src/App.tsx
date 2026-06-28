@@ -1,10 +1,8 @@
-import { useEffect, useState } from "react";
-import { CardViz } from "./CardViz";
+import { useEffect, useRef, useState } from "react";
 
 type LinksFile = {
   links: Record<string, string>;
-  question_by_name?: Record<string, string>;
-  display_by_name?: Record<string, string>;
+  question_edit_by_name?: Record<string, string>;
 };
 
 function metabaseDashboardUrl(url: string) {
@@ -21,24 +19,30 @@ function metabaseDashboardUrl(url: string) {
   return `/metabase${parsed.pathname}${parsed.search}#${params.toString()}`;
 }
 
-// Public question URL -> the card's public UUID (last path segment).
-function publicUuid(url: string): string | null {
+// Full Metabase question URL -> same-origin proxied path (the proxy carries the session,
+// so this opens the real, editable question — no login wall).
+function proxiedQuestion(url: string) {
+  const parsed = new URL(url, window.location.origin);
+  return `/metabase${parsed.pathname}${parsed.search}`;
+}
+
+// /question/<id> -> "<id>" (used as the localStorage key for the saved visualization).
+function cardId(url: string): string | null {
   try {
-    const seg = new URL(url, window.location.origin).pathname.split("/").filter(Boolean).pop();
-    return seg || null;
+    return new URL(url, window.location.origin).pathname.split("/").filter(Boolean).pop() || null;
   } catch {
     return null;
   }
 }
 
-type ActiveCard = { uuid: string; title: string; display?: string };
+type Active = { id: string; title: string; src: string };
 
 export function App() {
   const [dashboardUrl, setDashboardUrl] = useState("");
-  const [questionByName, setQuestionByName] = useState<Record<string, string>>({});
-  const [displayByName, setDisplayByName] = useState<Record<string, string>>({});
-  const [active, setActive] = useState<ActiveCard | null>(null);
+  const [questionEditByName, setQuestionEditByName] = useState<Record<string, string>>({});
+  const [active, setActive] = useState<Active | null>(null);
   const [showAbout, setShowAbout] = useState(false);
+  const frameRef = useRef<HTMLIFrameElement | null>(null);
   const embedUrl = metabaseDashboardUrl(dashboardUrl);
 
   const REPO = "https://github.com/gdavidss/arandu";
@@ -49,8 +53,7 @@ export function App() {
       .then((payload: LinksFile | null) => {
         const links = payload?.links ?? {};
         setDashboardUrl(links.all || Object.values(links)[0] || "");
-        setQuestionByName(payload?.question_by_name ?? {});
-        setDisplayByName(payload?.display_by_name ?? {});
+        setQuestionEditByName(payload?.question_edit_by_name ?? {});
       })
       .catch(() => setDashboardUrl(""));
   }, []);
@@ -69,20 +72,43 @@ export function App() {
   }, [active, showAbout]);
 
   // A script injected into the dashboard iframe posts the clicked card's title here.
-  // We open our own client-side viewer (no login, no server): it pulls the card's public
-  // data and renders it with editable, browser-persisted visualization options.
+  // We open the card's real Metabase question (the native visualization editor — table,
+  // pie, bar, settings, everything), restoring the user's previously saved view if any.
   useEffect(() => {
     function onMessage(event: MessageEvent) {
       const data = event.data;
       if (!data || data.type !== "fiscallens-card-zoom") return;
-      const url = questionByName[data.title];
-      const uuid = url ? publicUuid(url) : null;
-      if (!uuid) return;
-      setActive({ uuid, title: data.title, display: displayByName[data.title] });
+      const editUrl = questionEditByName[data.title];
+      const id = editUrl ? cardId(editUrl) : null;
+      if (!editUrl || !id) return;
+      const saved = localStorage.getItem(`arandu:viz:${id}`);
+      setActive({ id, title: data.title, src: saved || proxiedQuestion(editUrl) });
     }
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
-  }, [questionByName, displayByName]);
+  }, [questionEditByName]);
+
+  // While the editor is open, persist the question's view (Metabase serializes the chosen
+  // visualization into the URL) to localStorage, so the user's choice sticks per card.
+  useEffect(() => {
+    if (!active) return;
+    const id = active.id;
+    const tick = () => {
+      try {
+        const win = frameRef.current?.contentWindow;
+        if (!win) return;
+        const loc = win.location;
+        const rel = `${loc.pathname}${loc.search}${loc.hash}`;
+        if (rel.includes("/question") && !rel.includes("/auth/login")) {
+          localStorage.setItem(`arandu:viz:${id}`, rel);
+        }
+      } catch {
+        // cross-origin during a redirect; ignore.
+      }
+    };
+    const iv = window.setInterval(tick, 800);
+    return () => window.clearInterval(iv);
+  }, [active]);
 
   if (!embedUrl) {
     return (
@@ -162,7 +188,12 @@ export function App() {
             >
               ✕
             </button>
-            <CardViz uuid={active.uuid} title={active.title} display={active.display} />
+            <iframe
+              ref={frameRef}
+              className="zoom-frame"
+              src={active.src}
+              title={active.title}
+            />
           </div>
         </div>
       )}
@@ -184,67 +215,78 @@ export function App() {
               ✕
             </button>
             <h1 className="about-title">Arandu</h1>
-            <p className="about-sub">Consulta Cívica · uma lente pública para o Brasil</p>
+            <p className="about-sub">Consulta Cívica — uma lente pública para o Brasil</p>
 
-            <p>
-              Arandu é uma interface aberta para dados fiscais e econômicos brasileiros. Não
-              é partido, campanha, ministério nem jornal — é um instrumento cívico. O objetivo
-              não é remover a interpretação; é torná-la auditável.
-            </p>
-            <p>
-              Cada gráfico responde quatro perguntas: de onde vêm os dados, como foram
-              transformados, quando foram atualizados e o que observar com cuidado.
+            <p className="about-lede">
+              Código aberto. Dados abertos. Método público. Interface calma.
             </p>
 
-            <h2 className="about-h2">Como usar</h2>
-            <ul className="about-list">
-              <li>
-                Clique em qualquer gráfico para abri-lo em tela cheia. Você pode trocar o tipo
-                de gráfico e dar zoom — suas escolhas ficam salvas no seu navegador.
-              </li>
-              <li>Use o filtro de período no topo para recortar o tempo.</li>
-              <li>Baixe todas as séries em CSV pelo ícone de download.</li>
-            </ul>
+            <div className="about-stanza">
+              <p>Arandu é uma interface pública para os dados fiscais e econômicos do Brasil.</p>
+              <p>Não é partido. Não é campanha. Não é ministério. Não é jornal.</p>
+              <p>É um instrumento cívico.</p>
+            </div>
 
-            <h2 className="about-h2">O projeto</h2>
-            <ul className="about-links">
-              <li>
-                <a href={REPO} target="_blank" rel="noopener noreferrer">
-                  Repositório no GitHub ↗
-                </a>
-              </li>
-              <li>
-                <a
-                  href={`${REPO}/blob/main/metasystemic/CONSTITUTION.md`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Constituição do projeto ↗
-                </a>
-              </li>
-              <li>
-                <a
-                  href={`${REPO}/blob/main/CONTRIBUTING.md`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Como contribuir ↗
-                </a>
-              </li>
-              <li>
-                <a
-                  href={`${REPO}/blob/main/systemic/data-standard.md`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Padrão de dados ↗
-                </a>
-              </li>
-            </ul>
+            <div className="about-stanza">
+              <p>O objetivo não é remover a interpretação.</p>
+              <p>O objetivo é torná-la auditável.</p>
+            </div>
 
-            <p className="about-foot">
-              Open source. Dados abertos. Método público. Interface calma.
-            </p>
+            <div className="about-stanza">
+              <p className="about-cap">o dado</p>
+              <p>Cada gráfico responde a quatro perguntas.</p>
+              <p>De onde vem. Como foi transformado. Quando foi atualizado. O que olhar com cuidado.</p>
+            </div>
+
+            <div className="about-stanza">
+              <p className="about-cap">a lente</p>
+              <p>Clique em qualquer gráfico para abri-lo.</p>
+              <p>Mude a forma. Veja em tabela, pizza, barra. Suas escolhas ficam no seu navegador.</p>
+              <p>Não um cassino. Não um comício. Não uma mesa de operações.</p>
+              <p>Uma biblioteca pública.</p>
+            </div>
+
+            <p className="about-pledge">A lente faz parte do dado.</p>
+
+            <div className="about-stanza">
+              <p className="about-cap">no github</p>
+              <ul className="about-links">
+                <li>
+                  <a href={REPO} target="_blank" rel="noopener noreferrer">
+                    Repositório ↗
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={`${REPO}/blob/main/metasystemic/CONSTITUTION.md`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    A constituição ↗
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={`${REPO}/blob/main/CONTRIBUTING.md`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Como contribuir ↗
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={`${REPO}/blob/main/systemic/data-standard.md`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    O padrão de dados ↗
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <p className="about-foot">v0.1 · Brasil · nativo do GitHub</p>
           </div>
         </div>
       )}

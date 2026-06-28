@@ -10,6 +10,40 @@ const host = process.env.HOST || "0.0.0.0";
 const metabaseInternalUrl = process.env.METABASE_INTERNAL_URL || "http://localhost:3000";
 const metabaseProxyPrefixes = ["/metabase/", "/api/", "/app/", "/public/", "/favicon.ico"];
 
+// The proxy carries a Metabase session so the embedded, editable question view works
+// without a login wall. Credentials stay server-side here (never in the browser). For a
+// public deployment you'd swap this for a restricted embedding user; locally it's the
+// instance's own admin. The session is attached to upstream requests as a cookie.
+const mbEmail = process.env.MB_EMAIL || "admin@fiscallens.local";
+const mbPassword = process.env.MB_PASSWORD || "FiscalLensBrasil2026!";
+let mbSessionId = null;
+let mbSessionPromise = null;
+
+async function getMetabaseSession() {
+  if (mbSessionId) return mbSessionId;
+  if (!mbEmail || !mbPassword) return null;
+  if (!mbSessionPromise) {
+    mbSessionPromise = fetch(`${metabaseInternalUrl}/api/session`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ username: mbEmail, password: mbPassword }),
+    })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => (j && j.id ? j.id : null))
+      .catch(() => null)
+      .then((id) => {
+        mbSessionId = id;
+        mbSessionPromise = null;
+        return id;
+      });
+  }
+  return mbSessionPromise;
+}
+
+function clearMetabaseSession() {
+  mbSessionId = null;
+}
+
 const metabaseEmbedCleanup = `
 <style id="fiscallens-metabase-embed-cleanup">
   [role="contentinfo"],
@@ -155,6 +189,13 @@ const metabaseEmbedCleanup = `
   [data-testid="dashcard"] {
     cursor: zoom-in;
   }
+  /* Editable question view (full app, shown in the card modal): trim the global chrome so
+     the modal is mostly the chart and Metabase's own visualization editor. */
+  [data-testid="main-navbar-root"],
+  [data-element-id="navbar-root"],
+  [data-testid="app-bar"] {
+    display: none !important;
+  }
   /* Mobile: tighter side gutters so stacked cards use the width. */
   @media (max-width: 640px) {
     [data-testid="dashboard-grid"],
@@ -286,12 +327,22 @@ async function proxyMetabase(request, response) {
   const headers = new Headers(request.headers);
   headers.set("host", target.host);
 
+  // Attach the server-side Metabase session so editable question views are authenticated.
+  const session = await getMetabaseSession();
+  if (session) {
+    const existing = headers.get("cookie");
+    headers.set("cookie", `${existing ? existing + "; " : ""}metabase.SESSION=${session}`);
+  }
+
   const upstream = await fetch(target, {
     method: request.method,
     headers,
     body: await requestBody(request),
     redirect: "manual",
   });
+
+  // If the session went stale, drop it so the next request logs in again.
+  if (upstream.status === 401 || upstream.status === 403) clearMetabaseSession();
 
   const responseHeaders = {};
   upstream.headers.forEach((value, key) => {

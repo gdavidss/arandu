@@ -107,6 +107,9 @@ services:
     environment:
       VITE_METABASE_BASE_URL: http://localhost:3000
       METABASE_INTERNAL_URL: http://metabase:3000
+      # Server-side session for the editable question view (creds stay out of the browser).
+      MB_EMAIL: admin@fiscallens.local
+      MB_PASSWORD: FiscalLensBrasil2026!
     ports:
       - "5173:5173"
     volumes:
