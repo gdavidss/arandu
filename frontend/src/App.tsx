@@ -217,76 +217,70 @@ export function App() {
             <h1 className="about-title">Arandu</h1>
             <p className="about-sub">Consulta Cívica — uma lente pública para o Brasil</p>
 
-            <p className="about-lede">
-              Código aberto. Dados abertos. Método público. Interface calma.
+            <p>
+              O Arandu reúne os dados fiscais e econômicos do Brasil em um só lugar, sempre
+              com a fonte à vista. É um projeto aberto: qualquer pessoa pode olhar os mesmos
+              números e tirar as próprias conclusões.
+            </p>
+            <p>
+              Não pertence a nenhum partido, campanha, ministério ou jornal. É um instrumento
+              cívico — a ideia não é dizer o que pensar sobre os números, e sim deixar claro de
+              onde eles vêm, para que qualquer um possa conferir.
+            </p>
+            <p>
+              Cada gráfico mostra de onde vem o dado, como foi calculado, quando foi atualizado
+              e o que vale a pena observar com atenção.
             </p>
 
-            <div className="about-stanza">
-              <p>Arandu é uma interface pública para os dados fiscais e econômicos do Brasil.</p>
-              <p>Não é partido. Não é campanha. Não é ministério. Não é jornal.</p>
-              <p>É um instrumento cívico.</p>
-            </div>
+            <h2 className="about-h2">Como usar</h2>
+            <p>
+              Clique em qualquer gráfico para abri-lo em tela cheia. Ali você pode mudar a
+              visualização — tabela, pizza, linha, barra — e suas escolhas ficam salvas no seu
+              navegador. Use o filtro de período no topo para recortar o tempo e o ícone de
+              download para baixar todas as séries.
+            </p>
 
-            <div className="about-stanza">
-              <p>O objetivo não é remover a interpretação.</p>
-              <p>O objetivo é torná-la auditável.</p>
-            </div>
+            <h2 className="about-h2">O projeto</h2>
+            <p>
+              Código aberto, dados abertos, método público. O Arandu é mantido publicamente no
+              GitHub e segue uma constituição que define como ele muda e como os dados entram.
+            </p>
+            <ul className="about-links">
+              <li>
+                <a href={REPO} target="_blank" rel="noopener noreferrer">
+                  Repositório ↗
+                </a>
+              </li>
+              <li>
+                <a
+                  href={`${REPO}/blob/main/metasystemic/CONSTITUTION.md`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Constituição do projeto ↗
+                </a>
+              </li>
+              <li>
+                <a
+                  href={`${REPO}/blob/main/CONTRIBUTING.md`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Como contribuir ↗
+                </a>
+              </li>
+              <li>
+                <a
+                  href={`${REPO}/blob/main/systemic/data-standard.md`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Padrão de dados ↗
+                </a>
+              </li>
+            </ul>
 
-            <div className="about-stanza">
-              <p className="about-cap">o dado</p>
-              <p>Cada gráfico responde a quatro perguntas.</p>
-              <p>De onde vem. Como foi transformado. Quando foi atualizado. O que olhar com cuidado.</p>
-            </div>
-
-            <div className="about-stanza">
-              <p className="about-cap">a lente</p>
-              <p>Clique em qualquer gráfico para abri-lo.</p>
-              <p>Mude a forma. Veja em tabela, pizza, barra. Suas escolhas ficam no seu navegador.</p>
-              <p>Não um cassino. Não um comício. Não uma mesa de operações.</p>
-              <p>Uma biblioteca pública.</p>
-            </div>
-
-            <p className="about-pledge">A lente faz parte do dado.</p>
-
-            <div className="about-stanza">
-              <p className="about-cap">no github</p>
-              <ul className="about-links">
-                <li>
-                  <a href={REPO} target="_blank" rel="noopener noreferrer">
-                    Repositório ↗
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href={`${REPO}/blob/main/metasystemic/CONSTITUTION.md`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    A constituição ↗
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href={`${REPO}/blob/main/CONTRIBUTING.md`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Como contribuir ↗
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href={`${REPO}/blob/main/systemic/data-standard.md`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    O padrão de dados ↗
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <p className="about-foot">v0.1 · Brasil · nativo do GitHub</p>
+            <p className="about-foot">v0.1 · Brasil</p>
           </div>
         </div>
       )}

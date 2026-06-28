@@ -118,39 +118,24 @@ const metabaseEmbedCleanup = `
     display: flex !important;
     justify-content: safe center !important;
   }
-  /* Brand wordmark on the left of the tab navbar — same font, bold, ~2pt larger. */
+  /* Brand logo on the left of the tab navbar; reserve room so tabs never collide with it. */
   [data-testid="fixed-width-dashboard-tabs"] {
     position: relative !important;
+    padding-left: 130px !important;
   }
   [data-testid="fixed-width-dashboard-tabs"]::before {
     content: "";
     position: absolute;
-    left: 16px;
+    left: 18px;
     top: 50%;
-    transform: translateY(-100%);
-    width: 92px;
-    height: 28px;
+    transform: translateY(-50%);
+    width: 96px;
+    height: 26px;
     background-image: url("/arandu-logo.png"); /* transparent Arandu wordmark */
     background-repeat: no-repeat;
     background-position: left center;
     background-size: contain;
     pointer-events: none;
-  }
-  /* Subtitle under the logo. */
-  [data-testid="fixed-width-dashboard-tabs"]::after {
-    content: "Consulta Cívica";
-    position: absolute;
-    left: 17px;
-    top: 50%;
-    transform: translateY(20%);
-    font-family: inherit;
-    font-weight: 500;
-    font-size: 10px;
-    letter-spacing: 0.03em;
-    line-height: 1;
-    color: #5a8a72; /* muted arandu green */
-    pointer-events: none;
-    white-space: nowrap;
   }
   /* Navbar tab labels in arandu green (brand chrome — not data encoding). The active
      tab keeps a distinct green underline instead of Metabase's default blue. */
