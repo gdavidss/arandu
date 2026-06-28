@@ -89,15 +89,32 @@ const metabaseEmbedCleanup = `
     position: relative !important;
   }
   [data-testid="fixed-width-dashboard-tabs"]::before {
-    content: "arandu.ai";
+    content: "Arandu";
     position: absolute;
     left: 16px;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translateY(-100%);
     font-family: inherit;
     font-weight: 700;
     font-size: 16px;
+    line-height: 1.05;
     color: #0b5e3a; /* arandu green (from the constitution wordmark) */
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  /* Subtitle under the wordmark. */
+  [data-testid="fixed-width-dashboard-tabs"]::after {
+    content: "Contexto Contábil";
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(10%);
+    font-family: inherit;
+    font-weight: 500;
+    font-size: 10px;
+    letter-spacing: 0.03em;
+    line-height: 1;
+    color: #5a8a72; /* muted arandu green */
     pointer-events: none;
     white-space: nowrap;
   }
