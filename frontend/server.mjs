@@ -104,7 +104,7 @@ const metabaseEmbedCleanup = `
   }
   /* Subtitle under the wordmark. */
   [data-testid="fixed-width-dashboard-tabs"]::after {
-    content: "Contexto Contábil";
+    content: "Consulta Cívica";
     position: absolute;
     left: 16px;
     top: 50%;

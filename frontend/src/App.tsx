@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
+import { CardViz } from "./CardViz";
 
 type LinksFile = {
   links: Record<string, string>;
   question_by_name?: Record<string, string>;
-  question_edit_by_name?: Record<string, string>;
+  display_by_name?: Record<string, string>;
 };
 
 function metabaseDashboardUrl(url: string) {
@@ -20,27 +21,27 @@ function metabaseDashboardUrl(url: string) {
   return `/metabase${parsed.pathname}${parsed.search}#${params.toString()}`;
 }
 
-// Public question URL -> same-origin proxied embed URL, with chrome stripped.
-function metabaseQuestionUrl(url: string) {
-  const parsed = new URL(url, window.location.origin);
-  return `/metabase${parsed.pathname}${parsed.search}#titled=false&bordered=false`;
+// Public question URL -> the card's public UUID (last path segment).
+function publicUuid(url: string): string | null {
+  try {
+    const seg = new URL(url, window.location.origin).pathname.split("/").filter(Boolean).pop();
+    return seg || null;
+  } catch {
+    return null;
+  }
 }
 
-// Interactive (logged-in) question URL -> same-origin proxied URL. This is the full
-// Metabase question view, where the user can change the visualization and use native
-// chart interactions (requires being logged into Metabase once).
-function metabaseInteractiveUrl(url: string) {
-  const parsed = new URL(url, window.location.origin);
-  return `/metabase${parsed.pathname}${parsed.search}`;
-}
+type ActiveCard = { uuid: string; title: string; display?: string };
 
 export function App() {
   const [dashboardUrl, setDashboardUrl] = useState("");
   const [questionByName, setQuestionByName] = useState<Record<string, string>>({});
-  const [questionEditByName, setQuestionEditByName] = useState<Record<string, string>>({});
-  const [zoomUrl, setZoomUrl] = useState<string | null>(null);
-  const [editHref, setEditHref] = useState<string | null>(null);
+  const [displayByName, setDisplayByName] = useState<Record<string, string>>({});
+  const [active, setActive] = useState<ActiveCard | null>(null);
+  const [showAbout, setShowAbout] = useState(false);
   const embedUrl = metabaseDashboardUrl(dashboardUrl);
+
+  const REPO = "https://github.com/gdavidss/arandu";
 
   useEffect(() => {
     fetch("/metabase-dashboards.json", { cache: "no-store" })
@@ -49,38 +50,39 @@ export function App() {
         const links = payload?.links ?? {};
         setDashboardUrl(links.all || Object.values(links)[0] || "");
         setQuestionByName(payload?.question_by_name ?? {});
-        setQuestionEditByName(payload?.question_edit_by_name ?? {});
+        setDisplayByName(payload?.display_by_name ?? {});
       })
       .catch(() => setDashboardUrl(""));
   }, []);
 
-  // Esc closes the zoom modal.
+  // Esc closes whatever overlay is open.
   useEffect(() => {
-    if (!zoomUrl) return;
+    if (!active && !showAbout) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setZoomUrl(null);
+      if (e.key === "Escape") {
+        setActive(null);
+        setShowAbout(false);
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [zoomUrl]);
+  }, [active, showAbout]);
 
   // A script injected into the dashboard iframe posts the clicked card's title here.
-  // Pressing a card opens the read-only public question full-screen — NO login required.
-  // The editable Metabase view (which needs a login) is offered only as an opt-in link
-  // that opens in a new tab, so card clicks never hit a login wall.
+  // We open our own client-side viewer (no login, no server): it pulls the card's public
+  // data and renders it with editable, browser-persisted visualization options.
   useEffect(() => {
     function onMessage(event: MessageEvent) {
       const data = event.data;
       if (!data || data.type !== "fiscallens-card-zoom") return;
       const url = questionByName[data.title];
-      if (!url) return;
-      setZoomUrl(metabaseQuestionUrl(url));
-      const edit = questionEditByName[data.title];
-      setEditHref(edit ? metabaseInteractiveUrl(edit) : null);
+      const uuid = url ? publicUuid(url) : null;
+      if (!uuid) return;
+      setActive({ uuid, title: data.title, display: displayByName[data.title] });
     }
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
-  }, [questionByName, questionEditByName]);
+  }, [questionByName, displayByName]);
 
   if (!embedUrl) {
     return (
@@ -92,6 +94,29 @@ export function App() {
 
   return (
     <main className="dashboard-page">
+      <button
+        type="button"
+        className="info-btn"
+        onClick={() => setShowAbout(true)}
+        data-tooltip="Sobre o Arandu"
+        aria-label="Sobre o Arandu"
+      >
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="16" x2="12" y2="12" />
+          <line x1="12" y1="8" x2="12.01" y2="8" />
+        </svg>
+      </button>
       <a
         className="download-btn"
         href="/arandu-data.csv"
@@ -121,10 +146,10 @@ export function App() {
         title="Indicadores macrofiscais do Brasil"
       />
 
-      {zoomUrl && (
+      {active && (
         <div
           className="zoom-overlay"
-          onClick={() => setZoomUrl(null)}
+          onClick={() => setActive(null)}
           role="dialog"
           aria-modal="true"
         >
@@ -132,22 +157,94 @@ export function App() {
             <button
               type="button"
               className="zoom-close"
-              onClick={() => setZoomUrl(null)}
+              onClick={() => setActive(null)}
               aria-label="Fechar"
             >
               ✕
             </button>
-            {editHref && (
-              <a
-                className="zoom-edit"
-                href={editHref}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Editar no Metabase ↗
-              </a>
-            )}
-            <iframe className="zoom-frame" src={zoomUrl} title="Gráfico em tela cheia" />
+            <CardViz uuid={active.uuid} title={active.title} display={active.display} />
+          </div>
+        </div>
+      )}
+
+      {showAbout && (
+        <div
+          className="about-overlay"
+          onClick={() => setShowAbout(false)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="about-modal" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              className="zoom-close"
+              onClick={() => setShowAbout(false)}
+              aria-label="Fechar"
+            >
+              ✕
+            </button>
+            <h1 className="about-title">Arandu</h1>
+            <p className="about-sub">Consulta Cívica · uma lente pública para o Brasil</p>
+
+            <p>
+              Arandu é uma interface aberta para dados fiscais e econômicos brasileiros. Não
+              é partido, campanha, ministério nem jornal — é um instrumento cívico. O objetivo
+              não é remover a interpretação; é torná-la auditável.
+            </p>
+            <p>
+              Cada gráfico responde quatro perguntas: de onde vêm os dados, como foram
+              transformados, quando foram atualizados e o que observar com cuidado.
+            </p>
+
+            <h2 className="about-h2">Como usar</h2>
+            <ul className="about-list">
+              <li>
+                Clique em qualquer gráfico para abri-lo em tela cheia. Você pode trocar o tipo
+                de gráfico e dar zoom — suas escolhas ficam salvas no seu navegador.
+              </li>
+              <li>Use o filtro de período no topo para recortar o tempo.</li>
+              <li>Baixe todas as séries em CSV pelo ícone de download.</li>
+            </ul>
+
+            <h2 className="about-h2">O projeto</h2>
+            <ul className="about-links">
+              <li>
+                <a href={REPO} target="_blank" rel="noopener noreferrer">
+                  Repositório no GitHub ↗
+                </a>
+              </li>
+              <li>
+                <a
+                  href={`${REPO}/blob/main/metasystemic/CONSTITUTION.md`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Constituição do projeto ↗
+                </a>
+              </li>
+              <li>
+                <a
+                  href={`${REPO}/blob/main/CONTRIBUTING.md`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Como contribuir ↗
+                </a>
+              </li>
+              <li>
+                <a
+                  href={`${REPO}/blob/main/systemic/data-standard.md`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Padrão de dados ↗
+                </a>
+              </li>
+            </ul>
+
+            <p className="about-foot">
+              Open source. Dados abertos. Método público. Interface calma.
+            </p>
           </div>
         </div>
       )}
