@@ -101,6 +101,18 @@ const metabaseEmbedCleanup = `
     pointer-events: none;
     white-space: nowrap;
   }
+  /* Navbar tab labels in arandu green (brand chrome — not data encoding). The active
+     tab keeps a distinct green underline instead of Metabase's default blue. */
+  [data-testid="fixed-width-dashboard-tabs"] [role="tab"],
+  [data-testid="fixed-width-dashboard-tabs"] [role="tab"] *,
+  [role="tablist"] [role="tab"],
+  [role="tablist"] [role="tab"] * {
+    color: #0b5e3a !important;
+  }
+  [role="tablist"] [role="tab"][aria-selected="true"] {
+    border-bottom-color: #0b5e3a !important;
+    box-shadow: inset 0 -2px 0 #0b5e3a !important;
+  }
   /* Per-card source logo (added by script), sits left of the "…" menu. */
   a.fl-source {
     display: inline-flex;

@@ -39,6 +39,7 @@ export function App() {
   const [questionByName, setQuestionByName] = useState<Record<string, string>>({});
   const [questionEditByName, setQuestionEditByName] = useState<Record<string, string>>({});
   const [zoomUrl, setZoomUrl] = useState<string | null>(null);
+  const [editHref, setEditHref] = useState<string | null>(null);
   const embedUrl = metabaseDashboardUrl(dashboardUrl);
 
   useEffect(() => {
@@ -64,20 +65,18 @@ export function App() {
   }, [zoomUrl]);
 
   // A script injected into the dashboard iframe posts the clicked card's title here.
-  // We open that card's full Metabase question view full-screen, where the user can change
-  // the visualization (chart type, axes/zoom, settings) and use native interactions. Falls
-  // back to the read-only public embed if the interactive URL isn't available.
+  // Pressing a card opens the read-only public question full-screen — NO login required.
+  // The editable Metabase view (which needs a login) is offered only as an opt-in link
+  // that opens in a new tab, so card clicks never hit a login wall.
   useEffect(() => {
     function onMessage(event: MessageEvent) {
       const data = event.data;
       if (!data || data.type !== "fiscallens-card-zoom") return;
-      const editUrl = questionEditByName[data.title];
-      if (editUrl) {
-        setZoomUrl(metabaseInteractiveUrl(editUrl));
-        return;
-      }
       const url = questionByName[data.title];
-      if (url) setZoomUrl(metabaseQuestionUrl(url));
+      if (!url) return;
+      setZoomUrl(metabaseQuestionUrl(url));
+      const edit = questionEditByName[data.title];
+      setEditHref(edit ? metabaseInteractiveUrl(edit) : null);
     }
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
@@ -138,10 +137,16 @@ export function App() {
             >
               ✕
             </button>
-            <div className="zoom-hint">
-              Mude o tipo de gráfico, ajuste eixos e dê zoom aqui. Se aparecer a tela de login,
-              entre no Metabase uma vez para liberar a edição.
-            </div>
+            {editHref && (
+              <a
+                className="zoom-edit"
+                href={editHref}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Editar no Metabase ↗
+              </a>
+            )}
             <iframe className="zoom-frame" src={zoomUrl} title="Gráfico em tela cheia" />
           </div>
         </div>

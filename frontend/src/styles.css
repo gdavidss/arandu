@@ -148,22 +148,23 @@ body,
   background: #f3f4f6;
 }
 
-.zoom-hint {
+.zoom-edit {
   position: absolute;
   top: 8px;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 10px;
   z-index: 2;
-  max-width: 70%;
-  padding: 6px 12px;
+  padding: 5px 10px;
   font-size: 0.74rem;
-  line-height: 1.25;
-  color: #4b5563;
-  text-align: center;
+  font-weight: 600;
+  color: #0b5e3a;
+  text-decoration: none;
   background: rgba(251, 251, 250, 0.95);
-  border: 1px solid #e5e7eb;
+  border: 1px solid #d6d3cd;
   border-radius: 6px;
-  pointer-events: none;
+}
+
+.zoom-edit:hover {
+  background: #f3f4f6;
 }
 
 @media (max-width: 640px) {
