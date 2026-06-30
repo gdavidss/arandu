@@ -3760,6 +3760,7 @@ DASHBOARD_TABS: list[dict[str, Any]] = [
                     ("social_household_debt", 8),
                     ("social_default_rate", 8),
                 ],
+                [("institutions_bti_brazil", 8)],
             ]
         ),
     },
@@ -3779,14 +3780,27 @@ DASHBOARD_TABS: list[dict[str, Any]] = [
         ),
     },
     {
-        "name": "Atividade e emprego",
-        # Headline: monthly GDP-proxy growth. Then output levels, unemployment and income.
+        "name": "Atividade e setores",
+        # Real economy: activity + jobs + income, then sector composition and output.
         "cards": _grid(
             [
                 [("activity_ibc_yoy", 24)],
                 [("activity_pib_nominal", 12), ("monetary_ibc", 12)],
                 [("labor_unemployment", 12), ("labor_income_yoy", 12)],
                 [("labor_real_average_income", 12), ("labor_real_income_mass", 12)],
+                [("sectors_va_composition", 24)],
+                [
+                    ("sectors_industria_composition", 12),
+                    ("sectors_servicos_composition", 12),
+                ],
+                [("sectors_gdp_yoy", 24)],
+                [("sectors_gdp_volume_index", 24)],
+                [("sectors_monthly_volume", 24)],
+                [
+                    ("sectors_industrial_production", 8),
+                    ("sectors_retail", 8),
+                    ("sectors_services", 8),
+                ],
             ]
         ),
     },
@@ -3805,24 +3819,12 @@ DASHBOARD_TABS: list[dict[str, Any]] = [
         ),
     },
     {
-        "name": "Instituições",
-        # Headline: BTI status/governance indices + 3 democracy criteria, by edition (biennial).
+        "name": "Contas públicas",
+        # Government accounts in one place: consolidated result (NFSP), public debt, and the
+        # Central Government's primary result, revenue, spending and budget.
         "cards": _grid(
             [
-                [("institutions_bti_brazil", 24)],
-                [
-                    ("institutions_bti_status_governance", 12),
-                    ("institutions_bti_democracy_criteria", 12),
-                ],
-            ]
-        ),
-    },
-    {
-        "name": "Pulso fiscal",
-        # Headline: combined 12m result + interest. Then the % of GDP small multiples,
-        # the combined monthly flows, and the monthly small multiples.
-        "cards": _grid(
-            [
+                # Resultado fiscal consolidado (NFSP)
                 [("fiscal_12m", 24)],
                 [
                     ("fiscal_primary_deficit_12m", 8),
@@ -3835,54 +3837,16 @@ DASHBOARD_TABS: list[dict[str, Any]] = [
                     ("fiscal_monthly_nominal", 8),
                     ("fiscal_monthly_interest", 8),
                 ],
-            ]
-        ),
-    },
-    {
-        "name": "Dívida",
-        # Headline: the debt stock. Then gross/net measures, then the two drivers.
-        "cards": _grid(
-            [
+                # Dívida pública
                 [("debt_stock", 24)],
                 [("debt_dbgg", 12), ("debt_dlsp", 12)],
-                [("fiscal_nominal_deficit_12m", 12), ("monetary_selic", 12)],
-            ]
-        ),
-    },
-    {
-        "name": "Governo Central",
-        # Headline: primary result as % of GDP. Then revenue vs spending, spending
-        # composition, the primary components, revenue breakdowns and spending trend.
-        "cards": _grid(
-            [
+                # Governo Central
                 [("central_primary_pct_gdp", 24)],
                 [("central_revenue_spending", 24)],
                 [("central_spending_composition", 24)],
                 [("central_primary_components", 12), ("central_social_security", 12)],
                 [("central_revenues", 12), ("budget_latest", 12)],
                 [("budget_trend", 24)],
-            ]
-        ),
-    },
-    {
-        "name": "Setores produtivos",
-        # Headline: sector shares of GDP. Then industry/services breakdown, growth by
-        # sector, the volume indices and the monthly gauges.
-        "cards": _grid(
-            [
-                [("sectors_va_composition", 24)],
-                [
-                    ("sectors_industria_composition", 12),
-                    ("sectors_servicos_composition", 12),
-                ],
-                [("sectors_gdp_yoy", 24)],
-                [("sectors_gdp_volume_index", 24)],
-                [("sectors_monthly_volume", 24)],
-                [
-                    ("sectors_industrial_production", 8),
-                    ("sectors_retail", 8),
-                    ("sectors_services", 8),
-                ],
             ]
         ),
     },
