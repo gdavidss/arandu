@@ -219,6 +219,11 @@ SERIES_LABELS = {
     "lei14790_dest_sociedade_civil": "Sociedade civil",
     "lei14790_dest_funapol": "Funapol (Polícia Federal)",
     "lei14790_dest_abdi": "ABDI",
+    "bti_status_index_brazil": "Índice de Status",
+    "bti_governance_index_brazil": "Índice de Governança",
+    "bti_rule_of_law_brazil": "Estado de Direito",
+    "bti_stability_democratic_institutions_brazil": "Estabilidade das Instituições Democráticas",
+    "bti_stateness_brazil": "Estado (Stateness)",
 }
 
 
@@ -417,6 +422,122 @@ IPCA_TARGET_VIZ: dict[str, Any] = {
 # Re-exported as `arandu.systemic.CHARTS`.
 # ======================================================================================
 CHARTS: dict[str, dict[str, Any]] = {
+    "institutions_bti_brazil": {
+        "name": "Qualidade das instituições no Brasil — Índice de Transformação Bertelsmann (BTI)",
+        "display": "line",
+        "description": (
+            "Pontuações do Brasil no Índice de Transformação Bertelsmann (BTI) ao longo das "
+            "edições: o Índice de Status, o Índice de Governança e os critérios Estado "
+            "(Stateness), Estado de Direito e Estabilidade das Instituições Democráticas. "
+            "Fonte: Bertelsmann Stiftung — BTI (https://bti-project.org), planilha BTI "
+            "2006–2026 Scores e relatórios de país. Unidade: pontuação de 1 a 10 (10 = melhor). "
+            "Frequência: bienal (uma edição a cada dois anos). Conceito: avaliação qualitativa "
+            "por especialistas do grau de transformação rumo à democracia sob o Estado de "
+            "Direito e à economia de mercado, e da qualidade da governança; valores "
+            "transcritos das edições oficiais."
+        ),
+        "query": line_query(
+            [
+                "bti_status_index_brazil",
+                "bti_governance_index_brazil",
+                "bti_rule_of_law_brazil",
+                "bti_stability_democratic_institutions_brazil",
+                "bti_stateness_brazil",
+            ],
+            metric="Pontuação (1–10)",
+        ),
+        "visualization_settings": {
+            **line_settings(
+                "Pontuação (1–10)",
+                ["#1f77b4", "#d62728", "#2ca02c", "#9467bd", "#ff7f0e"],
+            ),
+            "graph.x_axis.scale": "ordinal",
+            "graph.x_axis.title_text": "Edição (ano)",
+            "graph.y_axis.auto_range": False,
+            "graph.y_axis.min": 0,
+            "graph.y_axis.max": 10,
+            "graph.y_axis.title_text": "Pontuação (1–10)",
+            "series_settings": {
+                "Índice de Status": {"line.marker_enabled": True, "color": "#1f77b4"},
+                "Índice de Governança": {"line.marker_enabled": True, "color": "#d62728"},
+                "Estado de Direito": {"line.marker_enabled": True, "color": "#2ca02c"},
+                "Estabilidade das Instituições Democráticas": {
+                    "line.marker_enabled": True,
+                    "color": "#9467bd",
+                },
+                "Estado (Stateness)": {"line.marker_enabled": True, "color": "#ff7f0e"},
+            },
+        },
+    },
+    "institutions_bti_status_governance": {
+        "name": "Brasil no BTI — Índice de Status e Índice de Governança por edição",
+        "display": "line",
+        "description": (
+            "Os dois índices agregados do BTI para o Brasil, por edição: o Índice de Status "
+            "(nível de transformação alcançado) e o Índice de Governança (capacidade de "
+            "condução política da transformação). Fonte: Bertelsmann Stiftung — BTI "
+            "(https://bti-project.org), planilha BTI 2006–2026 Scores. Unidade: pontuação de "
+            "1 a 10 (10 = melhor). Frequência: bienal. Conceito: avaliação qualitativa por "
+            "especialistas; valores transcritos das edições oficiais."
+        ),
+        "query": line_query(
+            ["bti_status_index_brazil", "bti_governance_index_brazil"],
+            metric="Pontuação (1–10)",
+        ),
+        "visualization_settings": {
+            **line_settings("Pontuação (1–10)", ["#1f77b4", "#d62728"]),
+            "graph.x_axis.scale": "ordinal",
+            "graph.x_axis.title_text": "Edição (ano)",
+            "graph.y_axis.auto_range": False,
+            "graph.y_axis.min": 0,
+            "graph.y_axis.max": 10,
+            "graph.y_axis.title_text": "Pontuação (1–10)",
+            "series_settings": {
+                "Índice de Status": {"line.marker_enabled": True, "color": "#1f77b4"},
+                "Índice de Governança": {"line.marker_enabled": True, "color": "#d62728"},
+            },
+        },
+    },
+    "institutions_bti_democracy_criteria": {
+        "name": (
+            "Brasil no BTI — Estado, Estado de Direito e Estabilidade das Instituições "
+            "Democráticas"
+        ),
+        "display": "line",
+        "description": (
+            "Três critérios de transformação política do BTI para o Brasil, por edição: Estado "
+            "(Stateness), Estado de Direito e Estabilidade das Instituições Democráticas. "
+            "Fonte: Bertelsmann Stiftung — BTI (https://bti-project.org), planilha BTI "
+            "2006–2026 Scores e relatórios de país. Unidade: pontuação de 1 a 10 (10 = melhor). "
+            "Frequência: bienal. Conceito: avaliação qualitativa por especialistas de cada "
+            "critério (média dos subindicadores); valores transcritos das edições oficiais."
+        ),
+        "query": line_query(
+            [
+                "bti_stateness_brazil",
+                "bti_rule_of_law_brazil",
+                "bti_stability_democratic_institutions_brazil",
+            ],
+            metric="Pontuação (1–10)",
+        ),
+        "visualization_settings": {
+            **line_settings("Pontuação (1–10)", ["#ff7f0e", "#2ca02c", "#9467bd"]),
+            "graph.x_axis.scale": "ordinal",
+            "graph.x_axis.title_text": "Edição (ano)",
+            "graph.y_axis.auto_range": False,
+            "graph.y_axis.min": 0,
+            "graph.y_axis.max": 10,
+            "graph.y_axis.title_text": "Pontuação (1–10)",
+            "series_settings": {
+                "Estado (Stateness)": {"line.marker_enabled": True, "color": "#ff7f0e"},
+                "Estado de Direito": {"line.marker_enabled": True, "color": "#2ca02c"},
+                "Estabilidade das Instituições Democráticas": {
+                    "line.marker_enabled": True,
+                    "color": "#9467bd",
+                },
+            },
+        },
+    },
     "overview_selic": {
         "name": "Selic meta",
         "display": "line",
@@ -3684,6 +3805,19 @@ DASHBOARD_TABS: list[dict[str, Any]] = [
         ),
     },
     {
+        "name": "Instituições",
+        # Headline: BTI status/governance indices + 3 democracy criteria, by edition (biennial).
+        "cards": _grid(
+            [
+                [("institutions_bti_brazil", 24)],
+                [
+                    ("institutions_bti_status_governance", 12),
+                    ("institutions_bti_democracy_criteria", 12),
+                ],
+            ]
+        ),
+    },
+    {
         "name": "Pulso fiscal",
         # Headline: combined 12m result + interest. Then the % of GDP small multiples,
         # the combined monthly flows, and the monthly small multiples.
@@ -4167,6 +4301,11 @@ CHART_SOURCES: dict[str, dict[str, str]] = {
         "url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
         "domain": "ecb.europa.eu",
     },
+    "BTI": {
+        "label": "BTI — Bertelsmann Stiftung",
+        "url": "https://bti-project.org",
+        "domain": "bti-project.org",
+    },
 }
 
 
@@ -4184,6 +4323,8 @@ def _chart_source(query: str) -> dict[str, str]:
         return CHART_SOURCES["RFB"]
     if "ecb_" in query:
         return CHART_SOURCES["ECB"]
+    if "bti_" in query:
+        return CHART_SOURCES["BTI"]
     if "spa_" in query:
         return CHART_SOURCES["SPA"]
     if "lei14790_" in query:

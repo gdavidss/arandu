@@ -144,6 +144,20 @@ sources:
       chinês (CNY): a PTAX do BCB cobre apenas ~10 moedas e o SGS não tem série BRL/CNY. A
       cotação aqui é a paridade direta (ex.: base CNY, símbolo BRL = R$ por iuan), derivada
       das taxas de referência do BCE; é referência de fechamento do BCE, não a PTAX do BCB.
+  bti:
+    name: Índice de Transformação Bertelsmann (BTI)
+    institution: Bertelsmann Stiftung
+    url: https://bti-project.org
+    license_or_terms: Publicação da Bertelsmann Stiftung (uso público com citação da fonte)
+    notes: >-
+      Índice de Transformação Bertelsmann (BTI), publicado a cada dois anos (bienal) pela
+      Bertelsmann Stiftung desde 2006. Pontuações em escala de 1 a 10 (10 = melhor) que
+      avaliam, por avaliação de especialistas, a qualidade da transformação política e
+      econômica e da governança. Não é uma API/série temporal ao vivo: os valores do Brasil
+      são snapshots transcritos à mão da planilha oficial consolidada BTI 2006–2026 Scores
+      (https://bti-project.org/en/downloads) e dos relatórios de país, registrados via
+      static_table como um ponto por edição (Jan 1 do ano da edição). O cron diário reemite os
+      mesmos valores sem alterá-los; uma nova observação é adicionada quando sai uma nova edição.
 
 series:
   - series_id: bcb_sgs_selic_target
@@ -3522,4 +3536,274 @@ series:
       - date: "2023-12-29"
         value: "0.4"
         note: "Lei 14.790/2023, Art. 30, IX: 0,40% para a ABDI"
+
+  # --- Instituições (BTI): Índice de Transformação Bertelsmann — Brasil ---
+  # Snapshots bienais transcritos da planilha oficial BTI 2006–2026 Scores e dos relatórios
+  # de país (https://bti-project.org/en/reports/country-report/BRA). Um ponto por edição,
+  # com a data sendo Jan 1 do ano da edição. Escala 1–10 (10 = melhor). static_table, sem rede.
+  - series_id: bti_status_index_brazil
+    source_id: bti
+    connector: static_table
+    source_series_code: "BTI-STATUS-BRA"
+    name: BTI Status Index — Brazil
+    description: >-
+      Índice de Status do BTI para o Brasil, por edição. Fonte: Bertelsmann Stiftung — BTI
+      (https://bti-project.org/en/reports/country-report/BRA), planilha BTI 2006–2026 Scores.
+      Unidade: índice de 1 a 10 (10 = melhor). Frequência: bienal. Conceito: nível agregado de
+      transformação rumo à democracia sob o Estado de Direito e à economia de mercado, por
+      avaliação de especialistas (snapshot transcrito da edição; não é série de API).
+    unit: index 1-10
+    frequency: biennial
+    concept: BTI Status Index (expert-assessed transformation status)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: published index score
+    source_url: https://bti-project.org/en/reports/country-report/BRA
+    static_observations:
+      - date: "2026-01-01"
+        value: "7.23"
+        note: "BTI 2026 edition"
+      - date: "2024-01-01"
+        value: "6.75"
+        note: "BTI 2024 edition"
+      - date: "2022-01-01"
+        value: "6.83"
+        note: "BTI 2022 edition"
+      - date: "2020-01-01"
+        value: "7.15"
+        note: "BTI 2020 edition"
+      - date: "2018-01-01"
+        value: "7.29"
+        note: "BTI 2018 edition"
+      - date: "2016-01-01"
+        value: "7.60"
+        note: "BTI 2016 edition"
+      - date: "2014-01-01"
+        value: "8.02"
+        note: "BTI 2014 edition"
+      - date: "2012-01-01"
+        value: "8.06"
+        note: "BTI 2012 edition"
+      - date: "2010-01-01"
+        value: "8.05"
+        note: "BTI 2010 edition"
+      - date: "2008-01-01"
+        value: "7.90"
+        note: "BTI 2008 edition"
+      - date: "2006-01-01"
+        value: "7.84"
+        note: "BTI 2006 edition"
+
+  - series_id: bti_governance_index_brazil
+    source_id: bti
+    connector: static_table
+    source_series_code: "BTI-GOV-BRA"
+    name: BTI Governance Index — Brazil
+    description: >-
+      Índice de Governança do BTI para o Brasil, por edição. Fonte: Bertelsmann Stiftung — BTI
+      (https://bti-project.org/en/reports/country-report/BRA), planilha BTI 2006–2026 Scores.
+      Unidade: índice de 1 a 10 (10 = melhor). Frequência: bienal. Conceito: qualidade da
+      condução política da transformação (capacidade de governança), por avaliação de
+      especialistas (snapshot transcrito da edição; não é série de API).
+    unit: index 1-10
+    frequency: biennial
+    concept: BTI Governance Index (expert-assessed governance quality)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: published index score
+    source_url: https://bti-project.org/en/reports/country-report/BRA
+    static_observations:
+      - date: "2026-01-01"
+        value: "5.69"
+        note: "BTI 2026 edition"
+      - date: "2024-01-01"
+        value: "3.80"
+        note: "BTI 2024 edition"
+      - date: "2022-01-01"
+        value: "4.42"
+        note: "BTI 2022 edition"
+      - date: "2020-01-01"
+        value: "5.58"
+        note: "BTI 2020 edition"
+      - date: "2018-01-01"
+        value: "5.95"
+        note: "BTI 2018 edition"
+      - date: "2016-01-01"
+        value: "6.76"
+        note: "BTI 2016 edition"
+      - date: "2014-01-01"
+        value: "7.27"
+        note: "BTI 2014 edition"
+      - date: "2012-01-01"
+        value: "7.32"
+        note: "BTI 2012 edition"
+      - date: "2010-01-01"
+        value: "7.18"
+        note: "BTI 2010 edition"
+      - date: "2008-01-01"
+        value: "6.70"
+        note: "BTI 2008 edition"
+      - date: "2006-01-01"
+        value: "6.87"
+        note: "BTI 2006 edition"
+
+  - series_id: bti_rule_of_law_brazil
+    source_id: bti
+    connector: static_table
+    source_series_code: "BTI-ROL-BRA"
+    name: BTI Rule of Law (Q3) — Brazil
+    description: >-
+      Critério Estado de Direito (Q3) do BTI para o Brasil, por edição. Fonte: Bertelsmann
+      Stiftung — BTI (https://bti-project.org/en/reports/country-report/BRA), planilha BTI
+      2006–2026 Scores. Unidade: índice de 1 a 10 (10 = melhor). Frequência: bienal. Conceito:
+      separação de poderes, independência do Judiciário, punição do abuso de cargo e garantias
+      de direitos civis (média dos subindicadores; snapshot transcrito da edição).
+    unit: index 1-10
+    frequency: biennial
+    concept: BTI Rule of Law criterion (Q3)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: published index score
+    source_url: https://bti-project.org/en/reports/country-report/BRA
+    static_observations:
+      - date: "2026-01-01"
+        value: "7.50"
+        note: "BTI 2026 edition"
+      - date: "2024-01-01"
+        value: "6.75"
+        note: "BTI 2024 edition"
+      - date: "2022-01-01"
+        value: "7.00"
+        note: "BTI 2022 edition"
+      - date: "2020-01-01"
+        value: "7.50"
+        note: "BTI 2020 edition"
+      - date: "2018-01-01"
+        value: "7.75"
+        note: "BTI 2018 edition"
+      - date: "2016-01-01"
+        value: "7.75"
+        note: "BTI 2016 edition"
+      - date: "2014-01-01"
+        value: "7.75"
+        note: "BTI 2014 edition"
+      - date: "2012-01-01"
+        value: "7.50"
+        note: "BTI 2012 edition"
+      - date: "2010-01-01"
+        value: "7.75"
+        note: "BTI 2010 edition"
+      - date: "2008-01-01"
+        value: "7.50"
+        note: "BTI 2008 edition"
+      - date: "2006-01-01"
+        value: "7.00"
+        note: "BTI 2006 edition"
+
+  - series_id: bti_stability_democratic_institutions_brazil
+    source_id: bti
+    connector: static_table
+    source_series_code: "BTI-STAB-BRA"
+    name: BTI Stability of Democratic Institutions (Q4) — Brazil
+    description: >-
+      Critério Estabilidade das Instituições Democráticas (Q4) do BTI para o Brasil, por
+      edição. Fonte: Bertelsmann Stiftung — BTI
+      (https://bti-project.org/en/reports/country-report/BRA), planilha BTI 2006–2026 Scores.
+      Unidade: índice de 1 a 10 (10 = melhor). Frequência: bienal. Conceito: desempenho das
+      instituições democráticas e compromisso dos atores com elas (média dos subindicadores;
+      snapshot transcrito da edição).
+    unit: index 1-10
+    frequency: biennial
+    concept: BTI Stability of Democratic Institutions criterion (Q4)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: published index score
+    source_url: https://bti-project.org/en/reports/country-report/BRA
+    static_observations:
+      - date: "2026-01-01"
+        value: "7.50"
+        note: "BTI 2026 edition"
+      - date: "2024-01-01"
+        value: "6.50"
+        note: "BTI 2024 edition"
+      - date: "2022-01-01"
+        value: "6.50"
+        note: "BTI 2022 edition"
+      - date: "2020-01-01"
+        value: "7.50"
+        note: "BTI 2020 edition"
+      - date: "2018-01-01"
+        value: "7.50"
+        note: "BTI 2018 edition"
+      - date: "2016-01-01"
+        value: "8.50"
+        note: "BTI 2016 edition"
+      - date: "2014-01-01"
+        value: "8.50"
+        note: "BTI 2014 edition"
+      - date: "2012-01-01"
+        value: "8.50"
+        note: "BTI 2012 edition"
+      - date: "2010-01-01"
+        value: "8.50"
+        note: "BTI 2010 edition"
+      - date: "2008-01-01"
+        value: "8.00"
+        note: "BTI 2008 edition"
+      - date: "2006-01-01"
+        value: "8.50"
+        note: "BTI 2006 edition"
+
+  - series_id: bti_stateness_brazil
+    source_id: bti
+    connector: static_table
+    source_series_code: "BTI-STATE-BRA"
+    name: BTI Stateness (Q1) — Brazil
+    description: >-
+      Critério Estado / Stateness (Q1) do BTI para o Brasil, por edição. Fonte: Bertelsmann
+      Stiftung — BTI (https://bti-project.org/en/reports/country-report/BRA), planilha BTI
+      2006–2026 Scores. Unidade: índice de 1 a 10 (10 = melhor). Frequência: bienal. Conceito:
+      monopólio estatal do uso da força, identidade estatal, laicidade e administração básica
+      (média dos subindicadores; snapshot transcrito da edição).
+    unit: index 1-10
+    frequency: biennial
+    concept: BTI Stateness criterion (Q1)
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: published index score
+    source_url: https://bti-project.org/en/reports/country-report/BRA
+    static_observations:
+      - date: "2026-01-01"
+        value: "7.50"
+        note: "BTI 2026 edition"
+      - date: "2024-01-01"
+        value: "7.25"
+        note: "BTI 2024 edition"
+      - date: "2022-01-01"
+        value: "7.75"
+        note: "BTI 2022 edition"
+      - date: "2020-01-01"
+        value: "8.00"
+        note: "BTI 2020 edition"
+      - date: "2018-01-01"
+        value: "8.25"
+        note: "BTI 2018 edition"
+      - date: "2016-01-01"
+        value: "8.25"
+        note: "BTI 2016 edition"
+      - date: "2014-01-01"
+        value: "8.25"
+        note: "BTI 2014 edition"
+      - date: "2012-01-01"
+        value: "8.50"
+        note: "BTI 2012 edition"
+      - date: "2010-01-01"
+        value: "8.50"
+        note: "BTI 2010 edition"
+      - date: "2008-01-01"
+        value: "8.50"
+        note: "BTI 2008 edition"
+      - date: "2006-01-01"
+        value: "8.50"
+        note: "BTI 2006 edition"
 
