@@ -81,12 +81,12 @@ const metabaseEmbedCleanup = `
     padding: 4px 20px 140px !important;
     max-width: 100% !important;
   }
-  /* Filter bar: white at both edges with a soft gray swell in the middle, so it bleeds into
-     the white above and below with NO visible line. No borders or shadows anywhere here. */
+  /* Filter bar: gray at the top, fading downward into white — a single top fade, no bottom
+     line (it reaches white before the edge). No borders or shadows here. */
   [data-testid="dashboard-parameters-widget-container"] {
-    padding: 16px 20px 24px !important;
+    padding: 14px 20px 26px !important;
     margin: 0 !important;
-    background: linear-gradient(to bottom, #ffffff 0%, #edefec 42%, #ffffff 100%) !important;
+    background: linear-gradient(to bottom, #e6e9e3 0%, #f1f2ef 35%, #ffffff 88%) !important;
     border: 0 !important;
     box-shadow: none !important;
   }
