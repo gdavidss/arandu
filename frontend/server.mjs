@@ -84,7 +84,7 @@ const metabaseEmbedCleanup = `
   /* Filter bar: white at the top (seamless with the header) fading DOWN into gray.
      The grid/content below carries the same gray so there's no line. */
   [data-testid="dashboard-parameters-widget-container"] {
-    padding: 14px 20px 26px !important;
+    padding: 6px 20px 6px !important;
     margin: 0 !important;
     background: #eceee9 !important;
     border: 0 !important;
