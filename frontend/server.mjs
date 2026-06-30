@@ -81,12 +81,24 @@ const metabaseEmbedCleanup = `
     padding: 4px 20px 140px !important;
     max-width: 100% !important;
   }
-  /* Filter bar: soft gray that fades into the white below, instead of a hard edge. */
+  /* Filter bar: white at both edges with a soft gray swell in the middle, so it bleeds into
+     the white above and below with NO visible line. No borders or shadows anywhere here. */
   [data-testid="dashboard-parameters-widget-container"] {
-    padding: 12px 20px 18px !important;
+    padding: 16px 20px 24px !important;
     margin: 0 !important;
-    background: linear-gradient(to bottom, #eef0ed 0%, #f6f7f5 45%, #ffffff 100%) !important;
+    background: linear-gradient(to bottom, #ffffff 0%, #edefec 42%, #ffffff 100%) !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+  /* Kill any separator line/shadow Metabase draws around the header/filter/grid region. */
+  [data-testid="fixed-width-dashboard-header"],
+  [data-testid="dashboard-header"],
+  [data-testid="embed-frame"],
+  [class*="EmbedFrame"],
+  [data-testid="dashboard-grid"] {
+    border-top: 0 !important;
     border-bottom: 0 !important;
+    box-shadow: none !important;
   }
   /* Hide the stray embed header action icons (fullscreen / export / refresh). */
   [aria-label="fullscreen"],
@@ -95,19 +107,21 @@ const metabaseEmbedCleanup = `
   .DashboardActions {
     display: none !important;
   }
-  /* Center the tab bar. The strip is a full-width scrollable flex container, so center
-     both the flex wrapper and the inner tab group (margin auto handles the block case).
-     "safe center" keeps the first tabs visible when the strip overflows on mobile. */
-  [data-testid="fixed-width-dashboard-tabs"] > div {
-    justify-content: safe center !important;
-  }
-  [role="tablist"] {
+  /* Center the tab strip in the navbar. The wordmark is an absolute ::before (out of flow),
+     so centering ignores it. "safe center" keeps tabs reachable if they overflow. */
+  [data-testid="fixed-width-dashboard-tabs"] {
     display: flex !important;
     justify-content: safe center !important;
+    /* Symmetric room so the strip stays truly centered and clears the left wordmark. */
+    padding-left: 132px !important;
+    padding-right: 132px !important;
   }
-  [role="tablist"] > div {
-    margin-left: auto !important;
-    margin-right: auto !important;
+  [data-testid="fixed-width-dashboard-tabs"] > div,
+  [role="tablist"] {
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: safe center !important;
   }
   /* Center the filter widgets (Período / De / Até) like the tabs. */
   [data-testid="dashboard-parameters-widget-container"] {
@@ -118,10 +132,9 @@ const metabaseEmbedCleanup = `
     display: flex !important;
     justify-content: safe center !important;
   }
-  /* Brand logo on the left of the tab navbar; reserve room so tabs never collide with it. */
+  /* Brand wordmark on the far left of the tab navbar (absolute, out of flow). */
   [data-testid="fixed-width-dashboard-tabs"] {
     position: relative !important;
-    padding-left: 120px !important;
   }
   [data-testid="fixed-width-dashboard-tabs"]::before {
     content: "Arandu";
