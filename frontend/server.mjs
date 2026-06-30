@@ -46,7 +46,6 @@ function clearMetabaseSession() {
 
 const metabaseEmbedCleanup = `
 <style id="fiscallens-metabase-embed-cleanup">
-  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap');
   [role="contentinfo"],
   footer,
   a[href*="powered_by_metabase"],
@@ -122,19 +121,19 @@ const metabaseEmbedCleanup = `
   /* Brand logo on the left of the tab navbar; reserve room so tabs never collide with it. */
   [data-testid="fixed-width-dashboard-tabs"] {
     position: relative !important;
-    padding-left: 140px !important;
+    padding-left: 120px !important;
   }
   [data-testid="fixed-width-dashboard-tabs"]::before {
-    content: "arandu";
+    content: "Arandu";
     position: absolute;
     left: 20px;
     top: 50%;
     transform: translateY(-50%);
-    font-family: "Fraunces", Georgia, "Times New Roman", serif;
-    font-weight: 500;
-    font-size: 27px;
-    letter-spacing: -0.5px;
-    color: #0b5e3a; /* arandu green */
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 19px;
+    letter-spacing: -0.2px;
+    color: #1f2937; /* neutral dark */
     pointer-events: none;
     white-space: nowrap;
   }
