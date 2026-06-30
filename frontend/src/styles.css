@@ -14,7 +14,7 @@ body,
   width: 100%;
   min-height: 100%;
   margin: 0;
-  background: #ffffff;
+  background: #eceee9; /* subtle neutral-gray canvas the top fade lands on */
 }
 
 .dashboard-page,
@@ -22,7 +22,7 @@ body,
   width: 100%;
   min-height: 100vh;
   margin: 0;
-  background: #ffffff;
+  background: #eceee9;
 }
 
 .dashboard-page {

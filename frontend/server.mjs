@@ -81,12 +81,12 @@ const metabaseEmbedCleanup = `
     padding: 4px 20px 140px !important;
     max-width: 100% !important;
   }
-  /* Filter bar: gray at the top, fading downward into white — a single top fade, no bottom
-     line (it reaches white before the edge). No borders or shadows here. */
+  /* Filter bar: white at the top (seamless with the header) fading DOWN into gray.
+     The grid/content below carries the same gray so there's no line. */
   [data-testid="dashboard-parameters-widget-container"] {
     padding: 14px 20px 26px !important;
     margin: 0 !important;
-    background: linear-gradient(to bottom, #e6e9e3 0%, #f1f2ef 35%, #ffffff 88%) !important;
+    background: linear-gradient(to bottom, #ffffff 0%, #f4f5f2 45%, #eceee9 100%) !important;
     border: 0 !important;
     box-shadow: none !important;
   }
@@ -171,9 +171,14 @@ const metabaseEmbedCleanup = `
     height: 16px;
     border-radius: 3px;
   }
-  /* Cards are clickable to open full-screen (handled by the parent app). */
+  /* Cards: white tiles on the gray canvas. Clickable to open full-screen. */
   [data-testid="dashcard"] {
     cursor: zoom-in;
+    background: #ffffff !important;
+    border: 1px solid #e2e4df !important;
+    border-radius: 12px !important;
+    box-shadow: 0 1px 2px rgba(20, 30, 20, 0.04) !important;
+    overflow: hidden;
   }
   /* Editable question view (full app, shown in the card modal): trim the global chrome so
      the modal is mostly the chart and Metabase's own visualization editor. */
