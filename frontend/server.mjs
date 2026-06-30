@@ -46,6 +46,7 @@ function clearMetabaseSession() {
 
 const metabaseEmbedCleanup = `
 <style id="fiscallens-metabase-embed-cleanup">
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap');
   [role="contentinfo"],
   footer,
   a[href*="powered_by_metabase"],
@@ -121,21 +122,21 @@ const metabaseEmbedCleanup = `
   /* Brand logo on the left of the tab navbar; reserve room so tabs never collide with it. */
   [data-testid="fixed-width-dashboard-tabs"] {
     position: relative !important;
-    padding-left: 152px !important;
+    padding-left: 140px !important;
   }
   [data-testid="fixed-width-dashboard-tabs"]::before {
-    content: "";
+    content: "arandu";
     position: absolute;
-    left: 18px;
+    left: 20px;
     top: 50%;
     transform: translateY(-50%);
-    width: 119px;
-    height: 26px;
-    background-image: url("/arandu-logo.png"); /* transparent Arandu wordmark */
-    background-repeat: no-repeat;
-    background-position: left center;
-    background-size: contain;
+    font-family: "Fraunces", Georgia, "Times New Roman", serif;
+    font-weight: 500;
+    font-size: 27px;
+    letter-spacing: -0.5px;
+    color: #0b5e3a; /* arandu green */
     pointer-events: none;
+    white-space: nowrap;
   }
   /* Per-card source logo (added by script), sits left of the "…" menu. */
   a.fl-source {
