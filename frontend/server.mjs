@@ -86,7 +86,7 @@ const metabaseEmbedCleanup = `
   [data-testid="dashboard-parameters-widget-container"] {
     padding: 14px 20px 26px !important;
     margin: 0 !important;
-    background: linear-gradient(to bottom, #ffffff 0%, #f4f5f2 45%, #eceee9 100%) !important;
+    background: linear-gradient(to bottom, #ffffff 0px, #eceee9 22px) !important;
     border: 0 !important;
     box-shadow: none !important;
   }
