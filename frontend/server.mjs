@@ -81,12 +81,12 @@ const metabaseEmbedCleanup = `
     padding: 4px 20px 140px !important;
     max-width: 100% !important;
   }
-  /* Filter bar: breathing room + a subtle bar so the "Período" control reads cleanly. */
+  /* Filter bar: soft gray that fades into the white below, instead of a hard edge. */
   [data-testid="dashboard-parameters-widget-container"] {
-    padding: 12px 20px !important;
+    padding: 12px 20px 18px !important;
     margin: 0 !important;
-    background: #fbfbfa !important;
-    border-bottom: 1px solid #ececec !important;
+    background: linear-gradient(to bottom, #eef0ed 0%, #f6f7f5 45%, #ffffff 100%) !important;
+    border-bottom: 0 !important;
   }
   /* Hide the stray embed header action icons (fullscreen / export / refresh). */
   [aria-label="fullscreen"],
