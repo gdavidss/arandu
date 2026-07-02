@@ -223,6 +223,46 @@ const metabaseEmbedCleanup = `
   );
 })();
 </script>
+<script id="fiscallens-question-page">
+(function () {
+  if (window.__flQuestion) return;
+  window.__flQuestion = true;
+  // Only on the top-level question view (the card "fullscreen"): add a Voltar button and
+  // persist the user's visualization (Metabase serializes it into the URL) per card, in
+  // the browser's localStorage. Never inside iframes (the public dashboard embed).
+  if (window.self !== window.top) return;
+  function isQuestion() { return window.location.pathname.indexOf("/question") !== -1; }
+  if (!isQuestion()) return;
+  var m = window.location.pathname.match(/\\/question\\/(\\d+)/);
+  var cardId = m ? m[1] : null;
+  // Voltar
+  var btn = document.createElement("a");
+  btn.textContent = "\\u2190 Voltar ao painel";
+  btn.href = "/";
+  btn.style.cssText = "position:fixed;top:10px;right:12px;z-index:9999;padding:7px 12px;" +
+    "font:600 13px Inter,system-ui,sans-serif;color:#374151;background:#fff;" +
+    "border:1px solid #d6d3cd;border-radius:8px;text-decoration:none;" +
+    "box-shadow:0 1px 3px rgba(0,0,0,.12)";
+  function mount() {
+    if (document.body && !document.getElementById("fl-voltar")) {
+      btn.id = "fl-voltar";
+      document.body.appendChild(btn);
+    }
+  }
+  mount();
+  new MutationObserver(mount).observe(document.documentElement, { childList: true, subtree: true });
+  // Persist the current view for this card (the SPA drops the /metabase prefix — re-add).
+  if (cardId) {
+    setInterval(function () {
+      var rel = window.location.pathname + window.location.search + window.location.hash;
+      if (rel.indexOf("/metabase/") !== 0) rel = "/metabase" + rel;
+      if (rel.indexOf("/question") !== -1 && rel.indexOf("/auth/login") === -1) {
+        try { window.localStorage.setItem("arandu:viz2:" + cardId, rel); } catch (e) {}
+      }
+    }, 800);
+  }
+})();
+</script>
 <script id="fiscallens-dismiss-onboarding">
 (function () {
   if (window.__flDismiss) return;

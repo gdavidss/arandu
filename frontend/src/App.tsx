@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 type LinksFile = {
   links: Record<string, string>;
@@ -35,14 +35,10 @@ function cardId(url: string): string | null {
   }
 }
 
-type Active = { id: string; title: string; src: string };
-
 export function App() {
   const [dashboardUrl, setDashboardUrl] = useState("");
   const [questionEditByName, setQuestionEditByName] = useState<Record<string, string>>({});
-  const [active, setActive] = useState<Active | null>(null);
   const [showAbout, setShowAbout] = useState(false);
-  const frameRef = useRef<HTMLIFrameElement | null>(null);
   const embedUrl = metabaseDashboardUrl(dashboardUrl);
 
   const REPO = "https://github.com/gdavidss/arandu";
@@ -58,25 +54,22 @@ export function App() {
       .catch(() => setDashboardUrl(""));
   }, []);
 
-  // Esc closes whatever overlay is open.
+  // Esc closes the About overlay.
   useEffect(() => {
-    if (!active && !showAbout) return;
+    if (!showAbout) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setActive(null);
-        setShowAbout(false);
-      }
+      if (e.key === "Escape") setShowAbout(false);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [active, showAbout]);
+  }, [showAbout]);
 
   // A script injected into the dashboard iframe posts the clicked card's title here.
   // We open the card's real Metabase question (the native visualization editor — table,
-  // pie, bar, settings, everything), restoring the user's previously saved view if any.
-  // NOTE the storage key is versioned (viz2): the v1 entries saved paths without the
-  // /metabase proxy prefix (Metabase's SPA rewrites its URL client-side without it),
-  // which restored to a broken route stuck on "Carregando…".
+  // pie, bar, settings, everything) TOP-LEVEL in the same tab: OSS Metabase hard-blocks
+  // the full app inside iframes (EE-only "interactive embedding"), so a modal iframe
+  // hangs on "Carregando…". The question page gets a "Voltar" button and persists the
+  // user's visualization to localStorage via the proxy-injected script; we restore it here.
   useEffect(() => {
     function onMessage(event: MessageEvent) {
       const data = event.data;
@@ -86,35 +79,11 @@ export function App() {
       if (!editUrl || !id) return;
       const saved = localStorage.getItem(`arandu:viz2:${id}`);
       const valid = saved && saved.startsWith("/metabase/") && saved.includes("/question");
-      setActive({ id, title: data.title, src: valid ? saved : proxiedQuestion(editUrl) });
+      window.location.assign(valid ? saved : proxiedQuestion(editUrl));
     }
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
   }, [questionEditByName]);
-
-  // While the editor is open, persist the question's view (Metabase serializes the chosen
-  // visualization into the URL) to localStorage, so the user's choice sticks per card.
-  // The SPA drops the /metabase proxy prefix when it rewrites the URL — re-add it.
-  useEffect(() => {
-    if (!active) return;
-    const id = active.id;
-    const tick = () => {
-      try {
-        const win = frameRef.current?.contentWindow;
-        if (!win) return;
-        const loc = win.location;
-        let rel = `${loc.pathname}${loc.search}${loc.hash}`;
-        if (!rel.startsWith("/metabase/")) rel = `/metabase${rel}`;
-        if (rel.includes("/question") && !rel.includes("/auth/login")) {
-          localStorage.setItem(`arandu:viz2:${id}`, rel);
-        }
-      } catch {
-        // cross-origin during a redirect; ignore.
-      }
-    };
-    const iv = window.setInterval(tick, 800);
-    return () => window.clearInterval(iv);
-  }, [active]);
 
   if (!embedUrl) {
     return (
@@ -177,32 +146,6 @@ export function App() {
         src={embedUrl}
         title="Indicadores macrofiscais do Brasil"
       />
-
-      {active && (
-        <div
-          className="zoom-overlay"
-          onClick={() => setActive(null)}
-          role="dialog"
-          aria-modal="true"
-        >
-          <div className="zoom-modal" onClick={(e) => e.stopPropagation()}>
-            <button
-              type="button"
-              className="zoom-close"
-              onClick={() => setActive(null)}
-              aria-label="Fechar"
-            >
-              ✕
-            </button>
-            <iframe
-              ref={frameRef}
-              className="zoom-frame"
-              src={active.src}
-              title={active.title}
-            />
-          </div>
-        </div>
-      )}
 
       {showAbout && (
         <div

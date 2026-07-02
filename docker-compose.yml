@@ -49,6 +49,10 @@ services:
       # most recent years. Raise it so long daily histories render in full.
       MB_UNAGGREGATED_QUERY_ROW_LIMIT: "100000"
       MB_AGGREGATED_QUERY_ROW_LIMIT: "100000"
+      # NOTE: do NOT try to iframe the full Metabase app — full-app ("interactive")
+      # embedding is EE-only; OSS blocks it in iframes (infinite "Carregando…"), and the
+      # MB_*_INTERACTIVE env vars kill boot on OSS. The card-fullscreen therefore opens
+      # the question view top-level (same tab) with a "Voltar" button, via the proxy.
     ports:
       - "3000:3000"
 
