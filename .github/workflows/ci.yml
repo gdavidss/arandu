@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  ingestion:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: pip install -e "./ingestion[dev]"
+      - name: Lint (ruff)
+        working-directory: ingestion
+        run: ruff check .
+      - name: Tests (pytest, all mocked — no DB needed)
+        working-directory: ingestion
+        run: pytest -q
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Typecheck
+        working-directory: frontend
+        run: |
+          npm ci
+          npx tsc --noEmit

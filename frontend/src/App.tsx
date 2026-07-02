@@ -74,6 +74,9 @@ export function App() {
   // A script injected into the dashboard iframe posts the clicked card's title here.
   // We open the card's real Metabase question (the native visualization editor — table,
   // pie, bar, settings, everything), restoring the user's previously saved view if any.
+  // NOTE the storage key is versioned (viz2): the v1 entries saved paths without the
+  // /metabase proxy prefix (Metabase's SPA rewrites its URL client-side without it),
+  // which restored to a broken route stuck on "Carregando…".
   useEffect(() => {
     function onMessage(event: MessageEvent) {
       const data = event.data;
@@ -81,8 +84,9 @@ export function App() {
       const editUrl = questionEditByName[data.title];
       const id = editUrl ? cardId(editUrl) : null;
       if (!editUrl || !id) return;
-      const saved = localStorage.getItem(`arandu:viz:${id}`);
-      setActive({ id, title: data.title, src: saved || proxiedQuestion(editUrl) });
+      const saved = localStorage.getItem(`arandu:viz2:${id}`);
+      const valid = saved && saved.startsWith("/metabase/") && saved.includes("/question");
+      setActive({ id, title: data.title, src: valid ? saved : proxiedQuestion(editUrl) });
     }
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
@@ -90,6 +94,7 @@ export function App() {
 
   // While the editor is open, persist the question's view (Metabase serializes the chosen
   // visualization into the URL) to localStorage, so the user's choice sticks per card.
+  // The SPA drops the /metabase proxy prefix when it rewrites the URL — re-add it.
   useEffect(() => {
     if (!active) return;
     const id = active.id;
@@ -98,9 +103,10 @@ export function App() {
         const win = frameRef.current?.contentWindow;
         if (!win) return;
         const loc = win.location;
-        const rel = `${loc.pathname}${loc.search}${loc.hash}`;
+        let rel = `${loc.pathname}${loc.search}${loc.hash}`;
+        if (!rel.startsWith("/metabase/")) rel = `/metabase${rel}`;
         if (rel.includes("/question") && !rel.includes("/auth/login")) {
-          localStorage.setItem(`arandu:viz:${id}`, rel);
+          localStorage.setItem(`arandu:viz2:${id}`, rel);
         }
       } catch {
         // cross-origin during a redirect; ignore.
