@@ -3877,12 +3877,16 @@ DASHBOARD_TABS: list[dict[str, Any]] = [
         # and quarterly series are never mixed in the same chart (different frequencies).
         "cards": _grid(
             [
+                # Instrument mix (share) leads: by value paid, then by transaction count.
+                [
+                    ("digital_payments_share", 12),
+                    ("digital_payments_share_count", 12),
+                ],
                 # Acesso / penetração
                 [("digital_access_devices", 24)],
                 [("digital_people_access", 12), ("digital_access_urban_rural", 12)],
                 [("digital_access_regions", 12), ("digital_connection_type", 12)],
-                # Pagamentos digitais
-                [("digital_payments_share", 12), ("digital_payments_share_count", 12)],
+                # Pagamentos digitais (detalhe)
                 [("digital_payments_value", 12), ("digital_payments_count", 12)],
                 [("digital_pix_value", 12), ("digital_pix_count", 12)],
                 [("digital_cards_value", 12), ("digital_cards_count", 12)],
