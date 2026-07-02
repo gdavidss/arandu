@@ -154,7 +154,7 @@ const metabaseEmbedCleanup = `
   a.fl-source {
     display: inline-flex;
     align-items: center;
-    margin-right: 4px;
+    margin-right: 0;
     opacity: 0.65;
     font-size: 11px;
     font-weight: 600;
@@ -221,6 +221,26 @@ const metabaseEmbedCleanup = `
     },
     true,
   );
+})();
+</script>
+<script id="fiscallens-dismiss-onboarding">
+(function () {
+  if (window.__flDismiss) return;
+  window.__flDismiss = true;
+  // Metabase shows a one-time "it's fine to explore saved questions" modal the first time
+  // the question view opens; it covers the chart and reads as "card not loading". Click it
+  // away automatically whenever it appears.
+  var mo = new MutationObserver(function () {
+    var btns = document.querySelectorAll("button");
+    for (var i = 0; i < btns.length; i++) {
+      var t = (btns[i].textContent || "").trim();
+      if (t === "Comece a explorar" || t === "Start exploring") {
+        btns[i].click();
+        return;
+      }
+    }
+  });
+  mo.observe(document.documentElement, { childList: true, subtree: true });
 })();
 </script>
 <script id="fiscallens-card-source">

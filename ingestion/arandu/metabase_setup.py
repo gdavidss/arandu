@@ -87,7 +87,7 @@ SERIES_LABELS = {
     "bcb_sgs_ipca_nucleo_ma": "IPCA núcleo (médias aparadas)",
     "bcb_sgs_ipca_servicos": "IPCA serviços",
     "bcb_sgs_salario_minimo": "Salário mínimo",
-    "ibge_pnad_unemployment_rate": "Taxa de desocupação",
+    "ibge_pnad_unemployment_rate": "Taxa de desemprego",
     "ibge_pnad_real_average_income": "Rendimento real médio",
     "ibge_pnad_real_labor_income_mass": "Massa real de rendimentos",
     "tesouro_rtn_receita_liquida": "Receita líquida",
@@ -860,11 +860,11 @@ CHARTS: dict[str, dict[str, Any]] = {
         "visualization_settings": line_settings("R$ milhões", ["#8c564b"]),
     },
     "labor_unemployment": {
-        "name": "Taxa de desocupação",
+        "name": "Taxa de desemprego",
         "display": "line",
         "description": (
-            "Taxa de desocupação das pessoas de 14 anos ou mais. "
-            "Fonte: IBGE SIDRA/PNAD Contínua, tabela 6381, variável 4099. "
+            "Taxa de desemprego (o IBGE chama de “taxa de desocupação”) das pessoas de "
+            "14 anos ou mais. Fonte: IBGE SIDRA/PNAD Contínua, tabela 6381, variável 4099. "
             "Unidade: %. Frequência: trimestre móvel com divulgação mensal."
         ),
         "query": line_query(
@@ -3747,20 +3747,27 @@ def _grid(rows: list[list[tuple[str, int]]], size_y: int = 6) -> list[dict[str, 
 DASHBOARD_TABS: list[dict[str, Any]] = [
     {
         "name": "Visão geral",
-        # One read of each story: prices/rates/FX, the fiscal+debt headline, then
-        # activity/jobs, then the household squeeze.
+        # A single read of the country, told as a story:
+        #  1) the economy's size and the cost of living (PIB first, inflation, Selic);
+        #  2) jobs, activity and the dollar;
+        #  3) the State — its accounts and its institutions (fiscal result, debt, BTI);
+        #  4) how it lands on households (real income, debt burden, default);
+        #  5) a secondary FX cross (BRL/CNY), lowest priority, last.
         "cards": _grid(
             [
-                [("overview_selic", 8), ("overview_ipca", 8), ("overview_exchange", 8)],
-                [("cambio_brl_cny", 8)],
-                [("fiscal_primary_deficit_12m", 12), ("debt_stock", 12)],
-                [("activity_pib_nominal", 8), ("monetary_ibc", 8), ("labor_unemployment", 8)],
+                [("activity_pib_nominal", 8), ("overview_ipca", 8), ("overview_selic", 8)],
+                [("labor_unemployment", 8), ("monetary_ibc", 8), ("overview_exchange", 8)],
+                [
+                    ("fiscal_primary_deficit_12m", 8),
+                    ("debt_stock", 8),
+                    ("institutions_bti_brazil", 8),
+                ],
                 [
                     ("labor_real_average_income", 8),
                     ("social_household_debt", 8),
                     ("social_default_rate", 8),
                 ],
-                [("institutions_bti_brazil", 8)],
+                [("cambio_brl_cny", 8)],
             ]
         ),
     },
