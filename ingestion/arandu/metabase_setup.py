@@ -422,55 +422,8 @@ IPCA_TARGET_VIZ: dict[str, Any] = {
 # Re-exported as `arandu.systemic.CHARTS`.
 # ======================================================================================
 CHARTS: dict[str, dict[str, Any]] = {
-    "institutions_bti_brazil": {
-        "name": "Qualidade das instituições no Brasil — Índice de Transformação Bertelsmann (BTI)",
-        "display": "line",
-        "description": (
-            "Pontuações do Brasil no Índice de Transformação Bertelsmann (BTI) ao longo das "
-            "edições: o Índice de Status, o Índice de Governança e os critérios Estado "
-            "(Stateness), Estado de Direito e Estabilidade das Instituições Democráticas. "
-            "Fonte: Bertelsmann Stiftung — BTI (https://bti-project.org), planilha BTI "
-            "2006–2026 Scores e relatórios de país. Unidade: pontuação de 1 a 10 (10 = melhor). "
-            "Frequência: bienal (uma edição a cada dois anos). Conceito: avaliação qualitativa "
-            "por especialistas do grau de transformação rumo à democracia sob o Estado de "
-            "Direito e à economia de mercado, e da qualidade da governança; valores "
-            "transcritos das edições oficiais."
-        ),
-        "query": line_query(
-            [
-                "bti_status_index_brazil",
-                "bti_governance_index_brazil",
-                "bti_rule_of_law_brazil",
-                "bti_stability_democratic_institutions_brazil",
-                "bti_stateness_brazil",
-            ],
-            metric="Pontuação (1–10)",
-        ),
-        "visualization_settings": {
-            **line_settings(
-                "Pontuação (1–10)",
-                ["#1f77b4", "#d62728", "#2ca02c", "#9467bd", "#ff7f0e"],
-            ),
-            "graph.x_axis.scale": "ordinal",
-            "graph.x_axis.title_text": "Edição (ano)",
-            "graph.y_axis.auto_range": False,
-            "graph.y_axis.min": 0,
-            "graph.y_axis.max": 10,
-            "graph.y_axis.title_text": "Pontuação (1–10)",
-            "series_settings": {
-                "Índice de Status": {"line.marker_enabled": True, "color": "#1f77b4"},
-                "Índice de Governança": {"line.marker_enabled": True, "color": "#d62728"},
-                "Estado de Direito": {"line.marker_enabled": True, "color": "#2ca02c"},
-                "Estabilidade das Instituições Democráticas": {
-                    "line.marker_enabled": True,
-                    "color": "#9467bd",
-                },
-                "Estado (Stateness)": {"line.marker_enabled": True, "color": "#ff7f0e"},
-            },
-        },
-    },
     "institutions_bti_status_governance": {
-        "name": "Brasil no BTI — Índice de Status e Índice de Governança por edição",
+        "name": "Qualidade das instituições no Brasil — Índice de Status e de Governança (BTI)",
         "display": "line",
         "description": (
             "Os dois índices agregados do BTI para o Brasil, por edição: o Índice de Status "
@@ -570,7 +523,7 @@ CHARTS: dict[str, dict[str, Any]] = {
         "visualization_settings": line_settings("R$/US$", ["#2ca02c"]),
     },
     "cambio_brl_cny": {
-        "name": "Câmbio BRL/CNY",
+        "name": "Câmbio: reais por yuan chinês (BRL/CNY)",
         "display": "line",
         "description": (
             "Reais por iuan chinês (CNY), taxa de câmbio de referência diária. Fonte: BCE "
@@ -613,7 +566,7 @@ CHARTS: dict[str, dict[str, Any]] = {
         "visualization_settings": line_settings("% do PIB", ["#2ca02c", "#d62728"]),
     },
     "fiscal_12m": {
-        "name": "Resultado NFSP 12m e juros",
+        "name": "Resultado das contas públicas e juros, acumulados em 12 meses (NFSP, % do PIB)",
         "display": "line",
         "description": (
             "Resultado primário, resultado nominal e juros nominais do Setor Público "
@@ -634,7 +587,7 @@ CHARTS: dict[str, dict[str, Any]] = {
         "visualization_settings": line_settings("% do PIB", ["#2ca02c", "#d62728", "#ff7f0e"]),
     },
     "fiscal_primary_deficit_12m": {
-        "name": "Resultado primário NFSP 12m",
+        "name": "Resultado primário do setor público, acumulado em 12 meses (NFSP, % do PIB)",
         "display": "line",
         "description": (
             "NFSP primária (Necessidade de Financiamento do Setor Público) do Setor "
@@ -650,40 +603,8 @@ CHARTS: dict[str, dict[str, Any]] = {
         ),
         "visualization_settings": line_settings("% do PIB", ["#2ca02c"]),
     },
-    "fiscal_nominal_deficit_12m": {
-        "name": "Resultado nominal NFSP 12m",
-        "display": "line",
-        "description": (
-            "NFSP nominal (Necessidade de Financiamento do Setor Público) do Setor "
-            "Público Consolidado, acumulada em 12 meses — apurada pelo lado do "
-            "financiamento (abaixo da linha). "
-            "Fonte: BCB SGS 5727. Unidade: % do PIB. Sinal: + superávit, − déficit."
-        ),
-        "query": line_query(
-            ["bcb_sgs_nfsp_nominal_12m_pct_gdp"],
-            "analytics.fiscal_pulse_series",
-            metric="% do PIB",
-            negate=SURPLUS_POSITIVE_FLIP,
-        ),
-        "visualization_settings": line_settings("% do PIB", ["#d62728"]),
-    },
-    "fiscal_interest_12m": {
-        "name": "Juros nominais NFSP 12m",
-        "display": "line",
-        "description": (
-            "Juros nominais do Setor Público Consolidado (componente da NFSP — "
-            "Necessidade de Financiamento do Setor Público, apurada abaixo da linha), "
-            "acumulados em 12 meses. Fonte: BCB SGS 5760. Unidade: % do PIB."
-        ),
-        "query": line_query(
-            ["bcb_sgs_nfsp_interest_12m_pct_gdp"],
-            "analytics.fiscal_pulse_series",
-            metric="% do PIB",
-        ),
-        "visualization_settings": line_settings("% do PIB", ["#ff7f0e"]),
-    },
     "fiscal_monthly_primary": {
-        "name": "Resultado primário NFSP mensal",
+        "name": "Resultado primário mensal do setor público (NFSP, R$ milhões)",
         "display": "bar",
         "description": (
             "NFSP primária (Necessidade de Financiamento do Setor Público) mensal do "
@@ -700,7 +621,7 @@ CHARTS: dict[str, dict[str, Any]] = {
         "visualization_settings": time_bar_settings("R$ milhões", ["#2ca02c"]),
     },
     "fiscal_monthly_nominal": {
-        "name": "Resultado nominal NFSP mensal",
+        "name": "Resultado nominal do setor público, mensal (NFSP)",
         "display": "bar",
         "description": (
             "NFSP nominal (Necessidade de Financiamento do Setor Público) mensal do "
@@ -717,7 +638,7 @@ CHARTS: dict[str, dict[str, Any]] = {
         "visualization_settings": time_bar_settings("R$ milhões", ["#d62728"]),
     },
     "fiscal_monthly_interest": {
-        "name": "Juros nominais mensais",
+        "name": "Juros da dívida do setor público por mês (juros nominais)",
         "display": "bar",
         "description": (
             "Juros nominais mensais do Setor Público Consolidado. "
@@ -729,30 +650,6 @@ CHARTS: dict[str, dict[str, Any]] = {
             metric="R$ milhões",
         ),
         "visualization_settings": time_bar_settings("R$ milhões", ["#ff7f0e"]),
-    },
-    "fiscal_monthly_components": {
-        "name": "Resultados e juros NFSP mensais",
-        "display": "bar",
-        "description": (
-            "Resultado primário, resultado nominal e juros nominais mensais do Setor Público "
-            "Consolidado (NFSP — Necessidade de Financiamento do Setor Público, apurada "
-            "abaixo da linha). Fonte: BCB SGS. Unidade: R$ milhões nominais. "
-            "Sinal dos resultados: + superávit, − déficit."
-        ),
-        "query": line_query(
-            [
-                "bcb_sgs_nfsp_primary_monthly_brl",
-                "bcb_sgs_nfsp_nominal_monthly_brl",
-                "bcb_sgs_nfsp_interest_monthly_brl",
-            ],
-            "analytics.fiscal_pulse_series",
-            metric="R$ milhões",
-            negate=SURPLUS_POSITIVE_FLIP,
-        ),
-        "visualization_settings": time_bar_settings(
-            "R$ milhões",
-            ["#2ca02c", "#d62728", "#ff7f0e"],
-        ),
     },
     "fiscal_debt": {
         "name": "Dívida pública",
@@ -771,7 +668,7 @@ CHARTS: dict[str, dict[str, Any]] = {
         "visualization_settings": line_settings("% do PIB", ["#9467bd", "#17becf"]),
     },
     "debt_stock": {
-        "name": "DBGG e DLSP",
+        "name": "Dívida pública bruta e líquida (DBGG e DLSP), em % do PIB",
         "display": "line",
         "description": (
             "DBGG (Dívida Bruta do Governo Geral) e DLSP (Dívida Líquida do Setor Público), "
@@ -786,7 +683,7 @@ CHARTS: dict[str, dict[str, Any]] = {
         "visualization_settings": line_settings("% do PIB", ["#9467bd", "#17becf"]),
     },
     "debt_dbgg": {
-        "name": "DBGG",
+        "name": "Dívida bruta do governo geral (DBGG), % do PIB",
         "display": "line",
         "description": "Dívida Bruta do Governo Geral. Fonte: BCB SGS 13762. Unidade: % do PIB.",
         "query": line_query(
@@ -797,7 +694,7 @@ CHARTS: dict[str, dict[str, Any]] = {
         "visualization_settings": line_settings("% do PIB", ["#9467bd"]),
     },
     "debt_dlsp": {
-        "name": "DLSP",
+        "name": "Dívida líquida do setor público (DLSP), % do PIB",
         "display": "line",
         "description": "Dívida Líquida do Setor Público. Fonte: BCB SGS 4513. Unidade: % do PIB.",
         "query": line_query(
@@ -808,14 +705,14 @@ CHARTS: dict[str, dict[str, Any]] = {
         "visualization_settings": line_settings("% do PIB", ["#17becf"]),
     },
     "monetary_selic": {
-        "name": "Selic meta",
+        "name": "Taxa básica de juros — meta da Selic",
         "display": "line",
         "description": "Selic meta definida pelo Copom. Fonte: BCB SGS 432. Unidade: % ao ano.",
         "query": line_query(["bcb_sgs_selic_target"], metric="Taxa (% a.a.)"),
         "visualization_settings": line_settings("Taxa (% a.a.)", ["#1f77b4"]),
     },
     "monetary_ipca_12m": {
-        "name": "IPCA em 12 meses vs meta",
+        "name": "Inflação (IPCA) acumulada em 12 meses vs meta",
         "display": "line",
         "description": (
             "IPCA acumulado em 12 meses contra a meta de inflação do CMN (centro e banda "
@@ -825,22 +722,15 @@ CHARTS: dict[str, dict[str, Any]] = {
         "query": ipca_target_query(),
         "visualization_settings": IPCA_TARGET_VIZ,
     },
-    "monetary_ipca_monthly": {
-        "name": "IPCA mensal",
-        "display": "bar",
-        "description": "Variação mensal do IPCA. Fonte: BCB SGS 433. Unidade: % ao mês.",
-        "query": line_query(["bcb_sgs_ipca_monthly"], metric="Variação (%)"),
-        "visualization_settings": time_bar_settings("Variação (%)", ["#ff7f0e"]),
-    },
     "monetary_exchange": {
-        "name": "Câmbio BRL/USD",
+        "name": "Câmbio — reais por dólar (R$/US$)",
         "display": "line",
         "description": "Taxa de câmbio livre, dólar venda. Fonte: BCB SGS 1. Unidade: R$/US$.",
         "query": line_query(["bcb_sgs_usd_brl_sale"], metric="R$/US$"),
         "visualization_settings": line_settings("R$/US$", ["#2ca02c"]),
     },
     "monetary_ibc": {
-        "name": "IBC-Br",
+        "name": "Atividade econômica — Índice do Banco Central (IBC-Br)",
         "display": "line",
         "description": (
             "Índice de Atividade Econômica do Banco Central, com ajuste sazonal. "
@@ -850,7 +740,7 @@ CHARTS: dict[str, dict[str, Any]] = {
         "visualization_settings": line_settings("Índice", ["#9467bd"]),
     },
     "activity_pib_nominal": {
-        "name": "PIB mensal nominal",
+        "name": "PIB mensal em valores correntes (nominal)",
         "display": "line",
         "description": (
             "PIB mensal em valores correntes estimado pelo Banco Central. "
@@ -875,7 +765,7 @@ CHARTS: dict[str, dict[str, Any]] = {
         "visualization_settings": line_settings("Taxa (%)", ["#2ca02c"]),
     },
     "labor_real_average_income": {
-        "name": "Rendimento real médio",
+        "name": "Rendimento médio do trabalho, descontada a inflação (rendimento real)",
         "display": "line",
         "description": (
             "Rendimento médio mensal real habitual de todos os trabalhos. "
@@ -890,7 +780,9 @@ CHARTS: dict[str, dict[str, Any]] = {
         "visualization_settings": line_settings("R$ reais", ["#1f77b4"]),
     },
     "labor_real_income_mass": {
-        "name": "Massa real de rendimentos",
+        "name": (
+            "Massa real de rendimentos (soma dos rendimentos do trabalho, descontada a inflação)"
+        ),
         "display": "line",
         "description": (
             "Massa de rendimento mensal real habitual de todos os trabalhos. "
@@ -905,7 +797,7 @@ CHARTS: dict[str, dict[str, Any]] = {
         "visualization_settings": line_settings("R$ milhões reais", ["#9467bd"]),
     },
     "central_revenue_spending": {
-        "name": "Receita líquida e despesa total (acumulado 12m)",
+        "name": "Receita líquida e despesa total do Governo Central (acumulado em 12 meses)",
         "display": "line",
         "description": (
             "Receita líquida e despesa total do Governo Central, acumuladas em 12 meses "
@@ -948,30 +840,64 @@ order by "Data", "Série"
         },
     },
     "central_primary_components": {
-        "name": "Resultado primário do Governo Central e componentes",
+        "name": (
+            "Resultado primário do Governo Central e componentes (Tesouro e Previdência), "
+            "acumulado em 12 meses"
+        ),
         "display": "line",
         "description": (
             "Resultado primário do Governo Central e seus componentes Tesouro Nacional e "
-            "Previdência Social. Fonte: Tesouro Nacional RTN. Unidade: R$ milhões nominais. "
-            "Sinal: + superávit, − déficit. (O resultado do Banco Central, ~mil vezes menor, "
-            "foi omitido por ser ilegível nesta escala.)"
+            "Previdência Social, acumulados em 12 meses para remover a forte sazonalidade "
+            "mensal. Fonte: Tesouro Nacional RTN. Unidade: R$ milhões nominais, acumulado "
+            "em 12 meses. Sinal: + superávit, − déficit. (O resultado do Banco Central, "
+            "~mil vezes menor, foi omitido por ser ilegível nesta escala.)"
         ),
-        "query": line_query(
-            [
-                "tesouro_rtn_resultado_primario_gc",
-                "tesouro_rtn_resultado_primario_tesouro",
-                "tesouro_rtn_resultado_previdencia",
-            ],
-            "analytics.governo_central_series",
-            metric="R$ milhões",
-        ),
-        "visualization_settings": line_settings(
-            "R$ milhões",
-            ["#1f77b4", "#2ca02c", "#d62728"],
-        ),
+        # 12-month rolling SUM of the same monthly R$ flows (additive) — no new data.
+        "query": f"""
+with d as (
+  select
+    date,
+    series_id,
+    sum(value) over (
+      partition by series_id order by date rows between 11 preceding and current row
+    ) as v12,
+    count(*) over (
+      partition by series_id order by date rows between 11 preceding and current row
+    ) as n
+  from analytics.governo_central_series
+  where series_id in (
+    'tesouro_rtn_resultado_primario_gc',
+    'tesouro_rtn_resultado_primario_tesouro',
+    'tesouro_rtn_resultado_previdencia'
+  )
+)
+select
+  date as "Data",
+  case series_id
+    when 'tesouro_rtn_resultado_primario_gc' then 'Governo Central'
+    when 'tesouro_rtn_resultado_primario_tesouro' then 'Tesouro Nacional'
+    when 'tesouro_rtn_resultado_previdencia' then 'Previdência (RGPS)'
+  end as "Série",
+  v12 as "R$ milhões (acumulado 12m)"
+from d
+where n = 12
+  {_periodo_filter_sql("date")}
+order by "Data", "Série"
+""".strip(),
+        "visualization_settings": {
+            **line_settings(
+                "R$ milhões (acumulado 12m)",
+                ["#1f77b4", "#2ca02c", "#d62728"],
+            ),
+            "series_settings": {
+                "Governo Central": {"line.marker_enabled": False, "color": "#1f77b4"},
+                "Tesouro Nacional": {"line.marker_enabled": False, "color": "#2ca02c"},
+                "Previdência (RGPS)": {"line.marker_enabled": False, "color": "#d62728"},
+            },
+        },
     },
     "central_primary_pct_gdp": {
-        "name": "Resultado primário do Governo Central (% do PIB, 12m)",
+        "name": "Resultado primário do Governo Central (% do PIB, acumulado em 12 meses)",
         "display": "line",
         "description": (
             "Resultado primário do Governo Central acumulado em 12 meses dividido pelo PIB "
@@ -1026,7 +952,10 @@ order by "Data"
         },
     },
     "central_spending_composition": {
-        "name": "Composição da despesa primária (participação no total, 12m)",
+        "name": (
+            "Composição da despesa primária do Governo Central (% do total, acumulado em 12 "
+            "meses)"
+        ),
         "display": "area",
         "description": (
             "Participação de cada categoria na despesa primária total do Governo Central, "
@@ -1093,7 +1022,7 @@ order by s."Data", s."Série"
         },
     },
     "central_revenues": {
-        "name": "Fontes de receita do Governo Central (acumulado 12m)",
+        "name": "Fontes de receita do Governo Central (acumulado em 12 meses)",
         "display": "line",
         "description": (
             "Principais fluxos de receita do Governo Central, acumulados em 12 meses para "
@@ -1157,7 +1086,7 @@ order by "Data", "Série"
         "visualization_settings": line_settings("R$ milhões", ["#2ca02c", "#d62728"]),
     },
     "budget_latest": {
-        "name": "Despesa por categoria",
+        "name": "Despesa federal por categoria (mês mais recente)",
         "display": "bar",
         "description": (
             "Categorias selecionadas de despesa do RTN. Fonte: Tesouro Nacional. "
@@ -1186,25 +1115,49 @@ order by "R$ milhões" desc
         ),
     },
     "budget_trend": {
-        "name": "Tendência de despesas",
+        "name": "Despesa federal por categoria (acumulado em 12 meses)",
         "display": "line",
         "description": (
-            "Tendência mensal de categorias selecionadas de despesa. "
-            "Fonte: Tesouro Nacional RTN. Unidade: R$ milhões nominais."
+            "Categorias selecionadas de despesa federal, acumuladas em 12 meses para "
+            "remover a forte sazonalidade mensal. Fonte: Tesouro Nacional RTN. "
+            "Unidade: R$ milhões nominais, acumulado em 12 meses."
         ),
-        "query": line_query(
-            [
-                "tesouro_rtn_beneficios_previdenciarios",
-                "tesouro_rtn_pessoal_encargos",
-                "tesouro_rtn_outras_obrigatorias",
-            ],
-            "analytics.federal_budget_series",
-            metric="R$ milhões",
-        ),
-        "visualization_settings": line_settings("R$ milhões"),
+        # 12-month rolling SUM of the same monthly R$ flows (additive) — no new data.
+        "query": f"""
+with d as (
+  select
+    date,
+    series_id,
+    sum(value) over (
+      partition by series_id order by date rows between 11 preceding and current row
+    ) as v12,
+    count(*) over (
+      partition by series_id order by date rows between 11 preceding and current row
+    ) as n
+  from analytics.federal_budget_series
+  where series_id in (
+    'tesouro_rtn_beneficios_previdenciarios',
+    'tesouro_rtn_pessoal_encargos',
+    'tesouro_rtn_outras_obrigatorias'
+  )
+)
+select
+  date as "Data",
+  case series_id
+    when 'tesouro_rtn_beneficios_previdenciarios' then 'Benefícios previdenciários'
+    when 'tesouro_rtn_pessoal_encargos' then 'Pessoal e encargos'
+    when 'tesouro_rtn_outras_obrigatorias' then 'Outras obrigatórias'
+  end as "Série",
+  v12 as "R$ milhões (acumulado 12m)"
+from d
+where n = 12
+  {_periodo_filter_sql("date")}
+order by "Data", "Série"
+""".strip(),
+        "visualization_settings": line_settings("R$ milhões (acumulado 12m)"),
     },
     "social_household_debt": {
-        "name": "Endividamento das famílias",
+        "name": "Endividamento das famílias (% da renda em 12 meses)",
         "display": "line",
         "description": (
             "Endividamento das famílias com o SFN sobre a renda acumulada em 12 meses, "
@@ -1235,15 +1188,43 @@ order by "R$ milhões" desc
         "visualization_settings": line_settings("% da carteira", ["#7f7f7f", "#d62728"]),
     },
     "social_food_inflation": {
-        "name": "Inflação de alimentos (IPCA)",
+        "name": "Inflação de alimentos acumulada em 12 meses (IPCA, alimentação e bebidas)",
         "display": "bar",
         "description": (
-            "IPCA do grupo Alimentação e bebidas, variação mensal. Proxy de pressão de "
+            "IPCA do grupo Alimentação e bebidas, variação acumulada em 12 meses "
+            "(composição multiplicativa das variações mensais). Proxy de pressão de "
             "preços de alimentos sobre as famílias — não mede insegurança alimentar. "
-            "Fonte: BCB SGS 1635. Unidade: % no mês. Frequência: mensal."
+            "Fonte: BCB SGS 1635. Unidade: % em 12 meses. Frequência: mensal."
         ),
-        "query": line_query(["bcb_sgs_ipca_alimentacao"], metric="Variação (% no mês)"),
-        "visualization_settings": time_bar_settings("Variação (% no mês)", ["#bcbd22"]),
+        # 12-month accumulated variation compounded from the same monthly series
+        # (multiplicative, the correct IPCA accumulation) — no new data, only aggregation.
+        "query": f"""
+with s as (
+  select
+    date,
+    exp(sum(ln(1 + value / 100.0)) over (
+      order by date rows between 11 preceding and current row
+    )) as f,
+    count(*) over (order by date rows between 11 preceding and current row) as n
+  from analytics.observations_enriched
+  where series_id = 'bcb_sgs_ipca_alimentacao'
+)
+select
+  date as "Data",
+  'IPCA alimentação e bebidas' as "Série",
+  round(((f - 1) * 100)::numeric, 2) as "Variação em 12 meses (%)"
+from s
+where n = 12
+  {_periodo_filter_sql("date")}
+order by "Data"
+""".strip(),
+        "visualization_settings": {
+            "graph.dimensions": ["Data"],
+            "graph.metrics": ["Variação em 12 meses (%)"],
+            "graph.colors": ["#bcbd22"],
+            "graph.x_axis.title_text": "Data",
+            "graph.y_axis.title_text": "Variação em 12 meses (%)",
+        },
     },
     # --- Apostas (bets) ---
     "bets_market_growth": {
@@ -1536,7 +1517,7 @@ order by value desc
     },
     # --- Added from the per-tab discovery workflow (verified, existing/new data) ---
     "monetary_real_rate": {
-        "name": "Juro real ex-post (Selic − IPCA 12m)",
+        "name": "Juro real: Selic menos inflação acumulada em 12 meses (IPCA)",
         "display": "line",
         "description": (
             "Juro real ex-post: Selic meta (média mensal) menos IPCA acumulado em 12 meses. "
@@ -1580,7 +1561,10 @@ order by "Data"
         },
     },
     "monetary_focus_ipca": {
-        "name": "Expectativa de inflação (Focus, 12m à frente) vs IPCA realizado (12m)",
+        "name": (
+            "Inflação esperada pelo mercado (boletim Focus, 12 meses à frente) vs inflação "
+            "observada (IPCA 12 meses)"
+        ),
         "display": "line",
         "description": (
             "Expectativa de mercado para o IPCA dos próximos 12 meses (mediana suavizada do "
@@ -1608,7 +1592,10 @@ order by "Data"
         },
     },
     "monetary_reer": {
-        "name": "Câmbio efetivo real (índice, IPCA)",
+        "name": (
+            "Câmbio efetivo real: o real frente às moedas dos principais parceiros comerciais "
+            "(índice, IPCA)"
+        ),
         "display": "line",
         "description": (
             "Índice da taxa de câmbio efetiva real do real — cesta de moedas dos principais "
@@ -1631,7 +1618,10 @@ order by "Data"
         },
     },
     "social_debt_service": {
-        "name": "Comprometimento de renda das famílias com o serviço da dívida",
+        "name": (
+            "Parcela da renda das famílias comprometida com o pagamento de dívidas (serviço da "
+            "dívida)"
+        ),
         "display": "line",
         "description": (
             "Comprometimento de renda das famílias com o serviço da dívida (juros + "
@@ -1657,30 +1647,62 @@ order by "Data"
         },
     },
     "monetary_ipca_decomposition": {
-        "name": "IPCA: cheio, alimentos e serviços (variação mensal)",
+        "name": "IPCA: índice geral, alimentos e serviços (variação acumulada em 12 meses)",
         "display": "line",
         "description": (
-            "IPCA cheio, grupo Alimentação e bebidas e grupo Serviços, variação mensal. "
-            "Fonte: BCB SGS 433, 1635, 10844. Unidade: % no mês. Frequência: mensal. "
-            "Conceito: variações mensais comparáveis; não somam ao cheio (são recortes)."
+            "IPCA cheio, grupo Alimentação e bebidas e grupo Serviços, variação acumulada "
+            "em 12 meses (composição multiplicativa das variações mensais). "
+            "Fonte: BCB SGS 433, 1635, 10844. Unidade: % em 12 meses. Frequência: mensal. "
+            "Conceito: variações acumuladas comparáveis; os recortes não somam ao cheio."
         ),
-        "query": line_query(
-            ["bcb_sgs_ipca_monthly", "bcb_sgs_ipca_alimentacao", "bcb_sgs_ipca_servicos"],
-            metric="Variação (% no mês)",
-        ),
+        # 12-month accumulated variation compounded from the same monthly series
+        # (multiplicative, the correct IPCA accumulation) — no new data, only aggregation.
+        "query": f"""
+with s as (
+  select
+    series_id,
+    date,
+    exp(sum(ln(1 + value / 100.0)) over (
+      partition by series_id order by date rows between 11 preceding and current row
+    )) as f,
+    count(*) over (
+      partition by series_id order by date rows between 11 preceding and current row
+    ) as n
+  from analytics.observations_enriched
+  where series_id in (
+    'bcb_sgs_ipca_monthly',
+    'bcb_sgs_ipca_alimentacao',
+    'bcb_sgs_ipca_servicos'
+  )
+)
+select
+  date as "Data",
+  case series_id
+    when 'bcb_sgs_ipca_monthly' then 'IPCA cheio'
+    when 'bcb_sgs_ipca_alimentacao' then 'Alimentação e bebidas'
+    when 'bcb_sgs_ipca_servicos' then 'Serviços'
+  end as "Série",
+  round(((f - 1) * 100)::numeric, 2) as "Variação em 12 meses (%)"
+from s
+where n = 12
+  {_periodo_filter_sql("date")}
+order by "Data", "Série"
+""".strip(),
         "visualization_settings": {
-            **line_settings("Variação (% no mês)", ["#111111", "#ff7f0e", "#1f77b4"]),
+            **line_settings("Variação em 12 meses (%)", ["#111111", "#ff7f0e", "#1f77b4"]),
             "graph.dimensions": ["Data", "Série"],
             "series_settings": {
-                "IPCA mensal": {"line.marker_enabled": False, "color": "#111111"},
-                "IPCA alimentação e bebidas": {"line.marker_enabled": False, "color": "#ff7f0e"},
-                "IPCA serviços": {"line.marker_enabled": False, "color": "#1f77b4"},
+                "IPCA cheio": {"line.marker_enabled": False, "color": "#111111"},
+                "Alimentação e bebidas": {"line.marker_enabled": False, "color": "#ff7f0e"},
+                "Serviços": {"line.marker_enabled": False, "color": "#1f77b4"},
             },
-            "column_settings": {'["name","Variação (% no mês)"]': {"suffix": "%", "decimals": 2}},
+            "column_settings": {
+                '["name","Variação em 12 meses (%)"]': {"suffix": "%", "decimals": 2}
+            },
         },
     },
     "monetary_ipca_core": {
-        "name": "IPCA cheio vs núcleo de médias aparadas",
+        "name": "IPCA cheio vs núcleo, que exclui variações extremas (médias aparadas)",
         "display": "line",
         "description": (
             "IPCA cheio e núcleo por médias aparadas com suavização, variação mensal. "
@@ -1705,7 +1727,7 @@ order by "Data"
         },
     },
     "activity_ibc_yoy": {
-        "name": "IBC-Br: variação em 12 meses",
+        "name": "Atividade econômica (IBC-Br): variação em 12 meses",
         "display": "line",
         "description": (
             "Variação interanual do IBC-Br (proxy mensal do PIB), calculada sobre a série "
@@ -1742,7 +1764,7 @@ order by "Data"
         },
     },
     "labor_income_yoy": {
-        "name": "Rendimento real médio: variação interanual",
+        "name": "Rendimento real médio: variação frente ao mesmo período do ano anterior",
         "display": "line",
         "description": (
             "Variação em 12 meses do rendimento médio real habitual (PNAD Contínua). "
@@ -1781,7 +1803,10 @@ order by "Data"
         },
     },
     "social_default_spread": {
-        "name": "Inadimplência: spread pessoas físicas − total",
+        "name": (
+            "Inadimplência: diferença entre pessoas físicas e o total do crédito (pontos "
+            "percentuais)"
+        ),
         "display": "line",
         "description": (
             "Diferença entre a inadimplência de pessoas físicas e a inadimplência total "
@@ -1906,27 +1931,43 @@ order by "Data", "Série"
         },
     },
     "sectors_gdp_yoy": {
-        "name": "Valor adicionado por setor: variação em 4 trimestres",
+        "name": "Valor adicionado por setor: variação acumulada em 4 trimestres",
         "display": "line",
         "description": (
-            "Variação do índice de volume contra o mesmo trimestre do ano anterior, por "
-            "setor, calculada sobre a série SEM ajuste sazonal (base correta para variação "
-            "interanual). Fonte: IBGE SIDRA, tabela 1620, variável 583, classificação 11255. "
-            "Unidade: % (4 trimestres). Frequência: trimestral. Conceito: volume real."
+            "Variação do acumulado em 4 trimestres do índice de volume contra os 4 "
+            "trimestres imediatamente anteriores, por setor, calculada sobre a série SEM "
+            "ajuste sazonal (metodologia IBGE da taxa acumulada). Fonte: IBGE SIDRA, tabela "
+            "1620, variável 583, classificação 11255. Unidade: % (acumulado em 4 "
+            "trimestres). Frequência: trimestral. Conceito: volume real."
         ),
+        # Taxa acumulada em 4 trimestres from the same NSA volume index (IBGE methodology:
+        # sum of 4 quarters vs the previous 4) — same series, only the aggregation changes.
         "query": f"""
-with s as (
+with w as (
   select
     series_id,
     date,
-    value,
-    lag(value, 4) over (partition by series_id order by date) as prev
+    sum(value) over (
+      partition by series_id order by date rows between 3 preceding and current row
+    ) as s4,
+    count(*) over (
+      partition by series_id order by date rows between 3 preceding and current row
+    ) as n
   from analytics.observations_enriched
   where series_id in (
     'ibge_cnt_volume_nsa_agropecuaria',
     'ibge_cnt_volume_nsa_industria',
     'ibge_cnt_volume_nsa_servicos'
   )
+),
+r as (
+  select
+    series_id,
+    date,
+    s4,
+    lag(s4, 4) over (partition by series_id order by date) as prev4
+  from w
+  where n = 4
 )
 select
   date as "Data",
@@ -1935,9 +1976,9 @@ select
     when 'ibge_cnt_volume_nsa_industria' then 'Indústria'
     when 'ibge_cnt_volume_nsa_servicos' then 'Serviços'
   end as "Série",
-  round((((value / nullif(prev, 0)) - 1) * 100)::numeric, 2) as "Variação (%)"
-from s
-where prev is not null
+  round((((s4 / nullif(prev4, 0)) - 1) * 100)::numeric, 2) as "Variação (%)"
+from r
+where prev4 is not null
   {_periodo_filter_sql("date")}
 order by "Data", "Série"
 """.strip(),
@@ -1955,7 +1996,7 @@ order by "Data", "Série"
         },
     },
     "sectors_va_composition": {
-        "name": "Participação dos setores no valor adicionado (área 100%)",
+        "name": "Participação dos setores no valor adicionado (% do total)",
         "display": "area",
         "description": (
             "Participação de cada setor produtivo (agropecuária, indústria, serviços) no "
@@ -1998,7 +2039,7 @@ order by "Data", "Série"
         },
     },
     "sectors_industria_composition": {
-        "name": "Composição da indústria por subsetor (área 100%)",
+        "name": "Composição da indústria por subsetor (% do total da indústria)",
         "display": "area",
         "description": (
             "Participação de cada subsetor da indústria (extrativa, transformação, "
@@ -2043,13 +2084,16 @@ order by "Data", "Série"
         },
     },
     "sectors_servicos_composition": {
-        "name": "Composição dos serviços por subsetor (área 100%)",
+        "name": "Composição dos serviços por subsetor (% do total de serviços)",
         "display": "area",
         "description": (
             "Participação de cada subsetor de serviços no valor adicionado dos serviços, "
-            "por trimestre: comércio, transporte/correio, informação e comunicação, "
-            "atividades financeiras, atividades imobiliárias, administração pública e outras "
-            "atividades de serviços. Fonte: IBGE SIDRA, tabela 1846, variável 585, "
+            "por trimestre: Comércio; Transporte (transporte, armazenagem e correio); "
+            "Info. e comunicação (informação e comunicação); Financeiro e seguros "
+            "(atividades financeiras, de seguros e serviços relacionados); Imobiliárias "
+            "(atividades imobiliárias); Adm. pública (administração, defesa, saúde e "
+            "educação públicas e seguridade social); e Outros serviços (outras atividades "
+            "de serviços). Fonte: IBGE SIDRA, tabela 1846, variável 585, "
             "classificação 11255 (códigos 90697-90703). Unidade: % do valor adicionado dos "
             "serviços (área 100% empilhada). Frequência: trimestral. Conceito: composição a "
             "preços correntes; os subsetores somam o total dos serviços."
@@ -2058,13 +2102,13 @@ order by "Data", "Série"
 select
   date as "Data",
   case series_id
-    when 'ibge_va_corrente_serv_outros' then 'Outras atividades de serviços'
-    when 'ibge_va_corrente_serv_admin_publica' then 'Administração pública'
+    when 'ibge_va_corrente_serv_outros' then 'Outros serviços'
+    when 'ibge_va_corrente_serv_admin_publica' then 'Adm. pública'
     when 'ibge_va_corrente_serv_comercio' then 'Comércio'
-    when 'ibge_va_corrente_serv_financeiras' then 'Atividades financeiras'
-    when 'ibge_va_corrente_serv_imobiliarias' then 'Atividades imobiliárias'
-    when 'ibge_va_corrente_serv_transporte' then 'Transporte e correio'
-    when 'ibge_va_corrente_serv_informacao' then 'Informação e comunicação'
+    when 'ibge_va_corrente_serv_financeiras' then 'Financeiro e seguros'
+    when 'ibge_va_corrente_serv_imobiliarias' then 'Imobiliárias'
+    when 'ibge_va_corrente_serv_transporte' then 'Transporte'
+    when 'ibge_va_corrente_serv_informacao' then 'Info. e comunicação'
   end as "Série",
   value as "R$ milhões (correntes)"
 from analytics.observations_enriched
@@ -2088,17 +2132,20 @@ order by "Data", "Série"
             "stackable.stack_type": "normalized",
             "series_settings": {
                 "Comércio": {"color": "#1f77b4"},
-                "Administração pública": {"color": "#d62728"},
-                "Outras atividades de serviços": {"color": "#2ca02c"},
-                "Atividades financeiras": {"color": "#9467bd"},
-                "Atividades imobiliárias": {"color": "#ff7f0e"},
-                "Transporte e correio": {"color": "#8c564b"},
-                "Informação e comunicação": {"color": "#17becf"},
+                "Adm. pública": {"color": "#d62728"},
+                "Outros serviços": {"color": "#2ca02c"},
+                "Financeiro e seguros": {"color": "#9467bd"},
+                "Imobiliárias": {"color": "#ff7f0e"},
+                "Transporte": {"color": "#8c564b"},
+                "Info. e comunicação": {"color": "#17becf"},
             },
         },
     },
     "sectors_monthly_volume": {
-        "name": "Volume mensal: indústria, varejo e serviços (com ajuste sazonal)",
+        "name": (
+            "Volume mensal de indústria, varejo e serviços (índices PIM-PF, PMC e PMS, com ajuste "
+            "sazonal)"
+        ),
         "display": "line",
         "description": (
             "Índices mensais de volume com ajuste sazonal da produção industrial (PIM-PF), "
@@ -2122,27 +2169,6 @@ order by "Data", "Série"
                 "Varejo (PMC)": {"line.marker_enabled": False, "color": "#ff7f0e"},
                 "Serviços (PMS)": {"line.marker_enabled": False, "color": "#1f77b4"},
             },
-        },
-    },
-    "sectors_industrial_production": {
-        "name": "Produção industrial (PIM-PF, com ajuste sazonal)",
-        "display": "line",
-        "description": (
-            "Produção física industrial, indústria geral, índice de volume com ajuste "
-            "sazonal. Fonte: IBGE SIDRA, tabela 8888, variável 12607, categoria 129314. "
-            "Unidade: número-índice (2022 = 100). Frequência: mensal. Conceito: volume real."
-        ),
-        "query": line_query(
-            ["ibge_pim_industria_geral_sa"], metric="Índice (2022=100)"
-        ),
-        "visualization_settings": {
-            "graph.dimensions": ["Data"],
-            "graph.metrics": ["Índice (2022=100)"],
-            "graph.colors": ["#9467bd"],
-            "graph.x_axis.title_text": "Data",
-            "graph.y_axis.title_text": "Índice (2022=100)",
-            "graph.show_legend": False,
-            "series_settings": {"Indústria (PIM-PF)": {"line.marker_enabled": False}},
         },
     },
     "sectors_retail": {
@@ -2188,27 +2214,6 @@ order by "Data", "Série"
         },
     },
     # --- Comércio exterior ---
-    "trade_exports_imports": {
-        "name": "Exportações e importações de bens (mensal)",
-        "display": "line",
-        "description": (
-            "Exportações e importações de bens, base Balanço de Pagamentos, fluxo mensal. "
-            "Fonte: BCB SGS 22708 (exportações) e 22709 (importações). Unidade: US$ milhões. "
-            "Frequência: mensal. Conceito: fluxo nominal em dólares, base Balanço de "
-            "Pagamentos (BPM6)."
-        ),
-        "query": line_query(
-            ["bcb_sgs_exportacoes_fob", "bcb_sgs_importacoes_fob"],
-            metric="US$ milhões",
-        ),
-        "visualization_settings": {
-            **line_settings("US$ milhões", ["#2ca02c", "#d62728"]),
-            "series_settings": {
-                "Exportações": {"line.marker_enabled": False, "color": "#2ca02c"},
-                "Importações": {"line.marker_enabled": False, "color": "#d62728"},
-            },
-        },
-    },
     "trade_flows_12m": {
         "name": "Exportações, importações e saldo de bens (acumulado em 12 meses)",
         "display": "line",
@@ -2286,67 +2291,60 @@ order by "Data", "Série"
         "display": "bar",
         "description": (
             "Exportações brasileiras de bens (FOB) por país de destino, total anual, para "
-            "os doze maiores parceiros (China, Estados Unidos, Argentina, Países Baixos, "
-            "Espanha, Singapura, México, Chile, Canadá, Alemanha, Japão, Coreia do Sul) e "
-            "demais países. Fonte: MDIC/SECEX Comex Stat. Unidade: US$ milhões. "
+            "os cinco maiores parceiros (China, Estados Unidos, Argentina, Países Baixos e "
+            "Espanha); todos os outros destinos são somados em “Demais países”. "
+            "Fonte: MDIC/SECEX Comex Stat. Unidade: US$ milhões. "
             "Frequência: anual (apenas anos completos). Conceito: fluxo nominal, base SECEX "
             "por país — distinto da base Balanço de Pagamentos do BCB. Barras empilhadas "
             "somam o total exportado (maior parceiro na base, demais países no topo)."
         ),
+        # Top-5 + fold: every non-top-5 partner series (including the source's own
+        # *_demais residual) is summed into 'Demais países' — a pure aggregation of the
+        # same verified values, keeping the stack legible at 6 segments.
         "query": f"""
-select
-  date as "Data",
-  case series_id
-    when 'comexstat_export_china' then 'China'
-    when 'comexstat_export_eua' then 'Estados Unidos'
-    when 'comexstat_export_argentina' then 'Argentina'
-    when 'comexstat_export_paises_baixos' then 'Países Baixos'
-    when 'comexstat_export_espanha' then 'Espanha'
-    when 'comexstat_export_singapura' then 'Singapura'
-    when 'comexstat_export_mexico' then 'México'
-    when 'comexstat_export_chile' then 'Chile'
-    when 'comexstat_export_canada' then 'Canadá'
-    when 'comexstat_export_alemanha' then 'Alemanha'
-    when 'comexstat_export_japao' then 'Japão'
-    when 'comexstat_export_coreia_sul' then 'Coreia do Sul'
-    when 'comexstat_export_demais' then 'Demais países'
-  end as "Série",
-  value as "US$ milhões"
-from analytics.observations_enriched
-where series_id in (
-    'comexstat_export_china',
-    'comexstat_export_eua',
-    'comexstat_export_argentina',
-    'comexstat_export_paises_baixos',
-    'comexstat_export_espanha',
-    'comexstat_export_singapura',
-    'comexstat_export_mexico',
-    'comexstat_export_chile',
-    'comexstat_export_canada',
-    'comexstat_export_alemanha',
-    'comexstat_export_japao',
-    'comexstat_export_coreia_sul',
-    'comexstat_export_demais'
-  )
-  and date < date_trunc('year', current_date)
-  {_periodo_filter_sql("date")}
+select "Data", "Série", sum(value) as "US$ milhões"
+from (
+  select
+    date as "Data",
+    case series_id
+      when 'comexstat_export_china' then 'China'
+      when 'comexstat_export_eua' then 'Estados Unidos'
+      when 'comexstat_export_argentina' then 'Argentina'
+      when 'comexstat_export_paises_baixos' then 'Países Baixos'
+      when 'comexstat_export_espanha' then 'Espanha'
+      else 'Demais países'
+    end as "Série",
+    value
+  from analytics.observations_enriched
+  where series_id in (
+      'comexstat_export_china',
+      'comexstat_export_eua',
+      'comexstat_export_argentina',
+      'comexstat_export_paises_baixos',
+      'comexstat_export_espanha',
+      'comexstat_export_singapura',
+      'comexstat_export_mexico',
+      'comexstat_export_chile',
+      'comexstat_export_canada',
+      'comexstat_export_alemanha',
+      'comexstat_export_japao',
+      'comexstat_export_coreia_sul',
+      'comexstat_export_demais'
+    )
+    and date < date_trunc('year', current_date)
+    {_periodo_filter_sql("date")}
+) t
+group by "Data", "Série"
 -- Metabase stacks by the order series first appear in the result set (first = top of
 -- stack). Emit the residual "Demais países" first and China last, so China sits at the
 -- base, partners descend upward and "Demais países" is the top band.
-order by "Data", case series_id
-    when 'comexstat_export_demais' then 0
-    when 'comexstat_export_coreia_sul' then 1
-    when 'comexstat_export_japao' then 2
-    when 'comexstat_export_alemanha' then 3
-    when 'comexstat_export_canada' then 4
-    when 'comexstat_export_chile' then 5
-    when 'comexstat_export_mexico' then 6
-    when 'comexstat_export_singapura' then 7
-    when 'comexstat_export_espanha' then 8
-    when 'comexstat_export_paises_baixos' then 9
-    when 'comexstat_export_argentina' then 10
-    when 'comexstat_export_eua' then 11
-    when 'comexstat_export_china' then 12
+order by "Data", case "Série"
+    when 'Demais países' then 0
+    when 'Espanha' then 1
+    when 'Países Baixos' then 2
+    when 'Argentina' then 3
+    when 'Estados Unidos' then 4
+    when 'China' then 5
   end
 """.strip(),
         "visualization_settings": {
@@ -2362,13 +2360,6 @@ order by "Data", case series_id
             # the array is listed top→bottom: Demais first, China last (at the base).
             "graph.series_order": [
                 {"key": "Demais países", "enabled": True, "name": "Demais países"},
-                {"key": "Coreia do Sul", "enabled": True, "name": "Coreia do Sul"},
-                {"key": "Japão", "enabled": True, "name": "Japão"},
-                {"key": "Alemanha", "enabled": True, "name": "Alemanha"},
-                {"key": "Canadá", "enabled": True, "name": "Canadá"},
-                {"key": "Chile", "enabled": True, "name": "Chile"},
-                {"key": "México", "enabled": True, "name": "México"},
-                {"key": "Singapura", "enabled": True, "name": "Singapura"},
                 {"key": "Espanha", "enabled": True, "name": "Espanha"},
                 {"key": "Países Baixos", "enabled": True, "name": "Países Baixos"},
                 {"key": "Argentina", "enabled": True, "name": "Argentina"},
@@ -2381,13 +2372,6 @@ order by "Data", case series_id
                 "Argentina": {"color": "#2ca02c"},
                 "Países Baixos": {"color": "#ff7f0e"},
                 "Espanha": {"color": "#9467bd"},
-                "Singapura": {"color": "#17becf"},
-                "México": {"color": "#8c564b"},
-                "Chile": {"color": "#e377c2"},
-                "Canadá": {"color": "#bcbd22"},
-                "Alemanha": {"color": "#393b79"},
-                "Japão": {"color": "#7f7f7f"},
-                "Coreia do Sul": {"color": "#9edae5"},
                 "Demais países": {"color": "#c7c7c7"},
             },
         },
@@ -2397,67 +2381,60 @@ order by "Data", case series_id
         "display": "bar",
         "description": (
             "Importações brasileiras de bens (FOB) por país de origem, total anual, para os "
-            "doze maiores parceiros (China, Estados Unidos, Alemanha, Argentina, Rússia, "
-            "Índia, Itália, França, México, Japão, Coreia do Sul, Chile) e demais países. "
+            "cinco maiores parceiros (China, Estados Unidos, Alemanha, Argentina e Rússia); "
+            "todos os outros países de origem são somados em “Demais países”. "
             "Fonte: MDIC/SECEX Comex Stat. Unidade: US$ milhões. Frequência: anual (apenas "
             "anos completos). Conceito: fluxo nominal, base SECEX por país — distinto da base "
             "Balanço de Pagamentos do BCB. Barras empilhadas somam o total importado (maior "
             "parceiro na base, demais países no topo)."
         ),
+        # Top-5 + fold: every non-top-5 partner series (including the source's own
+        # *_demais residual) is summed into 'Demais países' — a pure aggregation of the
+        # same verified values, keeping the stack legible at 6 segments.
         "query": f"""
-select
-  date as "Data",
-  case series_id
-    when 'comexstat_import_china' then 'China'
-    when 'comexstat_import_eua' then 'Estados Unidos'
-    when 'comexstat_import_alemanha' then 'Alemanha'
-    when 'comexstat_import_argentina' then 'Argentina'
-    when 'comexstat_import_russia' then 'Rússia'
-    when 'comexstat_import_india' then 'Índia'
-    when 'comexstat_import_italia' then 'Itália'
-    when 'comexstat_import_franca' then 'França'
-    when 'comexstat_import_mexico' then 'México'
-    when 'comexstat_import_japao' then 'Japão'
-    when 'comexstat_import_coreia_sul' then 'Coreia do Sul'
-    when 'comexstat_import_chile' then 'Chile'
-    when 'comexstat_import_demais' then 'Demais países'
-  end as "Série",
-  value as "US$ milhões"
-from analytics.observations_enriched
-where series_id in (
-    'comexstat_import_china',
-    'comexstat_import_eua',
-    'comexstat_import_alemanha',
-    'comexstat_import_argentina',
-    'comexstat_import_russia',
-    'comexstat_import_india',
-    'comexstat_import_italia',
-    'comexstat_import_franca',
-    'comexstat_import_mexico',
-    'comexstat_import_japao',
-    'comexstat_import_coreia_sul',
-    'comexstat_import_chile',
-    'comexstat_import_demais'
-  )
-  and date < date_trunc('year', current_date)
-  {_periodo_filter_sql("date")}
+select "Data", "Série", sum(value) as "US$ milhões"
+from (
+  select
+    date as "Data",
+    case series_id
+      when 'comexstat_import_china' then 'China'
+      when 'comexstat_import_eua' then 'Estados Unidos'
+      when 'comexstat_import_alemanha' then 'Alemanha'
+      when 'comexstat_import_argentina' then 'Argentina'
+      when 'comexstat_import_russia' then 'Rússia'
+      else 'Demais países'
+    end as "Série",
+    value
+  from analytics.observations_enriched
+  where series_id in (
+      'comexstat_import_china',
+      'comexstat_import_eua',
+      'comexstat_import_alemanha',
+      'comexstat_import_argentina',
+      'comexstat_import_russia',
+      'comexstat_import_india',
+      'comexstat_import_italia',
+      'comexstat_import_franca',
+      'comexstat_import_mexico',
+      'comexstat_import_japao',
+      'comexstat_import_coreia_sul',
+      'comexstat_import_chile',
+      'comexstat_import_demais'
+    )
+    and date < date_trunc('year', current_date)
+    {_periodo_filter_sql("date")}
+) t
+group by "Data", "Série"
 -- Metabase stacks by the order series first appear in the result set (first = top of
 -- stack). Emit the residual "Demais países" first and China last, so China sits at the
 -- base, partners descend upward and "Demais países" is the top band.
-order by "Data", case series_id
-    when 'comexstat_import_demais' then 0
-    when 'comexstat_import_chile' then 1
-    when 'comexstat_import_coreia_sul' then 2
-    when 'comexstat_import_japao' then 3
-    when 'comexstat_import_mexico' then 4
-    when 'comexstat_import_franca' then 5
-    when 'comexstat_import_italia' then 6
-    when 'comexstat_import_india' then 7
-    when 'comexstat_import_russia' then 8
-    when 'comexstat_import_argentina' then 9
-    when 'comexstat_import_alemanha' then 10
-    when 'comexstat_import_eua' then 11
-    when 'comexstat_import_china' then 12
+order by "Data", case "Série"
+    when 'Demais países' then 0
+    when 'Rússia' then 1
+    when 'Argentina' then 2
+    when 'Alemanha' then 3
+    when 'Estados Unidos' then 4
+    when 'China' then 5
   end
 """.strip(),
         "visualization_settings": {
@@ -2472,13 +2449,6 @@ order by "Data", case series_id
             # series_order entry at the TOP, so the array is listed top→bottom.
             "graph.series_order": [
                 {"key": "Demais países", "enabled": True, "name": "Demais países"},
-                {"key": "Chile", "enabled": True, "name": "Chile"},
-                {"key": "Coreia do Sul", "enabled": True, "name": "Coreia do Sul"},
-                {"key": "Japão", "enabled": True, "name": "Japão"},
-                {"key": "México", "enabled": True, "name": "México"},
-                {"key": "França", "enabled": True, "name": "França"},
-                {"key": "Itália", "enabled": True, "name": "Itália"},
-                {"key": "Índia", "enabled": True, "name": "Índia"},
                 {"key": "Rússia", "enabled": True, "name": "Rússia"},
                 {"key": "Argentina", "enabled": True, "name": "Argentina"},
                 {"key": "Alemanha", "enabled": True, "name": "Alemanha"},
@@ -2491,19 +2461,12 @@ order by "Data", case series_id
                 "Alemanha": {"color": "#2ca02c"},
                 "Argentina": {"color": "#ff7f0e"},
                 "Rússia": {"color": "#9467bd"},
-                "Índia": {"color": "#8c564b"},
-                "Itália": {"color": "#17becf"},
-                "França": {"color": "#393b79"},
-                "México": {"color": "#e377c2"},
-                "Japão": {"color": "#7f7f7f"},
-                "Coreia do Sul": {"color": "#9edae5"},
-                "Chile": {"color": "#bcbd22"},
                 "Demais países": {"color": "#c7c7c7"},
             },
         },
     },
     "trade_china_usa_trend": {
-        "name": "Comércio com China e Estados Unidos (anual, FOB)",
+        "name": "Comércio com China e Estados Unidos: exportações + importações (anual, FOB)",
         # Grouped (clustered) bars: China and EUA side by side per year — multi-series
         # bar without a stack type renders clustered, matching the tab's annual-bar style
         # and making the China-overtaking-EUA comparison clearer.
@@ -2818,8 +2781,8 @@ order by "Data", "Série"
     },
     "trade_brics_vs_blocs": {
         "name": (
-            "Corrente de comércio do Brasil com BRICS, Mercosul, União Europeia e "
-            "Estados Unidos (anual, FOB)"
+            "Corrente de comércio (exportações + importações) do Brasil com BRICS, Mercosul, "
+            "União Europeia e Estados Unidos (anual, FOB)"
         ),
         "display": "line",
         "description": (
@@ -2891,7 +2854,7 @@ order by "Data", "Série"
         },
     },
     "trade_commodities_exports": {
-        "name": "Maiores commodities exportadas por capítulo (anual, FOB)",
+        "name": "Principais produtos exportados por grupo (capítulo da NCM; anual, FOB)",
         "display": "bar",
         "description": (
             "Exportações brasileiras de bens (FOB) por capítulo de produto (SH2), total "
@@ -3000,7 +2963,7 @@ order by "Data", case series_id
     },
     # --- Consumo digital ---
     "digital_pix_value": {
-        "name": "Valor das transações Pix (liquidado no SPI)",
+        "name": "Valor das transações Pix liquidadas no SPI (Sistema de Pagamentos Instantâneos)",
         "display": "line",
         "description": (
             "Valor mensal das transações Pix liquidadas no SPI. "
@@ -3017,7 +2980,9 @@ order by "Data", case series_id
         },
     },
     "digital_pix_count": {
-        "name": "Quantidade de transações Pix (liquidado no SPI)",
+        "name": (
+            "Quantidade de transações Pix liquidadas no SPI (Sistema de Pagamentos Instantâneos)"
+        ),
         "display": "line",
         "description": (
             "Quantidade mensal de transações Pix liquidadas no SPI. "
@@ -3054,7 +3019,9 @@ order by "Data", case series_id
         },
     },
     "digital_people_access": {
-        "name": "Pessoas com internet e celular",
+        "name": (
+            "Pessoas com celular e pessoas que usaram internet (% das pessoas de 10 anos ou mais)"
+        ),
         "display": "line",
         "description": (
             "Percentual de pessoas de 10 anos ou mais que usaram a internet nos últimos "
@@ -3080,7 +3047,7 @@ order by "Data", case series_id
     },
     # --- Consumo digital: acesso / penetração (PNAD-C TIC, anual) ---
     "digital_access_devices": {
-        "name": "Penetração digital nos domicílios",
+        "name": "Domicílios com acesso à internet e com computador (% dos domicílios)",
         "display": "line",
         "description": (
             "Percentual de domicílios com utilização da internet e com computador. "
@@ -3105,7 +3072,7 @@ order by "Data", case series_id
         },
     },
     "digital_access_urban_rural": {
-        "name": "Acesso à internet por situação do domicílio",
+        "name": "Acesso à internet em domicílios urbanos e rurais (% dos domicílios)",
         "display": "line",
         "description": (
             "Percentual de domicílios com utilização da internet, urbanos e rurais. "
@@ -3130,7 +3097,7 @@ order by "Data", case series_id
         },
     },
     "digital_access_regions": {
-        "name": "Acesso à internet por região",
+        "name": "Domicílios com acesso à internet por região do Brasil (% dos domicílios)",
         "display": "line",
         "description": (
             "Percentual de domicílios com utilização da internet, por Grande Região. "
@@ -3216,7 +3183,8 @@ order by "Data", case series_id
             **line_settings("R$ bilhões", ["#2ca02c", "#1f77b4", "#ff7f0e", "#9aa0a6"]),
             "series_settings": {
                 "Pix": {"line.marker_enabled": False},
-                "TED": {"line.marker_enabled": False},
+                # Explicit blue: positionally TED would inherit the gray meant for Cheque.
+                "TED": {"line.marker_enabled": False, "color": "#1f77b4"},
                 "Boleto": {"line.marker_enabled": False},
                 "Cheque": {"line.marker_enabled": False, "color": "#9aa0a6"},
             },
@@ -3247,14 +3215,15 @@ order by "Data", case series_id
             ),
             "series_settings": {
                 "Pix": {"line.marker_enabled": False},
-                "TED": {"line.marker_enabled": False},
+                # Explicit blue: positionally TED would inherit the gray meant for Cheque.
+                "TED": {"line.marker_enabled": False, "color": "#1f77b4"},
                 "Boleto": {"line.marker_enabled": False},
                 "Cheque": {"line.marker_enabled": False, "color": "#9aa0a6"},
             },
         },
     },
     "digital_payments_share": {
-        "name": "Participação dos instrumentos no valor pago (área 100%)",
+        "name": "Participação dos instrumentos de pagamento no valor total pago (% do total)",
         "display": "area",
         "description": (
             "Participação de cada instrumento (Pix, TED, boleto, cheque) no valor mensal "
@@ -3303,7 +3272,9 @@ order by "Data", "Série"
         },
     },
     "digital_payments_share_count": {
-        "name": "Participação dos instrumentos na quantidade de transações (área 100%)",
+        "name": (
+            "Participação dos instrumentos de pagamento na quantidade de transações (% do total)"
+        ),
         "display": "area",
         "description": (
             "Participação de cada instrumento (Pix, TED, boleto, cheque) na quantidade "
@@ -3396,7 +3367,7 @@ order by "Data", "Série"
         },
     },
     "digital_pix_users": {
-        "name": "Usuários cadastrados no Pix (DICT)",
+        "name": "Pessoas e empresas cadastradas no Pix (chaves no DICT)",
         "display": "line",
         "description": (
             "Estoque mensal de usuários cadastrados no DICT (diretório de chaves Pix), "
@@ -3427,7 +3398,6 @@ order by "Data", "Série"
 DISPLAY_OVERRIDES: dict[str, str] = {
     # fiscal_monthly_interest stays a bar: it sits in a small-multiple row with the
     # monthly primary/nominal bars, and Tufte parallelism wants the triad uniform.
-    "fiscal_monthly_components": "line",
     "social_food_inflation": "line",
 }
 
@@ -3476,20 +3446,6 @@ VIZ_PATCHES: dict[str, dict[str, Any]] = {
         "graph.goal_label": "Equilíbrio (0)",
         "graph.show_legend": False,
     },
-    "fiscal_nominal_deficit_12m": {
-        "graph.show_legend": False,
-        "series_settings": {
-            "Resultado nominal NFSP 12m": {
-                "line.marker_enabled": False,
-                "line.interpolate": "linear",
-                "line.style": "solid",
-            }
-        },
-    },
-    "fiscal_interest_12m": {
-        "graph.show_legend": False,
-        "column_settings": {'["name","% do PIB"]': {"suffix": "%", "decimals": 1}},
-    },
     "fiscal_monthly_primary": {
         "graph.show_goal": True,
         "graph.goal_value": 0,
@@ -3499,28 +3455,19 @@ VIZ_PATCHES: dict[str, dict[str, Any]] = {
     "fiscal_monthly_nominal": {
         "graph.show_goal": True,
         "graph.goal_value": 0,
+        "graph.goal_label": "Equilíbrio (0)",
         "graph.show_legend": False,
     },
+    # No zero goal line here: interest costs are always positive, so a zero "Meta"
+    # reference would be meaningless and its default label misleading.
     "fiscal_monthly_interest": {
         "graph.show_legend": False,
-        "graph.show_goal": True,
-        "graph.goal_value": 0,
         "series_settings": {
             "Juros nominais mensais": {
                 "line.marker_enabled": False,
                 "line.interpolate": "linear",
                 "line.style": "solid",
             }
-        },
-    },
-    "fiscal_monthly_components": {
-        "graph.show_goal": True,
-        "graph.goal_value": 0,
-        "graph.goal_label": "Equilíbrio (0)",
-        "series_settings": {
-            "Resultado primário NFSP mensal": {"line.marker_enabled": False},
-            "Resultado nominal NFSP mensal": {"line.marker_enabled": False},
-            "Juros nominais mensais": {"line.marker_enabled": False},
         },
     },
     "fiscal_debt": {
@@ -3567,10 +3514,6 @@ VIZ_PATCHES: dict[str, dict[str, Any]] = {
         "column_settings": {'["name","Taxa (% a.a.)"]': {"suffix": "%", "decimals": 2}},
     },
     # monetary_ipca_12m now uses IPCA_TARGET_VIZ (time-varying target); no flat 3% goal.
-    "monetary_ipca_monthly": {
-        "graph.show_legend": False,
-        "column_settings": {'["name","Variação (%)"]': {"suffix": "%", "decimals": 2}},
-    },
     "monetary_exchange": {
         "graph.show_legend": False,
         "series_settings": {
@@ -3640,7 +3583,11 @@ VIZ_PATCHES: dict[str, dict[str, Any]] = {
             "Outras obrigatórias": {"line.marker_enabled": False},
         },
         "column_settings": {
-            '["name","R$ milhões"]': {"number_style": "decimal", "decimals": 0, "prefix": "R$ "}
+            '["name","R$ milhões (acumulado 12m)"]': {
+                "number_style": "decimal",
+                "decimals": 0,
+                "prefix": "R$ ",
+            }
         },
     },
     "social_household_debt": {
@@ -3668,6 +3615,7 @@ VIZ_PATCHES: dict[str, dict[str, Any]] = {
         "graph.show_legend": False,
         "graph.show_goal": True,
         "graph.goal_value": 0,
+        "graph.goal_label": "Estabilidade em 12 meses (0%)",
         "series_settings": {
             "IPCA alimentação e bebidas": {
                 "line.interpolate": "linear",
@@ -3675,7 +3623,9 @@ VIZ_PATCHES: dict[str, dict[str, Any]] = {
                 "line.style": "solid",
             }
         },
-        "column_settings": {'["name","Variação (% no mês)"]': {"suffix": "%", "decimals": 2}},
+        "column_settings": {
+            '["name","Variação em 12 meses (%)"]': {"suffix": "%", "decimals": 2}
+        },
     },
 }
 
@@ -3760,7 +3710,7 @@ DASHBOARD_TABS: list[dict[str, Any]] = [
                 [
                     ("fiscal_primary_deficit_12m", 8),
                     ("debt_stock", 8),
-                    ("institutions_bti_brazil", 8),
+                    ("institutions_bti_status_governance", 8),
                 ],
                 [
                     ("labor_real_average_income", 8),
@@ -3773,16 +3723,16 @@ DASHBOARD_TABS: list[dict[str, Any]] = [
     },
     {
         "name": "Inflação e juros",
-        # Headline IPCA vs target full-width, then the policy rate and real rate,
-        # expectations and monthly detail, the decomposition and core, FX, and food.
+        # Five distinct IPCA questions: level vs target (headline), real interest,
+        # expectations vs realized, composition (12m decomposition), underlying trend
+        # (core) — then FX. Food inflation lives on "Bem-estar das famílias".
         "cards": _grid(
             [
                 [("monetary_ipca_12m", 24)],
                 [("monetary_selic", 12), ("monetary_real_rate", 12)],
-                [("monetary_focus_ipca", 12), ("monetary_ipca_monthly", 12)],
-                [("monetary_ipca_decomposition", 12), ("monetary_ipca_core", 12)],
+                [("monetary_focus_ipca", 12), ("monetary_ipca_core", 12)],
+                [("monetary_ipca_decomposition", 24)],
                 [("monetary_exchange", 12), ("cambio_brl_cny", 12), ("monetary_reer", 12)],
-                [("social_food_inflation", 24)],
             ]
         ),
     },
@@ -3803,11 +3753,7 @@ DASHBOARD_TABS: list[dict[str, Any]] = [
                 [("sectors_gdp_yoy", 24)],
                 [("sectors_gdp_volume_index", 24)],
                 [("sectors_monthly_volume", 24)],
-                [
-                    ("sectors_industrial_production", 8),
-                    ("sectors_retail", 8),
-                    ("sectors_services", 8),
-                ],
+                [("sectors_retail", 12), ("sectors_services", 12)],
             ]
         ),
     },
@@ -3833,12 +3779,7 @@ DASHBOARD_TABS: list[dict[str, Any]] = [
             [
                 # Resultado fiscal consolidado (NFSP)
                 [("fiscal_12m", 24)],
-                [
-                    ("fiscal_primary_deficit_12m", 8),
-                    ("fiscal_nominal_deficit_12m", 8),
-                    ("fiscal_interest_12m", 8),
-                ],
-                [("fiscal_monthly_components", 24)],
+                [("fiscal_primary_deficit_12m", 24)],
                 [
                     ("fiscal_monthly_primary", 8),
                     ("fiscal_monthly_nominal", 8),
@@ -3864,7 +3805,7 @@ DASHBOARD_TABS: list[dict[str, Any]] = [
         "cards": _grid(
             [
                 [("trade_flows_12m", 24)],
-                [("trade_exports_imports", 12), ("trade_balance_monthly", 12)],
+                [("trade_balance_monthly", 24)],
                 [("trade_commodities_exports", 24)],
                 [("trade_partners_exports", 12), ("trade_partners_imports", 12)],
                 [("trade_china_usa_trend", 12), ("trade_mercosul", 12)],
