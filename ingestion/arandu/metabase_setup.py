@@ -68,6 +68,13 @@ SERIES_LABELS = {
     "industria_transformacao_pib_pct": "Indústria de transformação",
     "vc_brasil_aporte_total_usd": "Aporte total (Distrito)",
     "mensageria_uso_internet_pct": "Mensagens instantâneas",
+    "ibovespa_fechamento": "Ibovespa",
+    "matriz_eletrica_hidraulica_pct": "Hidráulica",
+    "matriz_eletrica_eolica_pct": "Eólica",
+    "matriz_eletrica_solar_pct": "Solar",
+    "matriz_eletrica_biomassa_pct": "Biomassa",
+    "matriz_eletrica_gas_natural_pct": "Gás natural",
+    "matriz_eletrica_outras_nao_renovaveis_pct": "Outras não-renováveis",
     "bcb_sgs_selic_target": "Selic meta",
     "bcb_sgs_ipca_monthly": "IPCA mensal",
     "bcb_sgs_ipca_12m": "IPCA em 12 meses",
@@ -318,6 +325,7 @@ def line_query(
     source_view: str = "analytics.observations_enriched",
     metric: str = "Valor",
     negate: set[str] | None = None,
+    periodo: bool = True,
 ) -> str:
     ids = ",\n    ".join(f"'{series_id}'" for series_id in series_ids)
     labels = "\n    ".join(
@@ -342,7 +350,7 @@ from {source_view}
 where series_id in (
     {ids}
   )
-  {PERIODO_FILTER}
+  {PERIODO_FILTER if periodo else ""}
 order by "Data", "Série"
 """.strip()
 
@@ -432,56 +440,72 @@ IPCA_TARGET_VIZ: dict[str, Any] = {
 CHARTS: dict[str, dict[str, Any]] = {
     # --- New datasets (task #4): Petrobras, energia, indústria, VC, WhatsApp ---
     "petrobras_financeiro": {
-        "name": "Petrobras: receita de vendas e lucro líquido (anual)",
-        "display": "bar",
+        "name": "Petrobras: receita de vendas e lucro líquido (2010–2024)",
+        "display": "line",
         "query": line_query(
             ["petrobras_receita_vendas_rs_bi", "petrobras_lucro_liquido_rs_bi"],
             metric="R$ bilhões",
+            periodo=False,
         ),
         "visualization_settings": {
-            **time_bar_settings("R$ bilhões", ["#1f77b4", "#2ca02c"]),
-            "graph.x_axis.scale": "ordinal",
+            **line_settings("R$ bilhões", ["#1f77b4", "#2ca02c"]),
+            "graph.x_axis.scale": "timeseries",
+            # A zero line marks the profit/loss boundary — the 2014-2017 prejuízos dip below it.
+            "graph.show_goal": True,
+            "graph.goal_value": 0,
+            "graph.goal_label": "Zero (lucro/prejuízo)",
+            "series_settings": {
+                "Receita de vendas": {"line.marker_enabled": True, "color": "#1f77b4"},
+                "Lucro líquido": {"line.marker_enabled": True, "color": "#2ca02c"},
+            },
             "column_settings": {'["name","R$ bilhões"]': {"decimals": 1, "prefix": "R$ "}},
         },
     },
     "matriz_eletrica_fontes": {
-        "name": "Matriz elétrica brasileira por fonte (2024)",
-        "display": "row",
-        "query": """
-select
-  case series_id
-    when 'matriz_eletrica_share_hidraulica_pct' then 'Hidráulica'
-    when 'matriz_eletrica_share_eolica_pct' then 'Eólica'
-    when 'matriz_eletrica_share_solar_pct' then 'Solar'
-    when 'matriz_eletrica_share_biomassa_pct' then 'Biomassa'
-    when 'matriz_eletrica_share_gas_natural_pct' then 'Gás natural'
-  end as "Fonte",
-  value as "% da matriz elétrica"
-from analytics.observations_enriched
-where series_id in (
-    'matriz_eletrica_share_hidraulica_pct',
-    'matriz_eletrica_share_eolica_pct',
-    'matriz_eletrica_share_solar_pct',
-    'matriz_eletrica_share_biomassa_pct',
-    'matriz_eletrica_share_gas_natural_pct'
-  )
-  and date = date '2024-01-01'
-order by "% da matriz elétrica" desc
-""".strip(),
+        "name": "Matriz elétrica brasileira por fonte (2017–2024)",
+        "display": "line",
+        "query": line_query(
+            [
+                "matriz_eletrica_hidraulica_pct",
+                "matriz_eletrica_eolica_pct",
+                "matriz_eletrica_solar_pct",
+                "matriz_eletrica_biomassa_pct",
+                "matriz_eletrica_gas_natural_pct",
+                "matriz_eletrica_outras_nao_renovaveis_pct",
+            ],
+            metric="% da matriz elétrica",
+        ),
         "visualization_settings": {
-            "graph.dimensions": ["Fonte"],
-            "graph.metrics": ["% da matriz elétrica"],
-            "graph.colors": ["#1f77b4"],
-            "graph.x_axis.title_text": "% da matriz elétrica",
-            "graph.y_axis.title_text": "Fonte",
-            "graph.show_legend": False,
+            # One line per source (not stacked): the composition bands read as a murky blob,
+            # while separate lines make each source's trajectory legible (solar rising, etc.).
+            **line_settings(
+                "% da matriz elétrica",
+                ["#1f77b4", "#2ca02c", "#ff7f0e", "#8c564b", "#9467bd", "#9aa0a6"],
+            ),
+            "graph.x_axis.scale": "timeseries",
+            "graph.y_axis.auto_range": False,
+            "graph.y_axis.min": 0,
             "column_settings": {'["name","% da matriz elétrica"]': {"decimals": 1, "suffix": "%"}},
+        },
+    },
+    "ibovespa_fechamento": {
+        "name": "Ibovespa — fechamento anual (pontos)",
+        "display": "line",
+        "query": line_query(["ibovespa_fechamento"], metric="Pontos", periodo=False),
+        "visualization_settings": {
+            **line_settings("Pontos"),
+            "graph.x_axis.scale": "timeseries",
+            # Index ranges ~43k-161k; a 0-180k frame keeps a zero baseline and fits every point.
+            "graph.y_axis.auto_range": False,
+            "graph.y_axis.min": 0,
+            "graph.y_axis.max": 180000,
+            "column_settings": {'["name","Pontos"]': {"decimals": 0}},
         },
     },
     "industria_transformacao_pib": {
         "name": "Participação da indústria de transformação no PIB",
         "display": "line",
-        "query": line_query(["industria_transformacao_pib_pct"], metric="% do PIB"),
+        "query": line_query(["industria_transformacao_pib_pct"], metric="% do PIB", periodo=False),
         "visualization_settings": {
             **line_settings("% do PIB"),
             "graph.x_axis.scale": "timeseries",
@@ -3803,7 +3827,7 @@ DASHBOARD_TABS: list[dict[str, Any]] = [
         #  2) jobs, activity and the dollar;
         #  3) the State — its accounts and its institutions (fiscal result, debt, BTI);
         #  4) how it lands on households (real income, debt burden, default);
-        #  5) a secondary FX cross (BRL/CNY), lowest priority, last.
+        #  5) markets: the stock index (Ibovespa) and a secondary FX cross (BRL/CNY), last.
         "cards": _grid(
             [
                 [("activity_pib_nominal", 8), ("overview_ipca", 8), ("overview_selic", 8)],
@@ -3818,7 +3842,7 @@ DASHBOARD_TABS: list[dict[str, Any]] = [
                     ("social_household_debt", 8),
                     ("social_default_rate", 8),
                 ],
-                [("cambio_brl_cny", 8)],
+                [("ibovespa_fechamento", 8), ("cambio_brl_cny", 8)],
             ]
         ),
     },
@@ -4349,6 +4373,11 @@ CHART_SOURCES: dict[str, dict[str, str]] = {
         "url": "https://cetic.br",
         "domain": "cetic.br",
     },
+    "B3": {
+        "label": "B3 — Ibovespa (via Yahoo Finance)",
+        "url": "https://www.b3.com.br/pt_br/market-data-e-indices/indices/indices-amplos/indice-ibovespa-ibovespa-estatisticas-historicas.htm",
+        "domain": "b3.com.br",
+    },
 }
 
 
@@ -4382,6 +4411,8 @@ def _chart_source(query: str) -> dict[str, str]:
         return CHART_SOURCES["DISTRITO"]
     if "mensageria" in query:
         return CHART_SOURCES["CETIC"]
+    if "ibovespa" in query:
+        return CHART_SOURCES["B3"]
     return CHART_SOURCES["BCB"]
 
 

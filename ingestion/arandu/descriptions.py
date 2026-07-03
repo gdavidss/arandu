@@ -499,15 +499,15 @@ CHART_DESCRIPTIONS: dict[str, str] = {
         "não o volume de transações; uma alta indica mais gente no sistema."
     ),
     "petrobras_financeiro": (
-        "Resultados anuais da Petrobras: receita de vendas consolidada e lucro líquido, "
-        "em R$ bilhões.\n\n**Por que importa:** Maior empresa do país e grande pagadora de "
-        "tributos e dividendos; receita e lucro afetam a arrecadação pública."
+        "Receita de vendas e lucro líquido da Petrobras, ano a ano (2010–2024), em R$ "
+        "bilhões.\n\n**Por que importa:** Maior empresa do país: os prejuízos de 2014–2017 "
+        "(Lava Jato, baixas contábeis) e a recuperação recente afetam tributos, "
+        "dividendos e investimento."
     ),
     "matriz_eletrica_fontes": (
-        "Participação de cada fonte (hidráulica, eólica, solar, biomassa, gás) na matriz "
-        "elétrica brasileira em 2024, pela Oferta Interna de Energia Elétrica "
-        "(OIEE).\n\n**Por que importa:** Mostra quanto da eletricidade é renovável; eólica "
-        "e solar ganham espaço."
+        "Participação de cada fonte na matriz elétrica brasileira, ano a ano.\n\n**Por que "
+        "importa:** Mostra a transição energética: a hidráulica cede espaço enquanto "
+        "eólica e solar crescem; a matriz segue perto de 90% renovável."
     ),
     "industria_transformacao_pib": (
         "Quanto a indústria de transformação (fábricas que convertem matérias-primas em "
@@ -525,5 +525,11 @@ CHART_DESCRIPTIONS: dict[str, str] = {
         "enviaram mensagens instantâneas, como WhatsApp e Telegram.\n\n**Por que importa:** "
         "Mede o alcance da mensageria, o principal canal de conversa e informação no "
         "país."
+    ),
+    "ibovespa_fechamento": (
+        "Ibovespa, principal índice de ações da B3, no fechamento de cada ano, em "
+        "pontos.\n\n**Por que importa:** Termômetro do mercado de ações e da confiança dos "
+        "investidores: sobe com otimismo sobre lucros e economia, cai com aversão a "
+        "risco."
     ),
 }

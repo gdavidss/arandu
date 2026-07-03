@@ -191,6 +191,14 @@ sources:
     notes: 'Indicador C5 (Comunicação) da TIC Domicílios: proporção de usuários de Internet que enviaram
       mensagens instantâneas (WhatsApp, Telegram e similares). Substitui DAU/MAU oficiais do WhatsApp, inexistentes.
       static_table.'
+  b3_ibovespa:
+    name: Ibovespa — B3 (Brasil, Bolsa, Balcão)
+    institution: B3 S.A. (índice); coleta via Yahoo Finance (^BVSP)
+    url: https://www.b3.com.br/pt_br/market-data-e-indices/indices/indices-amplos/indice-ibovespa-ibovespa-estatisticas-historicas.htm
+    license_or_terms: Ibovespa é índice público da B3; fechamentos anuais coletados via Yahoo Finance (^BVSP)
+      e conferidos com Trading Economics/Statista. Pontos nominais (não deflacionados).
+    notes: B3 não expõe um CSV público estável e o BCB descontinuou a série SGS 7 (fim em 2019); os fechamentos
+      de fim de ano são carregados via static_table e conferidos em fontes independentes.
 series:
   - series_id: bcb_sgs_selic_target
     source_id: bcb_sgs
@@ -3855,18 +3863,51 @@ series:
     transformation: published consolidated annual revenue, nominal BRL
     source_url: https://www.investidorpetrobras.com.br/
     static_observations:
+    - date: '2010-01-01'
+      value: '211.84'
+      note: CVM DFP (conta 3.01) + Petrobras SEC 6-K, R$ bi consolidado IFRS
+    - date: '2011-01-01'
+      value: '244.18'
+      note: CVM DFP (conta 3.01) + Petrobras SEC 6-K, R$ bi consolidado IFRS
+    - date: '2012-01-01'
+      value: '281.38'
+      note: CVM DFP (conta 3.01) + Petrobras SEC 6-K, R$ bi consolidado IFRS
+    - date: '2013-01-01'
+      value: '304.89'
+      note: CVM DFP (conta 3.01) + Petrobras SEC 6-K, R$ bi consolidado IFRS
+    - date: '2014-01-01'
+      value: '337.26'
+      note: CVM DFP (conta 3.01) + Petrobras SEC 6-K, R$ bi consolidado IFRS
+    - date: '2015-01-01'
+      value: '321.64'
+      note: CVM DFP (conta 3.01) + Petrobras SEC 6-K, R$ bi consolidado IFRS
+    - date: '2016-01-01'
+      value: '282.59'
+      note: CVM DFP (conta 3.01) + Petrobras SEC 6-K, R$ bi consolidado IFRS
+    - date: '2017-01-01'
+      value: '283.7'
+      note: CVM DFP (conta 3.01) + Petrobras SEC 6-K, R$ bi consolidado IFRS
+    - date: '2018-01-01'
+      value: '349.84'
+      note: CVM DFP (conta 3.01) + Petrobras SEC 6-K, R$ bi consolidado IFRS
+    - date: '2019-01-01'
+      value: '302.25'
+      note: CVM DFP (conta 3.01) + Petrobras SEC 6-K, R$ bi consolidado IFRS
+    - date: '2020-01-01'
+      value: '272.07'
+      note: CVM DFP (conta 3.01) + Petrobras SEC 6-K, R$ bi consolidado IFRS
+    - date: '2021-01-01'
+      value: '452.67'
+      note: CVM DFP (conta 3.01) + Petrobras SEC 6-K, R$ bi consolidado IFRS
     - date: '2022-01-01'
-      value: '641.2'
-      note: '"O total de receita de vendas saltou de R$ 452,6 bilhões em 2021 para R$ 641,2 bilhões em 2022"
-        (balanço oficial da Petrobras reportado por Forbes/Pod'
+      value: '641.26'
+      note: CVM DFP (conta 3.01) + Petrobras SEC 6-K, R$ bi consolidado IFRS
     - date: '2023-01-01'
       value: '511.99'
-      note: 'Receita de vendas consolidada de 2023: R$ 511,99 bilhões (base para a queda de 4,1% informada
-        para 2024).'
+      note: CVM DFP (conta 3.01) + Petrobras SEC 6-K, R$ bi consolidado IFRS
     - date: '2024-01-01'
       value: '490.83'
-      note: '"No ano, a receita somou R$490,83 bilhões, recuo de 4,1%." (InvestNews, divulgação de resultados
-        2024 da Petrobras).'
+      note: CVM DFP (conta 3.01) + Petrobras SEC 6-K, R$ bi consolidado IFRS
   - series_id: petrobras_lucro_liquido_rs_bi
     source_id: petrobras_ri
     connector: static_table
@@ -3881,22 +3922,57 @@ series:
     transformation: published consolidated annual net income, nominal BRL
     source_url: https://agencia.petrobras.com.br/w/negocio/petrobras-lucra-r-36-6-bilhoes-em-2024
     static_observations:
+    - date: '2010-01-01'
+      value: '35.19'
+      note: CVM DFP (conta 3.11.01, atribuivel aos acionistas) + SEC 6-K; negativos = prejuizo (2014-2017)
+    - date: '2011-01-01'
+      value: '33.31'
+      note: CVM DFP (conta 3.11.01, atribuivel aos acionistas) + SEC 6-K; negativos = prejuizo (2014-2017)
+    - date: '2012-01-01'
+      value: '21.18'
+      note: CVM DFP (conta 3.11.01, atribuivel aos acionistas) + SEC 6-K; negativos = prejuizo (2014-2017)
+    - date: '2013-01-01'
+      value: '23.57'
+      note: CVM DFP (conta 3.11.01, atribuivel aos acionistas) + SEC 6-K; negativos = prejuizo (2014-2017)
+    - date: '2014-01-01'
+      value: '-21.59'
+      note: CVM DFP (conta 3.11.01, atribuivel aos acionistas) + SEC 6-K; negativos = prejuizo (2014-2017)
+    - date: '2015-01-01'
+      value: '-34.84'
+      note: CVM DFP (conta 3.11.01, atribuivel aos acionistas) + SEC 6-K; negativos = prejuizo (2014-2017)
+    - date: '2016-01-01'
+      value: '-14.82'
+      note: CVM DFP (conta 3.11.01, atribuivel aos acionistas) + SEC 6-K; negativos = prejuizo (2014-2017)
+    - date: '2017-01-01'
+      value: '-0.45'
+      note: CVM DFP (conta 3.11.01, atribuivel aos acionistas) + SEC 6-K; negativos = prejuizo (2014-2017)
+    - date: '2018-01-01'
+      value: '25.78'
+      note: CVM DFP (conta 3.11.01, atribuivel aos acionistas) + SEC 6-K; negativos = prejuizo (2014-2017)
+    - date: '2019-01-01'
+      value: '40.14'
+      note: CVM DFP (conta 3.11.01, atribuivel aos acionistas) + SEC 6-K; negativos = prejuizo (2014-2017)
+    - date: '2020-01-01'
+      value: '7.11'
+      note: CVM DFP (conta 3.11.01, atribuivel aos acionistas) + SEC 6-K; negativos = prejuizo (2014-2017)
+    - date: '2021-01-01'
+      value: '106.67'
+      note: CVM DFP (conta 3.11.01, atribuivel aos acionistas) + SEC 6-K; negativos = prejuizo (2014-2017)
     - date: '2022-01-01'
       value: '188.33'
-      note: '"A Petrobras divulgou ... que seu lucro líquido registrado em 2022 foi de R$ 188,33 bilhões"
-        (CNN Brasil, balanço oficial).'
+      note: CVM DFP (conta 3.11.01, atribuivel aos acionistas) + SEC 6-K; negativos = prejuizo (2014-2017)
     - date: '2023-01-01'
-      value: '124.6'
-      note: '"A Petrobras registrou em 2023 lucro líquido de R$ 124,6 bilhões" (Agência Petrobras).'
+      value: '124.61'
+      note: CVM DFP (conta 3.11.01, atribuivel aos acionistas) + SEC 6-K; negativos = prejuizo (2014-2017)
     - date: '2024-01-01'
-      value: '36.6'
-      note: '"A Petrobras encerrou 2024 com lucro líquido de R$ 36,6 bilhões" (Agência Petrobras).'
-  - series_id: matriz_eletrica_share_hidraulica_pct
+      value: '36.61'
+      note: CVM DFP (conta 3.11.01, atribuivel aos acionistas) + SEC 6-K; negativos = prejuizo (2014-2017)
+  - series_id: matriz_eletrica_hidraulica_pct
     source_id: epe_ben
     connector: static_table
-    source_series_code: matriz_eletrica_share_hidraulica_pct
-    name: Matriz elétrica — participação Hidráulica
-    description: Participação da fonte Hidráulica na Oferta Interna de Energia Elétrica (OIEE).
+    source_series_code: matriz_eletrica_hidraulica_pct
+    name: Matriz elétrica — Hidráulica
+    description: Participação de Hidráulica na Oferta Interna de Energia Elétrica (OIEE).
     unit: percent of electricity supply
     frequency: annual
     concept: electricity generation mix
@@ -3905,20 +3981,44 @@ series:
     transformation: annual share of OIEE
     source_url: https://www.epe.gov.br/pt/publicacoes-dados-abertos/publicacoes/balanco-energetico-nacional-2025
     static_observations:
+    - date: '2017-01-01'
+      value: '65.1'
+      note: 'BEN 2019 (base 2018), ''Matriz Eletrica Brasileira'', BRASIL (2017) pie: ''Hidraulica2 65,1%''.
+        Rendered p.35. URL: https://www.epe.gov.br/sites-pt/public'
+    - date: '2018-01-01'
+      value: '66.6'
+      note: 'BEN 2020 (base 2019), ''Matriz Eletrica Brasileira'', BRASIL (2018) pie: ''Hidraulica2 66,6%''.
+        Rendered p.35. URL: https://www.epe.gov.br/sites-pt/public'
+    - date: '2019-01-01'
+      value: '64.9'
+      note: 'BEN 2020 (base 2019), ''Matriz Eletrica Brasileira'', BRASIL (2019) pie: ''Hidraulica2 64,9%''.
+        Rendered p.35. URL: https://www.epe.gov.br/sites-pt/public'
+    - date: '2020-01-01'
+      value: '60.7'
+      note: 'BEN 2022 (base 2021), ''A matriz eletrica brasileira em 2021...'', bar chart Hidraulica 2020=60,7%
+        / 2021=53,4%. Rendered p.34. URL: https://www.epe.gov'
+    - date: '2021-01-01'
+      value: '53.4'
+      note: 'BEN 2022 (base 2021) bar chart: Hidraulica 2020=60,7% / 2021=53,4%. Rendered p.34. Same URL
+        as 2020.'
+    - date: '2022-01-01'
+      value: '61.9'
+      note: 'BEN 2024 (base 2023), ''A matriz eletrica brasileira em 2023...'', bar chart Hidraulica 2022=61,9%
+        / 2023=58,9%. Rendered p.38. URL: https://www.epe.gov'
     - date: '2023-01-01'
       value: '58.9'
-      note: 'Gráfico ''Participação das fontes na matriz elétrica'' (p.37): Hidráulica 2023 = 58,9% / 2024
-        = 55,3%'
+      note: 'Consistent across two editions: BEN 2024 bar chart 2023=58,9% AND BEN 2025 bar chart 2023=58,9%.
+        pdftotext BEN 2025: ''58,9% 55,3%'' (Hidraulica 2023/20'
     - date: '2024-01-01'
       value: '55.3'
-      note: 'Gráfico ''Participação das fontes na matriz elétrica'' (p.37): Hidráulica 2023 = 58,9% / 2024
-        = 55,3%'
-  - series_id: matriz_eletrica_share_eolica_pct
+      note: 'BEN 2025 (base 2024), ''A matriz eletrica brasileira em 2024 apresentou queda de participacao
+        da fonte hidraulica...'', bar chart Hidraulica 2023=58,9% '
+  - series_id: matriz_eletrica_eolica_pct
     source_id: epe_ben
     connector: static_table
-    source_series_code: matriz_eletrica_share_eolica_pct
-    name: Matriz elétrica — participação Eólica
-    description: Participação da fonte Eólica na Oferta Interna de Energia Elétrica (OIEE).
+    source_series_code: matriz_eletrica_eolica_pct
+    name: Matriz elétrica — Eólica
+    description: Participação de Eólica na Oferta Interna de Energia Elétrica (OIEE).
     unit: percent of electricity supply
     frequency: annual
     concept: electricity generation mix
@@ -3927,20 +4027,37 @@ series:
     transformation: annual share of OIEE
     source_url: https://www.epe.gov.br/pt/publicacoes-dados-abertos/publicacoes/balanco-energetico-nacional-2025
     static_observations:
+    - date: '2017-01-01'
+      value: '6.8'
+      note: 'BEN 2019 (base 2018) BRASIL (2017) pie: ''Eolica 6,8%''. Rendered p.35. https://www.epe.gov.br/sites-pt/publicacoes-dados-abertos/publicacoes/Publicacoe'
+    - date: '2018-01-01'
+      value: '7.6'
+      note: 'BEN 2020 (base 2019) BRASIL (2018) pie: ''Eolica 7,6%''. Rendered p.35. https://www.epe.gov.br/sites-pt/publicacoes-dados-abertos/publicacoes/Publicacoe'
+    - date: '2019-01-01'
+      value: '8.6'
+      note: 'BEN 2020 (base 2019) BRASIL (2019) pie: ''Eolica 8,6%''. Rendered p.35. Same URL as 2018.'
+    - date: '2020-01-01'
+      value: '8.7'
+      note: 'BEN 2022 (base 2021) bar chart: Eolica 2020=8,7% / 2021=10,6%. Rendered p.34. https://www.epe.gov.br/sites-pt/publicacoes-dados-abertos/publicacoes/Pu'
+    - date: '2021-01-01'
+      value: '10.6'
+      note: 'BEN 2022 (base 2021) bar chart: Eolica 2020=8,7% / 2021=10,6%. Rendered p.34. Same URL as 2020.'
+    - date: '2022-01-01'
+      value: '11.8'
+      note: 'BEN 2024 (base 2023) bar chart: Eolica 2022=11,8% / 2023=13,2%. Rendered p.38. https://www.epe.gov.br/sites-pt/publicacoes-dados-abertos/publicacoes/P'
     - date: '2023-01-01'
       value: '13.2'
-      note: 'Gráfico ''Participação das fontes na matriz elétrica'' (p.37): Eólica 13,2% (2023) / 14,1%
-        (2024)'
+      note: 'Cross-confirmed: BEN 2024 bar 2023=13,2% AND BEN 2025 bar 2023=13,2% (pdftotext BEN 2025 ''13,2%14,1%'').
+        Rendered ben2024 p.38 and ben2025 p.37.'
     - date: '2024-01-01'
       value: '14.1'
-      note: 'Gráfico ''Participação das fontes na matriz elétrica'' (p.37): Eólica 13,2% (2023) / 14,1%
-        (2024)'
-  - series_id: matriz_eletrica_share_solar_pct
+      note: 'BEN 2025 (base 2024) bar chart: Eolica 2023=13,2% / 2024=14,1%. Rendered p.37. https://www.epe.gov.br/sites-pt/publicacoes-dados-abertos/publicacoes/P'
+  - series_id: matriz_eletrica_solar_pct
     source_id: epe_ben
     connector: static_table
-    source_series_code: matriz_eletrica_share_solar_pct
-    name: Matriz elétrica — participação Solar
-    description: Participação da fonte Solar na Oferta Interna de Energia Elétrica (OIEE).
+    source_series_code: matriz_eletrica_solar_pct
+    name: Matriz elétrica — Solar
+    description: Participação de Solar na Oferta Interna de Energia Elétrica (OIEE).
     unit: percent of electricity supply
     frequency: annual
     concept: electricity generation mix
@@ -3949,18 +4066,39 @@ series:
     transformation: annual share of OIEE
     source_url: https://www.epe.gov.br/pt/publicacoes-dados-abertos/publicacoes/balanco-energetico-nacional-2025
     static_observations:
+    - date: '2017-01-01'
+      value: '0.1'
+      note: 'BEN 2019 (base 2018) BRASIL (2017) pie: ''Solar 0,1%''. Rendered p.35. https://www.epe.gov.br/sites-pt/publicacoes-dados-abertos/publicacoes/Publicacoes'
+    - date: '2018-01-01'
+      value: '0.5'
+      note: 'BEN 2020 (base 2019) BRASIL (2018) pie: ''Solar 0,5%''. Rendered p.35. https://www.epe.gov.br/sites-pt/publicacoes-dados-abertos/publicacoes/Publicacoes'
+    - date: '2019-01-01'
+      value: '1.0'
+      note: 'BEN 2020 (base 2019) BRASIL (2019) pie: ''Solar 1,0%''. Rendered p.35 (cropped high-res). Same
+        URL as 2018.'
+    - date: '2020-01-01'
+      value: '1.6'
+      note: 'BEN 2022 (base 2021) bar chart: Solar 2020=1,6% / 2021=2,5%. Rendered p.34. https://www.epe.gov.br/sites-pt/publicacoes-dados-abertos/publicacoes/Publ'
+    - date: '2021-01-01'
+      value: '2.5'
+      note: 'BEN 2022 (base 2021) bar chart: Solar 2020=1,6% / 2021=2,5%. Rendered p.34. Same URL as 2020.'
+    - date: '2022-01-01'
+      value: '4.4'
+      note: 'BEN 2024 (base 2023) bar chart: Solar 2022=4,4% / 2023=7,0%. Rendered p.38. https://www.epe.gov.br/sites-pt/publicacoes-dados-abertos/publicacoes/Publ'
     - date: '2023-01-01'
       value: '7.0'
-      note: 'Gráfico ''Participação das fontes na matriz elétrica'' (p.37): Solar 7,0% (2023) / 9,3% (2024)'
+      note: 'Cross-confirmed: BEN 2024 bar 2023=7,0% AND BEN 2025 bar 2023=7,0% (''7,0% 9,3%''). Rendered
+        ben2024 p.38 and ben2025 p.37.'
     - date: '2024-01-01'
       value: '9.3'
-      note: 'Gráfico ''Participação das fontes na matriz elétrica'' (p.37): Solar 7,0% (2023) / 9,3% (2024)'
-  - series_id: matriz_eletrica_share_biomassa_pct
+      note: 'BEN 2025 (base 2024) bar chart: Solar 2023=7,0% / 2024=9,3%; text: ''A geracao solar fotovoltaica
+        atingiu 70,7 TWh ... crescendo 39,6%''. Rendered p.37.'
+  - series_id: matriz_eletrica_biomassa_pct
     source_id: epe_ben
     connector: static_table
-    source_series_code: matriz_eletrica_share_biomassa_pct
-    name: Matriz elétrica — participação Biomassa
-    description: Participação da fonte Biomassa na Oferta Interna de Energia Elétrica (OIEE).
+    source_series_code: matriz_eletrica_biomassa_pct
+    name: Matriz elétrica — Biomassa
+    description: Participação de Biomassa na Oferta Interna de Energia Elétrica (OIEE).
     unit: percent of electricity supply
     frequency: annual
     concept: electricity generation mix
@@ -3969,20 +4107,40 @@ series:
     transformation: annual share of OIEE
     source_url: https://www.epe.gov.br/pt/publicacoes-dados-abertos/publicacoes/balanco-energetico-nacional-2025
     static_observations:
+    - date: '2017-01-01'
+      value: '8.5'
+      note: 'BEN 2019 (base 2018) BRASIL (2017) pie: ''Biomassa3 8,5%''. Rendered p.35. https://www.epe.gov.br/sites-pt/publicacoes-dados-abertos/publicacoes/Publica'
+    - date: '2018-01-01'
+      value: '8.5'
+      note: 'BEN 2020 (base 2019) BRASIL (2018) pie: ''Biomassa3 8,5%''. Rendered p.35. https://www.epe.gov.br/sites-pt/publicacoes-dados-abertos/publicacoes/Publica'
+    - date: '2019-01-01'
+      value: '8.4'
+      note: 'BEN 2020 (base 2019) BRASIL (2019) pie: ''Biomassa3 8,4%''. Rendered p.35 (high-res crop).
+        Same URL as 2018.'
+    - date: '2020-01-01'
+      value: '9.0'
+      note: 'BEN 2022 (base 2021) bar chart: Biomassa 2020=9,0% / 2021=8,2%. Rendered p.34. https://www.epe.gov.br/sites-pt/publicacoes-dados-abertos/publicacoes/P'
+    - date: '2021-01-01'
+      value: '8.2'
+      note: 'BEN 2022 (base 2021) bar chart: Biomassa 2020=9,0% / 2021=8,2%. Rendered p.34. Same URL as
+        2020.'
+    - date: '2022-01-01'
+      value: '8.0'
+      note: 'BEN 2024 (base 2023) bar chart: Biomassa 2022=8,0% / 2023=8,0%. Rendered p.38. https://www.epe.gov.br/sites-pt/publicacoes-dados-abertos/publicacoes/P'
     - date: '2023-01-01'
       value: '8.0'
-      note: 'Gráfico ''Participação das fontes na matriz elétrica'' (p.37): Biomassa² 8,0% (2023) / 8,1%
-        (2024)'
+      note: BEN 2024 bar 2023=8,0%. Note BEN 2025 shows 2023=8,0% and 2024=8,1% ('8,0% 8,1%'). Rendered
+        ben2024 p.38 and ben2025 p.37.
     - date: '2024-01-01'
       value: '8.1'
-      note: 'Gráfico ''Participação das fontes na matriz elétrica'' (p.37): Biomassa² 8,0% (2023) / 8,1%
-        (2024)'
-  - series_id: matriz_eletrica_share_gas_natural_pct
+      note: 'BEN 2025 (base 2024) bar chart: Biomassa 2023=8,0% / 2024=8,1% (''8,0% 8,1%''). Rendered p.37.
+        https://www.epe.gov.br/sites-pt/publicacoes-dados-abertos'
+  - series_id: matriz_eletrica_gas_natural_pct
     source_id: epe_ben
     connector: static_table
-    source_series_code: matriz_eletrica_share_gas_natural_pct
-    name: Matriz elétrica — participação Gás natural
-    description: Participação da fonte Gás natural na Oferta Interna de Energia Elétrica (OIEE).
+    source_series_code: matriz_eletrica_gas_natural_pct
+    name: Matriz elétrica — Gás natural
+    description: Participação de Gás natural na Oferta Interna de Energia Elétrica (OIEE).
     unit: percent of electricity supply
     frequency: annual
     concept: electricity generation mix
@@ -3991,14 +4149,96 @@ series:
     transformation: annual share of OIEE
     source_url: https://www.epe.gov.br/pt/publicacoes-dados-abertos/publicacoes/balanco-energetico-nacional-2025
     static_observations:
+    - date: '2017-01-01'
+      value: '10.5'
+      note: 'BEN 2019 (base 2018) BRASIL (2017) pie: ''Gas Natural 10,5%''. Rendered p.35. https://www.epe.gov.br/sites-pt/publicacoes-dados-abertos/publicacoes/Publ'
+    - date: '2018-01-01'
+      value: '8.6'
+      note: 'BEN 2020 (base 2019) BRASIL (2018) pie: ''Gas Natural 8,6%''. Rendered p.35. https://www.epe.gov.br/sites-pt/publicacoes-dados-abertos/publicacoes/Publi'
+    - date: '2019-01-01'
+      value: '9.3'
+      note: 'BEN 2020 (base 2019) BRASIL (2019) pie: ''Gas Natural 9,3%''. Rendered p.35 (high-res crop).
+        Same URL as 2018.'
+    - date: '2020-01-01'
+      value: '9.1'
+      note: 'BEN 2022 (base 2021) bar chart: Gas Natural 2020=9,1% / 2021=12,8%. Rendered p.34. https://www.epe.gov.br/sites-pt/publicacoes-dados-abertos/publicaco'
+    - date: '2021-01-01'
+      value: '12.8'
+      note: 'BEN 2022 (base 2021) bar chart: Gas Natural 2020=9,1% / 2021=12,8%. Rendered p.34. Same URL
+        as 2020.'
+    - date: '2022-01-01'
+      value: '6.1'
+      note: 'BEN 2024 (base 2023) bar chart: Gas Natural 2022=6,1% / 2023=5,3%. Rendered p.38. https://www.epe.gov.br/sites-pt/publicacoes-dados-abertos/publicacoe'
     - date: '2023-01-01'
       value: '5.3'
-      note: 'Gráfico ''Participação das fontes na matriz elétrica'' (p.37): Gás Natural 5,3% (2023) / 6,3%
-        (2024)'
+      note: 'Cross-confirmed: BEN 2024 bar 2023=5,3% AND BEN 2025 bar 2023=5,3% (''5,3% 6,3%''). Rendered
+        ben2024 p.38 and ben2025 p.37.'
     - date: '2024-01-01'
       value: '6.3'
-      note: 'Gráfico ''Participação das fontes na matriz elétrica'' (p.37): Gás Natural 5,3% (2023) / 6,3%
-        (2024)'
+      note: 'BEN 2025 (base 2024) bar chart: Gas Natural 2023=5,3% / 2024=6,3%; text notes ''aumento da
+        geracao a partir de gas natural (+23,9%)''. Rendered p.37. ht'
+  - series_id: matriz_eletrica_outras_nao_renovaveis_pct
+    source_id: epe_ben
+    connector: static_table
+    source_series_code: matriz_eletrica_outras_nao_renovaveis_pct
+    name: Matriz elétrica — Outras não-renováveis
+    description: Participação de Outras não-renováveis na Oferta Interna de Energia Elétrica (OIEE).
+    unit: percent of electricity supply
+    frequency: annual
+    concept: electricity generation mix
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: annual share of OIEE
+    source_url: https://www.epe.gov.br/pt/publicacoes-dados-abertos/publicacoes/balanco-energetico-nacional-2025
+    static_observations:
+    - date: '2017-01-01'
+      value: '9.1'
+      note: 'SUM of quoted BEN 2019 (2017 pie): Carvao e Derivados 3,6% + Derivados de Petroleo 3,0% + Nuclear
+        2,5% = 9,1%. https://www.epe.gov.br/sites-pt/publica'
+    - date: '2018-01-01'
+      value: '8.1'
+      note: 'SUM of quoted BEN 2020 (2018 pie): Carvao e Derivados 3,2% + Derivados de Petroleo 2,4% + Nuclear
+        2,5% = 8,1%. https://www.epe.gov.br/sites-pt/publica'
+    - date: '2019-01-01'
+      value: '7.8'
+      note: 'SUM of quoted BEN 2020 (2019 pie): Carvao e Derivados 3,3% + Derivados de Petroleo 2,0% + Nuclear
+        2,5% = 7,8%. Same URL as 2018.'
+    - date: '2020-01-01'
+      value: '7.1'
+      note: 'SUM of quoted BEN 2022 (2020 bars): Carvao e derivados 2,7% + Derivados de petroleo 2,2% +
+        Nuclear 2,2% = 7,1%. https://www.epe.gov.br/sites-pt/public'
+    - date: '2021-01-01'
+      value: '9.1'
+      note: 'SUM of quoted BEN 2022 (2021 bars): Carvao e derivados 3,4% + Derivados de petroleo 3,5% +
+        Nuclear 2,2% = 9,1%. Same URL as 2020.'
+    - date: '2022-01-01'
+      value: '6.0'
+      note: 'SUM of quoted BEN 2024 (2022 bars): Carvao e derivados 2,1% + Derivados de petroleo 1,8% +
+        Nuclear 2,1% = 6,0%. https://www.epe.gov.br/sites-pt/public'
+    - date: '2023-01-01'
+      value: '5.4'
+      note: 'SUM of quoted BEN 2024/2025 (2023 bars): Carvao e derivados 1,9% + Derivados de petroleo 1,5%
+        + Nuclear 2,0% = 5,4%.'
+    - date: '2024-01-01'
+      value: '5.5'
+      note: 'SUM of quoted BEN 2025 (2024 bars): Carvao e derivados 1,9% + Derivados de petroleo 1,5% +
+        Nuclear 2,1% = 5,5%. https://www.epe.gov.br/sites-pt/public'
+  - series_id: industria_transformacao_pib_pct
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: 6587/9312
+    name: Manufacturing value added as % of GDP
+    description: Valor adicionado da indústria de transformação em proporção do PIB.
+    unit: percent of GDP
+    frequency: annual
+    concept: industrialization / manufacturing share
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: annual share of GDP
+    source_url: https://sidra.ibge.gov.br/tabela/6587
+    sidra_url: https://apisidra.ibge.gov.br/values/t/6587/n1/1/v/9312/p/all
+    sidra_period_key: D3C
+    start_date: '2010-01-01'
   - series_id: vc_brasil_aporte_total_usd
     source_id: distrito_vc
     connector: static_table
@@ -4031,12 +4271,12 @@ series:
         (2021, revisado) para US$ 4,45 bi em 2022 — ano do inverno global do venture capital.'
     - date: '2023-01-01'
       value: '1.88'
-      note: 'NeoFeed (citando Distrito, Inside VC Fechamento 2024): US$ 1,88 bilhao em 2023 (base
-        do crescimento de 13,83% informado para 2024).'
+      note: 'NeoFeed (citando Distrito, Inside VC Fechamento 2024): US$ 1,88 bilhao em 2023 (base do crescimento
+        de 13,83% informado para 2024).'
     - date: '2024-01-01'
       value: '2.14'
-      note: 'NeoFeed (citando Distrito, Inside VC Fechamento 2024): "Em 2024, as startups brasileiras
-        captaram US$ 2,14 bilhoes, alta de 13,83% sobre o ano anterior (US$ 1,88 bilhao)."'
+      note: 'NeoFeed (citando Distrito, Inside VC Fechamento 2024): "Em 2024, as startups brasileiras captaram
+        US$ 2,14 bilhoes, alta de 13,83% sobre o ano anterior (US$ 1,88 bilhao)."'
   - series_id: mensageria_uso_internet_pct
     source_id: cetic_tic
     connector: static_table
@@ -4079,19 +4319,66 @@ series:
       value: '92'
       note: TIC Domicílios 2025, indicador 'C5 - USUÁRIOS DE INTERNET, POR ATIVIDADES REALIZADAS NA INTERNET
         - COMUNICAÇÃO', linha 'Mandou mensagens instantâneas'
-  - series_id: industria_transformacao_pib_pct
-    source_id: ibge_sidra
-    connector: ibge_sidra
-    source_series_code: 6587/9312
-    name: Manufacturing value added as % of GDP
-    description: Valor adicionado da indústria de transformação em proporção do PIB.
-    unit: percent of GDP
+  - series_id: ibovespa_fechamento
+    source_id: b3_ibovespa
+    connector: static_table
+    source_series_code: ibovespa_fechamento
+    name: Ibovespa — fechamento anual
+    description: Índice Bovespa (Ibovespa), principal índice da B3, fechamento do último pregão de cada
+      ano.
+    unit: index points
     frequency: annual
-    concept: industrialization / manufacturing share
+    concept: stock market index
     geography: Brazil
     seasonal_adjustment: not seasonally adjusted
-    transformation: annual share of GDP
-    source_url: https://sidra.ibge.gov.br/tabela/6587
-    sidra_url: https://apisidra.ibge.gov.br/values/t/6587/n1/1/v/9312/p/all
-    sidra_period_key: D3C
-    start_date: '2010-01-01'
+    transformation: year-end close, nominal index points
+    source_url: https://www.b3.com.br/pt_br/market-data-e-indices/indices/indices-amplos/indice-ibovespa-ibovespa-estatisticas-historicas.htm
+    static_observations:
+    - date: '2011-12-29'
+      value: '56754'
+      note: 'Yahoo Finance daily endpoint .../chart/%5EBVSP?interval=1d over Dec 2011: last trading day
+        2011-12-29 close = 56754.0 (chart.result[0].indicators.quot'
+    - date: '2012-12-28'
+      value: '60952'
+      note: 'Yahoo Finance daily endpoint, Dec 2012: last trading day 2012-12-28 close = 60952.0'
+    - date: '2013-12-30'
+      value: '51507'
+      note: 'Yahoo Finance daily endpoint, Dec 2013: last trading day 2013-12-30 close = 51507.0'
+    - date: '2014-12-30'
+      value: '50007'
+      note: 'Yahoo Finance daily endpoint, Dec 2014: last trading day 2014-12-30 close = 50007.0'
+    - date: '2015-12-30'
+      value: '43350'
+      note: 'Yahoo Finance daily endpoint output: ''2015 year-end last trading day close: (2015-12-30, 43350.0)'''
+    - date: '2016-12-29'
+      value: '60227'
+      note: 'Yahoo Finance daily endpoint, Dec 2016: last trading day 2016-12-29 close = 60227.0'
+    - date: '2017-12-29'
+      value: '76402'
+      note: 'Yahoo Finance daily endpoint, Dec 2017: last trading day 2017-12-29 close = 76402.0'
+    - date: '2018-12-28'
+      value: '87887'
+      note: 'Yahoo Finance daily endpoint, Dec 2018: last trading day 2018-12-28 close = 87887.0'
+    - date: '2019-12-30'
+      value: '115964'
+      note: 'Yahoo Finance daily endpoint output: ''2019 year-end last trading day close: (2019-12-30, 115964.0)''
+        (note: monthly-interval bar showed 115645; daily l'
+    - date: '2020-12-30'
+      value: '119306'
+      note: 'Yahoo Finance daily endpoint, Dec 2020: last trading day 2020-12-30 close = 119306.0'
+    - date: '2021-12-30'
+      value: '104822'
+      note: 'Yahoo Finance daily endpoint output: ''2021 year-end last trading day close: (2021-12-30, 104822.0)'''
+    - date: '2022-12-29'
+      value: '110031'
+      note: 'Yahoo Finance daily endpoint, Dec 2022: last trading day 2022-12-29 close = 110031.0'
+    - date: '2023-12-28'
+      value: '134185'
+      note: 'Yahoo Finance daily endpoint output: ''2023 year-end last trading day close: (2023-12-28, 134185.0)''.
+        Independently confirmed by Statista: ''The year en'
+    - date: '2024-12-30'
+      value: '120283'
+      note: 'Yahoo Finance daily endpoint output: ''2024 year-end last trading day close: (2024-12-30, 120283.0)'''
+    - date: '2025-12-30'
+      value: '161125'
+      note: 'Yahoo Finance daily endpoint output: ''2025 year-end last trading day close: (2025-12-30, 161125.0)'''
