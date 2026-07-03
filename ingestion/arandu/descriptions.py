@@ -516,8 +516,9 @@ CHART_DESCRIPTIONS: dict[str, str] = {
     ),
     "vc_deployed_brasil": (
         "Volume anual de venture capital (aportes de fundos em startups) captado por "
-        "startups brasileiras, em US$ bilhões.\n\n**Por que importa:** Reflete o apetite "
-        "dos investidores pela inovação; alta indica mais aportes, queda o contrário."
+        "startups brasileiras, em US$ bilhões (Distrito).\n\n**Por que importa:** Mede o "
+        "apetite por inovação: pico em 2021, forte queda em 2022–23 (inverno global) e "
+        "leve retomada em 2024."
     ),
     "mensageria_uso_internet": (
         "Percentual de usuários de Internet (10+ anos, uso nos últimos 3 meses) que "

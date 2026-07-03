@@ -4030,13 +4030,13 @@ series:
       note: 'LinkedIn News/Distrito (fechamento 2022): aportes em startups caIram 54,6%, de US$ 9,76 bi
         (2021, revisado) para US$ 4,45 bi em 2022 — ano do inverno global do venture capital.'
     - date: '2023-01-01'
-      value: '1.8'
-      note: 'Mobile Time (citando Distrito): ''Em 2024 o Pais acumula US$ 1,9 bilhao em aportes, resultado
-        5,5% maior do que o do ano passado, quando o volume chego'
+      value: '1.88'
+      note: 'NeoFeed (citando Distrito, Inside VC Fechamento 2024): US$ 1,88 bilhao em 2023 (base
+        do crescimento de 13,83% informado para 2024).'
     - date: '2024-01-01'
-      value: '1.9'
-      note: 'Mobile Time (citando Distrito): ''Em 2024 o Pais acumula US$ 1,9 bilhao em aportes, resultado
-        5,5% maior do que o do ano passado''. Fonte: https://www.m'
+      value: '2.14'
+      note: 'NeoFeed (citando Distrito, Inside VC Fechamento 2024): "Em 2024, as startups brasileiras
+        captaram US$ 2,14 bilhoes, alta de 13,83% sobre o ano anterior (US$ 1,88 bilhao)."'
   - series_id: mensageria_uso_internet_pct
     source_id: cetic_tic
     connector: static_table
