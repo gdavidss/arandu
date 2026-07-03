@@ -235,15 +235,38 @@ const metabaseEmbedCleanup = `
   if (!isQuestion()) return;
   var m = window.location.pathname.match(/\\/question\\/(\\d+)/);
   var cardId = m ? m[1] : null;
-  // Voltar
+  // Dress the page as a MODAL: dark backdrop, centered rounded panel, no page chrome.
+  // (A real iframe modal is impossible: OSS Metabase blocks the full app when framed.)
+  var css = document.createElement("style");
+  css.textContent =
+    "html,body{background:#111827 !important}" +
+    /* transform creates a containing block, so Metabase's fixed-position layers stay
+       inside the panel instead of covering the whole viewport */
+    "#root{position:fixed;top:3vh;left:2vw;right:2vw;bottom:3vh;transform:translateZ(0);" +
+    "border-radius:12px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.45);background:#fff}" +
+    /* hide the data-catalog sidebar; the SQL pane stays collapsed because the ABRIR
+       EDITOR toggle is blanked (the top bar itself holds the De/Período/Até filters) */
+    "[data-testid='sidebar-right'],aside[data-testid='sidebar-content']{display:none !important}" +
+    "[data-testid='visibility-toggler']{visibility:hidden !important}";
+  function addCss() {
+    if (document.head && !document.getElementById("fl-modal-css")) {
+      css.id = "fl-modal-css";
+      document.head.appendChild(css);
+    }
+  }
+  addCss();
+  // Close button (\\u2715) — returns to the dashboard. ESC too.
   var btn = document.createElement("a");
-  btn.textContent = "\\u2190 Voltar ao painel";
+  btn.textContent = "\\u2715";
   btn.href = "/";
-  btn.style.cssText = "position:fixed;top:10px;right:12px;z-index:9999;padding:7px 12px;" +
-    "font:600 13px Inter,system-ui,sans-serif;color:#374151;background:#fff;" +
+  btn.setAttribute("aria-label", "Fechar");
+  btn.style.cssText = "position:fixed;top:calc(3vh + 10px);right:calc(2vw + 12px);z-index:9999;" +
+    "width:32px;height:32px;display:flex;align-items:center;justify-content:center;" +
+    "font:600 15px Inter,system-ui,sans-serif;color:#374151;background:#fff;" +
     "border:1px solid #d6d3cd;border-radius:8px;text-decoration:none;" +
-    "box-shadow:0 1px 3px rgba(0,0,0,.12)";
+    "box-shadow:0 1px 3px rgba(0,0,0,.2)";
   function mount() {
+    addCss();
     if (document.body && !document.getElementById("fl-voltar")) {
       btn.id = "fl-voltar";
       document.body.appendChild(btn);
@@ -251,6 +274,9 @@ const metabaseEmbedCleanup = `
   }
   mount();
   new MutationObserver(mount).observe(document.documentElement, { childList: true, subtree: true });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") window.location.assign("/");
+  });
   // Persist the current view for this card (the SPA drops the /metabase prefix — re-add).
   if (cardId) {
     setInterval(function () {
