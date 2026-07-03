@@ -113,7 +113,19 @@ rest on is the constitution at
 Arandu is meant to be useful to humans first and legible to machines next. An
 agent should be able to ask what a card is, what source it uses, what query
 produced it, when it was updated, and what caveats it carries — under the same
-rules that bind people. Start at
+rules that bind people.
+
+There's a live **MCP server** ([Model Context Protocol](https://modelcontextprotocol.io))
+that exposes the same warehouse data behind the charts, read-only, over streamable
+HTTP at `http://localhost:8808/mcp`. Connect any MCP client:
+
+```sh
+claude mcp add --transport http arandu http://localhost:8808/mcp
+```
+
+It offers four tools — `list_series`, `search_series`, `get_series`, and
+`get_series_sources` — each carrying the same provenance the cards carry. Full
+details, including the JSON config form, are in
 [metasystemic/agent-interface.md](metasystemic/agent-interface.md).
 
 ---

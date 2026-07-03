@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Ingestion pipelines for arandu.ai"
 requires-python = ">=3.12"
 dependencies = [
+  "mcp[cli]>=1.28.1,<2",
   "psycopg[binary]>=3.2.1",
   "python-dateutil>=2.9.0",
   "pyyaml>=6.0.2",

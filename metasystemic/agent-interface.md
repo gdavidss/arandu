@@ -8,7 +8,7 @@ arandu.ai should be useful to humans first. But it should also be legible to mac
 
 The interface is built for a person reading a chart: calm, sparse, sourced. The same artifacts that make a card honest for a person — its source, its query, its last update, its caveats — are also the things an agent needs. So the agent interface is not a separate product. It is the same lens, exposed in a machine-readable shape.
 
-The project may support future agent access through structured metadata, APIs, streams, or MCP-compatible interfaces. This document records what exists today.
+Agent access happens through structured metadata, importable modules, and an MCP server; APIs and streams may follow. This document records what exists today.
 
 ## The six agent questions
 
@@ -25,7 +25,7 @@ These are the same questions a careful human asks. They map to the [data standar
 
 ## The current agent-legible surface
 
-There are three surfaces today. Two are static JSON files served by the frontend; one is an importable Python module pair.
+There are four surfaces today. Two are static JSON files served by the frontend; one is an importable Python module pair; one is a live MCP server over the warehouse.
 
 ### 1. `frontend/public/dashboard-data.json` — the series catalog
 
@@ -68,12 +68,25 @@ Thin, importable surfaces over the code artifacts, so humans and agents can reac
 - `arandu.systemic` re-exports the content layer: `CHARTS` (the cards), `CHART_SOURCES`, `SERIES_LABELS`. See [systemic/](../systemic/).
 - `arandu.metasystemic` re-exports the structure layer: `DASHBOARD_TABS` (the canonical tabs), `MANDATOS` (period presets), and the visual-grammar helpers (`line_settings`, `bar_settings`, `time_bar_settings`, `_grid`, `VIZ_PATCHES`, `DISPLAY_OVERRIDES`).
 
+### 4. The MCP server — live, queryable access
+
+A [Model Context Protocol](https://modelcontextprotocol.io) server (`ingestion/arandu/mcp_server.py`, compose service `mcp`) exposes the warehouse's analytics views over streamable HTTP at `http://localhost:8808/mcp`. Any MCP client — Claude Code, Claude Desktop, Cursor — can call four read-only tools:
+
+- `list_series` — the catalog: `series_id`, `name`, `source_name`, `institution`, `unit`, `frequency`, `concept`, `latest_date`, `latest_value`, `source_url`.
+- `search_series(query)` — the same shape, filtered by keyword across id, name, concept, and source.
+- `get_series(series_id, start_date?, end_date?)` — full metadata plus the `[ { date, value }, … ]` observations behind a card (capped at 20 000 rows).
+- `get_series_sources` — the distinct institutions and datasets behind the catalog, with their public URLs.
+
+Connect with `claude mcp add --transport http arandu http://localhost:8808/mcp`, or in `mcp.json`: `{ "mcpServers": { "arandu": { "url": "http://localhost:8808/mcp" } } }`.
+
+The MCP server reads the same `analytics.series_latest` / `analytics.observations_enriched` views the dashboard reads. It adds no new interpretation and grants no write access — it is the same lens, answered live.
+
 ### Mapping the surface to the six questions
 
 | Agent question | Where it is answered |
 | --- | --- |
-| What a card is | `dashboard-data.json` (`name`, `concept`, `unit`); `arandu.systemic.CHARTS`; `metabase-dashboards.json` (`question_by_name`). |
-| What source it uses | `dashboard-data.json` (`sourceName`, `institution`, `sourceUrl`); `metabase-dashboards.json` (`card_sources`). |
+| What a card is | `dashboard-data.json` (`name`, `concept`, `unit`); MCP `list_series` / `get_series`; `arandu.systemic.CHARTS`; `metabase-dashboards.json` (`question_by_name`). |
+| What source it uses | `dashboard-data.json` (`sourceName`, `institution`, `sourceUrl`); MCP `get_series_sources`; `metabase-dashboards.json` (`card_sources`). |
 | What query produced it | `metabase-dashboards.json` (`question_edit_by_name`); `arandu.systemic.CHARTS`. |
 | When it was updated | `dashboard-data.json` (`lastSuccessfulUpdateAt`, `latestDate`); `generatedAt` / `generated_at`. |
 | What caveats it carries | `dashboard-data.json` (`seasonalAdjustment`, `transformation`, `method`, `scope`, `notes`). |
@@ -81,7 +94,7 @@ Thin, importable surfaces over the code artifacts, so humans and agents can reac
 
 ## Future direction
 
-The project may extend this surface with APIs, streams, or MCP-compatible interfaces. Any such surface must expose the same six questions and carry the same metadata. New machine-readable surfaces are agent-interface changes (see below).
+The MCP server is the first live machine interface; the project may extend the surface further with APIs or streams. Any such surface must expose the same six questions and carry the same metadata. New machine-readable surfaces are agent-interface changes (see below).
 
 ## Rules
 

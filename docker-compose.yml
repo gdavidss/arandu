@@ -49,10 +49,11 @@ services:
       # most recent years. Raise it so long daily histories render in full.
       MB_UNAGGREGATED_QUERY_ROW_LIMIT: "100000"
       MB_AGGREGATED_QUERY_ROW_LIMIT: "100000"
-      # NOTE: do NOT try to iframe the full Metabase app — full-app ("interactive")
-      # embedding is EE-only; OSS blocks it in iframes (infinite "Carregando…"), and the
-      # MB_*_INTERACTIVE env vars kill boot on OSS. The card-fullscreen therefore opens
-      # the question view top-level (same tab) with a "Voltar" button, via the proxy.
+      # NOTE: OSS Metabase blocks the full app inside iframes (full-app "interactive"
+      # embedding is EE-only) and the MB_*_INTERACTIVE env vars kill boot on OSS. So the
+      # card-fullscreen modal works by having the frontend proxy patch out Metabase's
+      # `window.self !== window.top` self-check in the served JS bundle (see server.mjs),
+      # which lets the question view boot inside the modal's iframe.
     ports:
       - "3000:3000"
 
@@ -74,6 +75,25 @@ services:
       - ./warehouse/init:/warehouse-init:ro
       - ./frontend/public:/frontend-public
     command: ["python", "-m", "arandu", "worker"]
+
+  # MCP server — the same warehouse data behind the charts, exposed to any agent
+  # (Claude Code, Cursor, …) over streamable HTTP. Read-only. See metasystemic/agent-interface.md.
+  mcp:
+    build:
+      context: ./ingestion
+    depends_on:
+      warehouse:
+        condition: service_healthy
+    environment:
+      WAREHOUSE_DSN: postgresql://fiscallens:fiscallens@warehouse:5432/fiscallens
+      MCP_HOST: 0.0.0.0
+      MCP_PORT: "8808"
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      - ./ingestion:/app
+    command: ["python", "-m", "arandu.mcp_server"]
+    ports:
+      - "8808:8808"
 
   metabase_setup:
     build:

@@ -35,13 +35,18 @@ function cardId(url: string): string | null {
   }
 }
 
+type Zoom = { src: string; title: string };
+
 export function App() {
   const [dashboardUrl, setDashboardUrl] = useState("");
   const [questionEditByName, setQuestionEditByName] = useState<Record<string, string>>({});
   const [showAbout, setShowAbout] = useState(false);
+  const [showMcp, setShowMcp] = useState(false);
+  const [zoom, setZoom] = useState<Zoom | null>(null);
   const embedUrl = metabaseDashboardUrl(dashboardUrl);
 
   const REPO = "https://github.com/gdavidss/arandu";
+  const MCP_URL = "http://localhost:8808/mcp";
 
   useEffect(() => {
     fetch("/metabase-dashboards.json", { cache: "no-store" })
@@ -54,22 +59,26 @@ export function App() {
       .catch(() => setDashboardUrl(""));
   }, []);
 
-  // Esc closes the About overlay.
+  // Esc closes whatever overlay is open (card zoom, About, MCP).
   useEffect(() => {
-    if (!showAbout) return;
+    if (!zoom && !showAbout && !showMcp) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setShowAbout(false);
+      if (e.key !== "Escape") return;
+      if (zoom) setZoom(null);
+      else if (showMcp) setShowMcp(false);
+      else setShowAbout(false);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [showAbout]);
+  }, [zoom, showAbout, showMcp]);
 
   // A script injected into the dashboard iframe posts the clicked card's title here.
   // We open the card's real Metabase question (the native visualization editor — table,
-  // pie, bar, settings, everything) TOP-LEVEL in the same tab: OSS Metabase hard-blocks
-  // the full app inside iframes (EE-only "interactive embedding"), so a modal iframe
-  // hangs on "Carregando…". The question page gets a "Voltar" button and persists the
-  // user's visualization to localStorage via the proxy-injected script; we restore it here.
+  // pie, bar, settings, everything) in a MODAL: an <iframe> over the dashboard. OSS
+  // Metabase normally blocks the full app inside iframes (EE-only "interactive
+  // embedding"), so the proxy patches out its `window.self !== window.top` self-check
+  // and the app boots framed. The user's visualization is persisted per card to
+  // localStorage by the proxy-injected script; we restore it here.
   useEffect(() => {
     function onMessage(event: MessageEvent) {
       const data = event.data;
@@ -79,7 +88,7 @@ export function App() {
       if (!editUrl || !id) return;
       const saved = localStorage.getItem(`arandu:viz2:${id}`);
       const valid = saved && saved.startsWith("/metabase/") && saved.includes("/question");
-      window.location.assign(valid ? saved : proxiedQuestion(editUrl));
+      setZoom({ src: valid ? (saved as string) : proxiedQuestion(editUrl), title: data.title });
     }
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
@@ -118,6 +127,30 @@ export function App() {
           <line x1="12" y1="8" x2="12.01" y2="8" />
         </svg>
       </button>
+      <button
+        type="button"
+        className="mcp-btn"
+        onClick={() => setShowMcp(true)}
+        data-tooltip="Conectar um agente (MCP)"
+        aria-label="Conectar um agente (MCP)"
+      >
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M9 2v6" />
+          <path d="M15 2v6" />
+          <path d="M6 8h12v3a6 6 0 0 1-12 0V8Z" />
+          <path d="M12 17v5" />
+        </svg>
+      </button>
       <a
         className="download-btn"
         href="/arandu-data.csv"
@@ -146,6 +179,101 @@ export function App() {
         src={embedUrl}
         title="Indicadores macrofiscais do Brasil"
       />
+
+      {zoom && (
+        <div
+          className="zoom-overlay"
+          onClick={() => setZoom(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label={zoom.title}
+        >
+          <div className="zoom-modal" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              className="zoom-close"
+              onClick={() => setZoom(null)}
+              aria-label="Fechar"
+            >
+              ✕
+            </button>
+            <iframe className="zoom-frame" src={zoom.src} title={zoom.title} />
+          </div>
+        </div>
+      )}
+
+      {showMcp && (
+        <div
+          className="about-overlay"
+          onClick={() => setShowMcp(false)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="about-modal" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              className="zoom-close"
+              onClick={() => setShowMcp(false)}
+              aria-label="Fechar"
+            >
+              ✕
+            </button>
+            <h1 className="about-title">Conecte um agente</h1>
+            <p className="about-sub">Os mesmos dados dos gráficos, via MCP</p>
+
+            <p>
+              O Arandu expõe um servidor <strong>MCP</strong> (Model Context Protocol): qualquer
+              agente — Claude Code, Claude Desktop, Cursor — pode ler as mesmas séries que os
+              gráficos mostram, com a mesma proveniência. O acesso é somente leitura.
+            </p>
+
+            <h2 className="about-h2">Claude Code / linha de comando</h2>
+            <pre className="mcp-code">
+              <code>claude mcp add --transport http arandu {MCP_URL}</code>
+            </pre>
+
+            <h2 className="about-h2">Ou em mcp.json</h2>
+            <pre className="mcp-code">
+              <code>{`{
+  "mcpServers": {
+    "arandu": { "url": "${MCP_URL}" }
+  }
+}`}</code>
+            </pre>
+
+            <h2 className="about-h2">Ferramentas disponíveis</h2>
+            <ul className="about-list">
+              <li>
+                <code>list_series</code> — o catálogo: nome, fonte, unidade, frequência, último valor.
+              </li>
+              <li>
+                <code>search_series(query)</code> — busca por palavra-chave nas séries.
+              </li>
+              <li>
+                <code>get_series(series_id, start_date?, end_date?)</code> — metadados e as
+                observações por trás de um gráfico.
+              </li>
+              <li>
+                <code>get_series_sources</code> — as instituições e fontes, com URLs públicas.
+              </li>
+            </ul>
+
+            <ul className="about-links">
+              <li>
+                <a
+                  href={`${REPO}/blob/main/metasystemic/agent-interface.md`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Interface para agentes ↗
+                </a>
+              </li>
+            </ul>
+
+            <p className="about-foot">Somente leitura · mesma lente, respondida ao vivo</p>
+          </div>
+        </div>
+      )}
 
       {showAbout && (
         <div

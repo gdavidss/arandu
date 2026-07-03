@@ -111,12 +111,22 @@ body,
 
 .zoom-modal {
   position: relative;
-  width: 96vw;
-  height: 92vh;
+  width: 92vw;
+  height: 88vh;
   background: #ffffff;
   border-radius: 10px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
   overflow: hidden;
+}
+
+/* The card's real Metabase question, booted inside the modal (the proxy patches out
+   Metabase's iframe self-check so the full app renders here). */
+.zoom-frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #ffffff;
 }
 
 /* Client-side card viewer (ECharts), inside the full-screen modal. */
@@ -281,6 +291,82 @@ body,
   transform: translateY(0);
 }
 
+/* MCP "connect an agent" button — sits to the left of the About (ⓘ) button. */
+.mcp-btn {
+  position: fixed;
+  top: 8px;
+  right: 90px;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  color: #6b7280;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.mcp-btn:hover {
+  color: #0b5e3a;
+  background: #f0efed;
+}
+
+.mcp-btn::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  white-space: nowrap;
+  background: #1f2937;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1;
+  padding: 6px 8px;
+  border-radius: 4px;
+  opacity: 0;
+  transform: translateY(-2px);
+  pointer-events: none;
+  transition:
+    opacity 0.12s ease,
+    transform 0.12s ease;
+}
+
+.mcp-btn:hover::after,
+.mcp-btn:focus-visible::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Code blocks in the MCP modal. */
+.mcp-code {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  background: #f6f7f4;
+  border: 1px solid #e3e5df;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: #1f2937;
+}
+
+.mcp-code code,
+.about-modal li code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.about-modal li code {
+  background: #f6f7f4;
+  border: 1px solid #e3e5df;
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 0.82rem;
+}
+
 .about-overlay {
   position: fixed;
   inset: 0;
@@ -377,5 +463,11 @@ body,
     height: 26px;
     top: 7px;
     right: 38px;
+  }
+  .mcp-btn {
+    width: 26px;
+    height: 26px;
+    top: 7px;
+    right: 68px;
   }
 }
