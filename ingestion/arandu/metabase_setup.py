@@ -12,6 +12,8 @@ from typing import Any
 
 import requests
 
+from arandu.descriptions import CHART_DESCRIPTIONS
+
 logger = logging.getLogger(__name__)
 
 
@@ -3647,6 +3649,13 @@ for _patch_key, _patch in VIZ_PATCHES.items():
 for _disp_key, _disp in DISPLAY_OVERRIDES.items():
     if _disp_key in CHARTS:
         CHARTS[_disp_key]["display"] = _disp
+
+# Plain-language card descriptions live in arandu.descriptions (four parts: O que mostra /
+# Por que importa / Como ler / Fonte). Override the inline specs so every card carries the
+# structured version; unknown keys are ignored.
+for _desc_key, _desc in CHART_DESCRIPTIONS.items():
+    if _desc_key in CHARTS:
+        CHARTS[_desc_key]["description"] = _desc
 
 # line_settings adds "Série" as a breakout dimension so multi-series charts don't get
 # summed into one line. For single-series line_query charts that breakout just yields a
