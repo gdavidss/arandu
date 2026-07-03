@@ -820,10 +820,11 @@ CHART_DESCRIPTIONS: dict[str, str] = {
         "inicial e de crescimento) captado por startups brasileiras a cada ano, em "
         "bilhões de dólares.\n\n**Por que importa:** O venture capital financia a criação e "
         "a expansão de empresas de tecnologia; o volume anual mostra o apetite dos "
-        "investidores pelo ecossistema de inovação e acompanha o ciclo do pico de 2021 "
-        "até a retração dos anos seguintes.\n\nFonte: Distrito — relatório Inside Venture "
-        "Capital (fonte privada; não há estatística oficial de VC no Brasil; sem dado "
-        "divulgado para 2022) · Unidade: US$ bilhões · Frequência: anual"
+        "investidores pelo ecossistema de inovação — do pico de 2021 (US$ 9,4 bi) à forte "
+        "retração dos anos seguintes (o \"inverno\" global do VC).\n\nFonte: Distrito — "
+        "relatório Inside Venture Capital (fonte privada; não há estatística oficial de "
+        "VC no Brasil). Série de equity em US$; 2025 ainda não foi fechado pela Distrito "
+        "· Unidade: US$ bilhões · Frequência: anual"
     ),
     "mensageria_uso_internet": (
         "Percentual de usuários de Internet no Brasil (pessoas de 10 anos ou mais que "
