@@ -4329,6 +4329,26 @@ CHART_SOURCES: dict[str, dict[str, str]] = {
         "url": "https://bti-project.org",
         "domain": "bti-project.org",
     },
+    "PETROBRAS": {
+        "label": "Petrobras — Relações com Investidores",
+        "url": "https://www.investidorpetrobras.com.br",
+        "domain": "petrobras.com.br",
+    },
+    "EPE": {
+        "label": "EPE — Balanço Energético Nacional",
+        "url": "https://www.epe.gov.br",
+        "domain": "epe.gov.br",
+    },
+    "DISTRITO": {
+        "label": "Distrito — Inside Venture Capital",
+        "url": "https://www.distrito.me",
+        "domain": "distrito.me",
+    },
+    "CETIC": {
+        "label": "Cetic.br / NIC.br — TIC Domicílios",
+        "url": "https://cetic.br",
+        "domain": "cetic.br",
+    },
 }
 
 
@@ -4352,6 +4372,16 @@ def _chart_source(query: str) -> dict[str, str]:
         return CHART_SOURCES["SPA"]
     if "lei14790_" in query:
         return CHART_SOURCES["PLANALTO"]
+    if "petrobras_" in query:
+        return CHART_SOURCES["PETROBRAS"]
+    if "matriz_eletrica" in query:
+        return CHART_SOURCES["EPE"]
+    if "industria_transformacao" in query:
+        return CHART_SOURCES["IBGE"]
+    if "vc_brasil" in query:
+        return CHART_SOURCES["DISTRITO"]
+    if "mensageria" in query:
+        return CHART_SOURCES["CETIC"]
     return CHART_SOURCES["BCB"]
 
 
