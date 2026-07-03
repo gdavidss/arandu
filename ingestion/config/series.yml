@@ -159,6 +159,38 @@ sources:
       static_table como um ponto por edição (Jan 1 do ano da edição). O cron diário reemite os
       mesmos valores sem alterá-los; uma nova observação é adicionada quando sai uma nova edição.
 
+  petrobras_ri:
+    name: Petrobras — Divulgação de Resultados Anuais (Relações com Investidores)
+    institution: Petróleo Brasileiro S.A. (Petrobras)
+    url: https://www.investidorpetrobras.com.br/
+    license_or_terms: Conteúdo público de divulgação de resultados (companhia aberta B3/NYSE); uso informativo
+      com citação da fonte.
+    notes: Receita de vendas e lucro líquido consolidados anuais (IFRS) das demonstrações financeiras da
+      Petrobras. Sem API pública de série temporal; registrados via static_table e reemitidos sem alteração
+      pelo cron diário.
+  epe_ben:
+    name: Balanço Energético Nacional (BEN) — Relatório Síntese
+    institution: Empresa de Pesquisa Energética (EPE) / Ministério de Minas e Energia
+    url: https://www.epe.gov.br/pt/publicacoes-dados-abertos/publicacoes/balanco-energetico-nacional-2025
+    license_or_terms: Publicação oficial de acesso público da EPE (dados abertos governamentais); uso com
+      citação da fonte.
+    notes: Participação das fontes na matriz elétrica (Oferta Interna de Energia Elétrica), ano base 2024,
+      transcrita do BEN 2025 (Relatório Síntese). static_table, um ponto por ano por fonte.
+  distrito_vc:
+    name: Inside Venture Capital Brasil (Distrito)
+    institution: Distrito (plataforma privada de dados de inovação/startups)
+    url: https://www.distrito.me/blog/mercado-de-venture-capital-brasil/
+    license_or_terms: Dados de mercado divulgados publicamente pela Distrito; fonte privada, não governamental.
+    notes: 'NÃO é fonte oficial: não há estatística governamental de venture capital no Brasil. A Distrito
+      é o provedor privado mais citado (reproduzido por NeoFeed, IstoÉ Dinheiro, Forbes, Mobile Time). static_table.'
+  cetic_tic:
+    name: TIC Domicílios — Cetic.br/NIC.br
+    institution: Cetic.br / NIC.br / CGI.br
+    url: https://cetic.br/pt/tics/domicilios/
+    license_or_terms: Dados públicos divulgados pelo Cetic.br/NIC.br; uso com citação da fonte.
+    notes: 'Indicador C5 (Comunicação) da TIC Domicílios: proporção de usuários de Internet que enviaram
+      mensagens instantâneas (WhatsApp, Telegram e similares). Substitui DAU/MAU oficiais do WhatsApp, inexistentes.
+      static_table.'
 series:
   - series_id: bcb_sgs_selic_target
     source_id: bcb_sgs
@@ -3807,3 +3839,255 @@ series:
         value: "8.50"
         note: "BTI 2006 edition"
 
+
+  # --- New datasets (task #4): Petrobras, energia, indústria, VC, WhatsApp ---
+  - series_id: petrobras_receita_vendas_rs_bi
+    source_id: petrobras_ri
+    connector: static_table
+    source_series_code: petrobras_receita_vendas_rs_bi
+    name: Petrobras — receita de vendas (consolidada)
+    description: Receita de vendas líquida consolidada anual da Petrobras (IFRS).
+    unit: BRL billions
+    frequency: annual
+    concept: company revenue
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: published consolidated annual revenue, nominal BRL
+    source_url: https://www.investidorpetrobras.com.br/
+    static_observations:
+    - date: '2022-01-01'
+      value: '641.2'
+      note: '"O total de receita de vendas saltou de R$ 452,6 bilhões em 2021 para R$ 641,2 bilhões em 2022"
+        (balanço oficial da Petrobras reportado por Forbes/Pod'
+    - date: '2023-01-01'
+      value: '511.99'
+      note: 'Receita de vendas consolidada de 2023: R$ 511,99 bilhões (base para a queda de 4,1% informada
+        para 2024).'
+    - date: '2024-01-01'
+      value: '490.83'
+      note: '"No ano, a receita somou R$490,83 bilhões, recuo de 4,1%." (InvestNews, divulgação de resultados
+        2024 da Petrobras).'
+  - series_id: petrobras_lucro_liquido_rs_bi
+    source_id: petrobras_ri
+    connector: static_table
+    source_series_code: petrobras_lucro_liquido_rs_bi
+    name: Petrobras — lucro líquido
+    description: Lucro líquido consolidado anual atribuível aos acionistas da Petrobras (IFRS).
+    unit: BRL billions
+    frequency: annual
+    concept: company net income
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: published consolidated annual net income, nominal BRL
+    source_url: https://agencia.petrobras.com.br/w/negocio/petrobras-lucra-r-36-6-bilhoes-em-2024
+    static_observations:
+    - date: '2022-01-01'
+      value: '188.33'
+      note: '"A Petrobras divulgou ... que seu lucro líquido registrado em 2022 foi de R$ 188,33 bilhões"
+        (CNN Brasil, balanço oficial).'
+    - date: '2023-01-01'
+      value: '124.6'
+      note: '"A Petrobras registrou em 2023 lucro líquido de R$ 124,6 bilhões" (Agência Petrobras).'
+    - date: '2024-01-01'
+      value: '36.6'
+      note: '"A Petrobras encerrou 2024 com lucro líquido de R$ 36,6 bilhões" (Agência Petrobras).'
+  - series_id: matriz_eletrica_share_hidraulica_pct
+    source_id: epe_ben
+    connector: static_table
+    source_series_code: matriz_eletrica_share_hidraulica_pct
+    name: Matriz elétrica — participação Hidráulica
+    description: Participação da fonte Hidráulica na Oferta Interna de Energia Elétrica (OIEE).
+    unit: percent of electricity supply
+    frequency: annual
+    concept: electricity generation mix
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: annual share of OIEE
+    source_url: https://www.epe.gov.br/pt/publicacoes-dados-abertos/publicacoes/balanco-energetico-nacional-2025
+    static_observations:
+    - date: '2023-01-01'
+      value: '58.9'
+      note: 'Gráfico ''Participação das fontes na matriz elétrica'' (p.37): Hidráulica 2023 = 58,9% / 2024
+        = 55,3%'
+    - date: '2024-01-01'
+      value: '55.3'
+      note: 'Gráfico ''Participação das fontes na matriz elétrica'' (p.37): Hidráulica 2023 = 58,9% / 2024
+        = 55,3%'
+  - series_id: matriz_eletrica_share_eolica_pct
+    source_id: epe_ben
+    connector: static_table
+    source_series_code: matriz_eletrica_share_eolica_pct
+    name: Matriz elétrica — participação Eólica
+    description: Participação da fonte Eólica na Oferta Interna de Energia Elétrica (OIEE).
+    unit: percent of electricity supply
+    frequency: annual
+    concept: electricity generation mix
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: annual share of OIEE
+    source_url: https://www.epe.gov.br/pt/publicacoes-dados-abertos/publicacoes/balanco-energetico-nacional-2025
+    static_observations:
+    - date: '2023-01-01'
+      value: '13.2'
+      note: 'Gráfico ''Participação das fontes na matriz elétrica'' (p.37): Eólica 13,2% (2023) / 14,1%
+        (2024)'
+    - date: '2024-01-01'
+      value: '14.1'
+      note: 'Gráfico ''Participação das fontes na matriz elétrica'' (p.37): Eólica 13,2% (2023) / 14,1%
+        (2024)'
+  - series_id: matriz_eletrica_share_solar_pct
+    source_id: epe_ben
+    connector: static_table
+    source_series_code: matriz_eletrica_share_solar_pct
+    name: Matriz elétrica — participação Solar
+    description: Participação da fonte Solar na Oferta Interna de Energia Elétrica (OIEE).
+    unit: percent of electricity supply
+    frequency: annual
+    concept: electricity generation mix
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: annual share of OIEE
+    source_url: https://www.epe.gov.br/pt/publicacoes-dados-abertos/publicacoes/balanco-energetico-nacional-2025
+    static_observations:
+    - date: '2023-01-01'
+      value: '7.0'
+      note: 'Gráfico ''Participação das fontes na matriz elétrica'' (p.37): Solar 7,0% (2023) / 9,3% (2024)'
+    - date: '2024-01-01'
+      value: '9.3'
+      note: 'Gráfico ''Participação das fontes na matriz elétrica'' (p.37): Solar 7,0% (2023) / 9,3% (2024)'
+  - series_id: matriz_eletrica_share_biomassa_pct
+    source_id: epe_ben
+    connector: static_table
+    source_series_code: matriz_eletrica_share_biomassa_pct
+    name: Matriz elétrica — participação Biomassa
+    description: Participação da fonte Biomassa na Oferta Interna de Energia Elétrica (OIEE).
+    unit: percent of electricity supply
+    frequency: annual
+    concept: electricity generation mix
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: annual share of OIEE
+    source_url: https://www.epe.gov.br/pt/publicacoes-dados-abertos/publicacoes/balanco-energetico-nacional-2025
+    static_observations:
+    - date: '2023-01-01'
+      value: '8.0'
+      note: 'Gráfico ''Participação das fontes na matriz elétrica'' (p.37): Biomassa² 8,0% (2023) / 8,1%
+        (2024)'
+    - date: '2024-01-01'
+      value: '8.1'
+      note: 'Gráfico ''Participação das fontes na matriz elétrica'' (p.37): Biomassa² 8,0% (2023) / 8,1%
+        (2024)'
+  - series_id: matriz_eletrica_share_gas_natural_pct
+    source_id: epe_ben
+    connector: static_table
+    source_series_code: matriz_eletrica_share_gas_natural_pct
+    name: Matriz elétrica — participação Gás natural
+    description: Participação da fonte Gás natural na Oferta Interna de Energia Elétrica (OIEE).
+    unit: percent of electricity supply
+    frequency: annual
+    concept: electricity generation mix
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: annual share of OIEE
+    source_url: https://www.epe.gov.br/pt/publicacoes-dados-abertos/publicacoes/balanco-energetico-nacional-2025
+    static_observations:
+    - date: '2023-01-01'
+      value: '5.3'
+      note: 'Gráfico ''Participação das fontes na matriz elétrica'' (p.37): Gás Natural 5,3% (2023) / 6,3%
+        (2024)'
+    - date: '2024-01-01'
+      value: '6.3'
+      note: 'Gráfico ''Participação das fontes na matriz elétrica'' (p.37): Gás Natural 5,3% (2023) / 6,3%
+        (2024)'
+  - series_id: vc_brasil_aporte_total_usd
+    source_id: distrito_vc
+    connector: static_table
+    source_series_code: vc_brasil_aporte_total_usd
+    name: Venture capital investido em startups brasileiras
+    description: Volume total de venture capital captado por startups brasileiras por ano (Distrito).
+    unit: USD billions
+    frequency: annual
+    concept: venture capital deployed
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: published annual total, USD billions (private data provider)
+    source_url: https://www.distrito.me/blog/mercado-de-venture-capital-brasil/
+    static_observations:
+    - date: '2019-01-01'
+      value: '2.97'
+      note: 'NeoFeed (citando Distrito): ''as startups brasileiras captaram mais de US$ 3,5 bilhoes (R$
+        18,1 bilhoes) em 2020. O montante foi 17% superior ao volume'
+    - date: '2020-01-01'
+      value: '3.54'
+      note: 'IstoE Dinheiro (citando o relatorio Inside Venture Capital da Distrito): ''o total investido
+        em todo o ano de 2020, de US$ 3,54 bilhoes''. Corroborado p'
+    - date: '2021-01-01'
+      value: '9.41'
+      note: 'Ebury (citando Distrito): ''o total de investimentos Venture Capital do ano chegou a US$9,41
+        bilhoes, mais que o dobro do valor que foi acumulado ao lo'
+    - date: '2023-01-01'
+      value: '1.8'
+      note: 'Mobile Time (citando Distrito): ''Em 2024 o Pais acumula US$ 1,9 bilhao em aportes, resultado
+        5,5% maior do que o do ano passado, quando o volume chego'
+    - date: '2024-01-01'
+      value: '1.9'
+      note: 'Mobile Time (citando Distrito): ''Em 2024 o Pais acumula US$ 1,9 bilhao em aportes, resultado
+        5,5% maior do que o do ano passado''. Fonte: https://www.m'
+  - series_id: mensageria_uso_internet_pct
+    source_id: cetic_tic
+    connector: static_table
+    source_series_code: mensageria_uso_internet_pct
+    name: Uso de mensagens instantâneas entre usuários de internet
+    description: Proporção de usuários de Internet que enviaram mensagens instantâneas (WhatsApp e similares).
+    unit: percent of internet users
+    frequency: annual
+    concept: instant messaging usage
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: annual share of internet users (Cetic.br C5)
+    source_url: https://cetic.br/pt/tics/domicilios/
+    static_observations:
+    - date: '2019-01-01'
+      value: '92'
+      note: TIC Domicílios 2019, indicador 'C5 - USUÁRIOS DE INTERNET, POR ATIVIDADES REALIZADAS NA INTERNET
+        - COMUNICAÇÃO', linha 'Mandou mensagens instantâneas'
+    - date: '2020-01-01'
+      value: '93'
+      note: TIC Domicílios 2020, indicador 'C5 - USUÁRIOS DE INTERNET, POR ATIVIDADES REALIZADAS NA INTERNET
+        - COMUNICAÇÃO', linha 'Mandou mensagens instantâneas'
+    - date: '2021-01-01'
+      value: '93'
+      note: TIC Domicílios 2021, indicador 'C5 - USUÁRIOS DE INTERNET, POR ATIVIDADES REALIZADAS NA INTERNET
+        - COMUNICAÇÃO', linha 'Mandou mensagens instantâneas'
+    - date: '2022-01-01'
+      value: '93'
+      note: TIC Domicílios 2022, indicador 'C5 - USUÁRIOS DE INTERNET, POR ATIVIDADES REALIZADAS NA INTERNET
+        - COMUNICAÇÃO', linha 'Mandou mensagens instantâneas'
+    - date: '2023-01-01'
+      value: '92'
+      note: TIC Domicílios 2023, indicador 'C5 - USUÁRIOS DE INTERNET, POR ATIVIDADES REALIZADAS NA INTERNET
+        - COMUNICAÇÃO', linha 'Mandou mensagens instantâneas'
+    - date: '2024-01-01'
+      value: '92'
+      note: TIC Domicílios 2024, indicador 'C5 - USUÁRIOS DE INTERNET, POR ATIVIDADES REALIZADAS NA INTERNET
+        - COMUNICAÇÃO', linha 'Mandou mensagens instantâneas'
+    - date: '2025-01-01'
+      value: '92'
+      note: TIC Domicílios 2025, indicador 'C5 - USUÁRIOS DE INTERNET, POR ATIVIDADES REALIZADAS NA INTERNET
+        - COMUNICAÇÃO', linha 'Mandou mensagens instantâneas'
+  - series_id: industria_transformacao_pib_pct
+    source_id: ibge_sidra
+    connector: ibge_sidra
+    source_series_code: 6587/9312
+    name: Manufacturing value added as % of GDP
+    description: Valor adicionado da indústria de transformação em proporção do PIB.
+    unit: percent of GDP
+    frequency: annual
+    concept: industrialization / manufacturing share
+    geography: Brazil
+    seasonal_adjustment: not seasonally adjusted
+    transformation: annual share of GDP
+    source_url: https://sidra.ibge.gov.br/tabela/6587
+    sidra_url: https://apisidra.ibge.gov.br/values/t/6587/n1/1/v/9312/p/all
+    sidra_period_key: D3C
+    start_date: '2010-01-01'

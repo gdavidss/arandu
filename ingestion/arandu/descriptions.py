@@ -788,4 +788,52 @@ CHART_DESCRIPTIONS: dict[str, str] = {
         "no sistema de pagamentos instantâneos.\n\nFonte: BCB, Estatísticas do Pix "
         "(PixUsuariosCadastradosDICT) · Unidade: milhões de usuários · Frequência: mensal"
     ),
+    "petrobras_financeiro": (
+        "Resultados anuais da Petrobras: a receita de vendas consolidada e o lucro "
+        "líquido, em R$ bilhões, de 2022 a 2024.\n\n**Por que importa:** A Petrobras é a "
+        "maior empresa do Brasil e uma das maiores pagadoras de tributos e dividendos ao "
+        "país; sua receita e seu lucro afetam a arrecadação pública, o investimento e o "
+        "setor de energia.\n\nFonte: Petrobras — Relações com Investidores / Agência "
+        "Petrobras (divulgação de resultados) · Unidade: R$ bilhões · Frequência: anual"
+    ),
+    "matriz_eletrica_fontes": (
+        "Participação de cada fonte na matriz elétrica brasileira em 2024, pela Oferta "
+        "Interna de Energia Elétrica (OIEE = toda a geração nacional mais a importação "
+        "líquida): hidráulica, eólica, solar, biomassa e gás natural.\n\n**Por que "
+        "importa:** Mostra o quanto a eletricidade do país vem de fontes renováveis (a "
+        "matriz é cerca de 88% renovável) e como eólica e solar vêm ganhando espaço — o "
+        "que afeta preço, emissões e segurança do abastecimento.\n\nFonte: EPE — Balanço "
+        "Energético Nacional (BEN) 2025, ano base 2024 · Unidade: % da Oferta Interna de "
+        "Energia Elétrica · Frequência: anual"
+    ),
+    "industria_transformacao_pib": (
+        "Mostra quanto a indústria de transformação (as fábricas que transformam "
+        "matérias-primas em produtos) representa do PIB brasileiro a cada ano, em % — o "
+        "valor adicionado da manufatura sobre o total da economia.\n\n**Por que importa:** "
+        "A queda dessa fatia ao longo do tempo é o indicador mais usado para acompanhar a "
+        "desindustrialização do país, tema que afeta empregos qualificados, tecnologia e "
+        "a estrutura da economia.\n\nFonte: IBGE — Sistema de Contas Nacionais / Indicador "
+        "ODS 9.2.1 (SIDRA, Tabela 6587) · Unidade: % do PIB · Frequência: anual"
+    ),
+    "vc_deployed_brasil": (
+        "Volume total de venture capital (aportes de fundos em startups em estágio "
+        "inicial e de crescimento) captado por startups brasileiras a cada ano, em "
+        "bilhões de dólares.\n\n**Por que importa:** O venture capital financia a criação e "
+        "a expansão de empresas de tecnologia; o volume anual mostra o apetite dos "
+        "investidores pelo ecossistema de inovação e acompanha o ciclo do pico de 2021 "
+        "até a retração dos anos seguintes.\n\nFonte: Distrito — relatório Inside Venture "
+        "Capital (fonte privada; não há estatística oficial de VC no Brasil; sem dado "
+        "divulgado para 2022) · Unidade: US$ bilhões · Frequência: anual"
+    ),
+    "mensageria_uso_internet": (
+        "Percentual de usuários de Internet no Brasil (pessoas de 10 anos ou mais que "
+        "usaram a Internet nos últimos três meses) que enviaram mensagens instantâneas — "
+        "atividade que engloba aplicativos como WhatsApp e Telegram.\n\n**Por que "
+        "importa:** A mensageria instantânea é a atividade mais difundida da Internet "
+        "brasileira e o principal canal de conversa, informação e serviços; o indicador "
+        "mostra seu alcance quase universal sem depender de números não oficiais de "
+        "audiência das empresas.\n\nFonte: Cetic.br/NIC.br — TIC Domicílios, indicador C5 "
+        "(não existe DAU/MAU oficial do WhatsApp) · Unidade: % dos usuários de Internet · "
+        "Frequência: anual"
+    ),
 }

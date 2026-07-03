@@ -62,6 +62,12 @@ def time_bar_settings(metric: str, colors: list[str] | None = None) -> dict[str,
 
 
 SERIES_LABELS = {
+    # New datasets (task #4)
+    "petrobras_receita_vendas_rs_bi": "Receita de vendas",
+    "petrobras_lucro_liquido_rs_bi": "Lucro líquido",
+    "industria_transformacao_pib_pct": "Indústria de transformação",
+    "vc_brasil_aporte_total_usd": "Aporte total (Distrito)",
+    "mensageria_uso_internet_pct": "Mensagens instantâneas",
     "bcb_sgs_selic_target": "Selic meta",
     "bcb_sgs_ipca_monthly": "IPCA mensal",
     "bcb_sgs_ipca_12m": "IPCA em 12 meses",
@@ -424,6 +430,92 @@ IPCA_TARGET_VIZ: dict[str, Any] = {
 # Re-exported as `arandu.systemic.CHARTS`.
 # ======================================================================================
 CHARTS: dict[str, dict[str, Any]] = {
+    # --- New datasets (task #4): Petrobras, energia, indústria, VC, WhatsApp ---
+    "petrobras_financeiro": {
+        "name": "Petrobras: receita de vendas e lucro líquido (anual)",
+        "display": "bar",
+        "query": line_query(
+            ["petrobras_receita_vendas_rs_bi", "petrobras_lucro_liquido_rs_bi"],
+            metric="R$ bilhões",
+        ),
+        "visualization_settings": {
+            **time_bar_settings("R$ bilhões", ["#1f77b4", "#2ca02c"]),
+            "graph.x_axis.scale": "ordinal",
+            "column_settings": {'["name","R$ bilhões"]': {"decimals": 1, "prefix": "R$ "}},
+        },
+    },
+    "matriz_eletrica_fontes": {
+        "name": "Matriz elétrica brasileira por fonte (2024)",
+        "display": "row",
+        "query": """
+select
+  case series_id
+    when 'matriz_eletrica_share_hidraulica_pct' then 'Hidráulica'
+    when 'matriz_eletrica_share_eolica_pct' then 'Eólica'
+    when 'matriz_eletrica_share_solar_pct' then 'Solar'
+    when 'matriz_eletrica_share_biomassa_pct' then 'Biomassa'
+    when 'matriz_eletrica_share_gas_natural_pct' then 'Gás natural'
+  end as "Fonte",
+  value as "% da matriz elétrica"
+from analytics.observations_enriched
+where series_id in (
+    'matriz_eletrica_share_hidraulica_pct',
+    'matriz_eletrica_share_eolica_pct',
+    'matriz_eletrica_share_solar_pct',
+    'matriz_eletrica_share_biomassa_pct',
+    'matriz_eletrica_share_gas_natural_pct'
+  )
+  and date = date '2024-01-01'
+order by "% da matriz elétrica" desc
+""".strip(),
+        "visualization_settings": {
+            "graph.dimensions": ["Fonte"],
+            "graph.metrics": ["% da matriz elétrica"],
+            "graph.colors": ["#1f77b4"],
+            "graph.x_axis.title_text": "% da matriz elétrica",
+            "graph.y_axis.title_text": "Fonte",
+            "graph.show_legend": False,
+            "column_settings": {'["name","% da matriz elétrica"]': {"decimals": 1, "suffix": "%"}},
+        },
+    },
+    "industria_transformacao_pib": {
+        "name": "Participação da indústria de transformação no PIB",
+        "display": "line",
+        "query": line_query(["industria_transformacao_pib_pct"], metric="% do PIB"),
+        "visualization_settings": {
+            **line_settings("% do PIB"),
+            "graph.x_axis.scale": "timeseries",
+            # Values sit in ~9-13% of GDP; a 0-14 frame keeps an honest zero baseline while
+            # still making the long decline (desindustrialização) legible (0-100 hides it).
+            "graph.y_axis.auto_range": False,
+            "graph.y_axis.min": 0,
+            "graph.y_axis.max": 14,
+            "column_settings": {'["name","% do PIB"]': {"decimals": 1, "suffix": "%"}},
+        },
+    },
+    "vc_deployed_brasil": {
+        "name": "Venture capital investido em startups brasileiras (por ano)",
+        "display": "bar",
+        "query": line_query(["vc_brasil_aporte_total_usd"], metric="US$ bilhões"),
+        "visualization_settings": {
+            **time_bar_settings("US$ bilhões"),
+            "graph.x_axis.scale": "ordinal",
+            "graph.show_legend": False,
+            "column_settings": {'["name","US$ bilhões"]': {"decimals": 1, "prefix": "US$ "}},
+        },
+    },
+    "mensageria_uso_internet": {
+        "name": "Uso de mensagens instantâneas (WhatsApp e similares)",
+        "display": "line",
+        "query": line_query(["mensageria_uso_internet_pct"], metric="% dos usuários"),
+        "visualization_settings": {
+            **line_settings("% dos usuários"),
+            "graph.y_axis.auto_range": False,
+            "graph.y_axis.min": 0,
+            "graph.y_axis.max": 100,
+            "column_settings": {'["name","% dos usuários"]': {"decimals": 0, "suffix": "%"}},
+        },
+    },
     "institutions_bti_status_governance": {
         "name": "Qualidade das instituições no Brasil — Índice de Status e de Governança (BTI)",
         "display": "line",
@@ -3763,6 +3855,10 @@ DASHBOARD_TABS: list[dict[str, Any]] = [
                 [("sectors_gdp_volume_index", 24)],
                 [("sectors_monthly_volume", 24)],
                 [("sectors_retail", 12), ("sectors_services", 12)],
+                # Industrialização, empresas e energia
+                [("industria_transformacao_pib", 24)],
+                [("petrobras_financeiro", 12), ("vc_deployed_brasil", 12)],
+                [("matriz_eletrica_fontes", 24)],
             ]
         ),
     },
@@ -3848,6 +3944,8 @@ DASHBOARD_TABS: list[dict[str, Any]] = [
                 [("digital_pix_value", 12), ("digital_pix_count", 12)],
                 [("digital_cards_value", 12), ("digital_cards_count", 12)],
                 [("digital_pix_users", 24)],
+                # Uso / consumo: mensageria (WhatsApp e similares)
+                [("mensageria_uso_internet", 24)],
             ]
         ),
     },
