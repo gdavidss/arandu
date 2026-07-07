@@ -4269,7 +4269,9 @@ def warehouse_database_payload() -> dict[str, Any]:
             "dbname": env("WAREHOUSE_DB", "fiscallens"),
             "user": env("WAREHOUSE_USER", "fiscallens"),
             "password": env("WAREHOUSE_PASSWORD", "fiscallens"),
-            "ssl": False,
+            # Managed Postgres (e.g. Supabase) requires TLS. Set WAREHOUSE_SSL=true in prod.
+            "ssl": env("WAREHOUSE_SSL", "false").lower() == "true",
+            "ssl-mode": env("WAREHOUSE_SSL_MODE", "require"),
             "tunnel-enabled": False,
         },
         "is_full_sync": True,

@@ -1,0 +1,156 @@
+# Production compose for a single host (e.g. an Oracle Cloud Always Free VM).
+#
+# The DATA WAREHOUSE lives on Supabase (managed Postgres) — there is no local
+# `warehouse` service here. Everything that must stay online (Metabase, its own
+# app DB, the frontend proxy, the MCP server) runs on this host, all pointed at
+# Supabase via WAREHOUSE_* / WAREHOUSE_DSN.
+#
+# Secrets come from a .env file next to this one — copy .env.prod.example to
+# .env and fill it in. NEVER commit .env.
+#
+#   docker compose -f docker-compose.prod.yml up -d --build
+#
+# One-time, before the first `up` (creates schemas + views on Supabase):
+#   docker compose -f docker-compose.prod.yml run --rm ingestion python -m arandu migrate
+
+services:
+  # Metabase's OWN state (questions, dashboards, users) — kept local on this host.
+  # This is NOT the warehouse; the warehouse (your data) is on Supabase.
+  metabase_postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: metabase
+      POSTGRES_USER: metabase
+      POSTGRES_PASSWORD: ${MB_DB_PASS}
+    volumes:
+      - metabase_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U metabase -d metabase"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  metabase:
+    image: metabase/metabase:latest
+    restart: unless-stopped
+    depends_on:
+      metabase_postgres:
+        condition: service_healthy
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: metabase
+      MB_DB_PORT: 5432
+      MB_DB_USER: metabase
+      MB_DB_PASS: ${MB_DB_PASS}
+      MB_DB_HOST: metabase_postgres
+      MB_SITE_NAME: arandu.ai
+      MB_UNAGGREGATED_QUERY_ROW_LIMIT: "100000"
+      MB_AGGREGATED_QUERY_ROW_LIMIT: "100000"
+    expose:
+      - "3000" # internal only — the frontend proxy reaches it; not published to the internet
+
+  # Daily refresh of the live series into the Supabase warehouse. Running here (not
+  # in CI) keeps the shared frontend/public JSON in sync AND keeps the Supabase
+  # free project awake (it pauses after ~7 days idle).
+  ingestion:
+    build:
+      context: ./ingestion
+    restart: unless-stopped
+    environment:
+      WAREHOUSE_DSN: ${WAREHOUSE_DSN}
+      SERIES_CONFIG: /app/config/series.yml
+      REFRESH_INTERVAL_HOURS: "24"
+      REFRESH_ON_START: "true"
+      DASHBOARD_DATA_PATH: /frontend-public/dashboard-data.json
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      - ./ingestion:/app
+      - ./frontend/public:/frontend-public
+    command: ["python", "-m", "arandu", "worker"]
+
+  mcp:
+    build:
+      context: ./ingestion
+    restart: unless-stopped
+    environment:
+      WAREHOUSE_DSN: ${WAREHOUSE_DSN}
+      MCP_HOST: 0.0.0.0
+      MCP_PORT: "8808"
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      - ./ingestion:/app
+    command: ["python", "-m", "arandu.mcp_server"]
+    expose:
+      - "8808"
+
+  # One-shot: builds the Metabase dashboard against the Supabase warehouse.
+  # Re-run manually whenever cards/series change (not part of `up -d`).
+  metabase_setup:
+    build:
+      context: ./ingestion
+    profiles: ["setup"]
+    depends_on:
+      metabase:
+        condition: service_started
+    environment:
+      MB_URL: http://metabase:3000
+      # Bare origin — the frontend prefixes /metabase itself when it opens the links.
+      PUBLIC_METABASE_URL: https://${ARANDU_DOMAIN}
+      MB_EMAIL: ${MB_EMAIL}
+      MB_PASSWORD: ${MB_PASSWORD}
+      MB_FIRST_NAME: arandu.ai
+      MB_LAST_NAME: Admin
+      WAREHOUSE_HOST: ${SUPABASE_DB_HOST}
+      WAREHOUSE_PORT: ${SUPABASE_DB_PORT}
+      WAREHOUSE_DB: ${SUPABASE_DB_NAME}
+      WAREHOUSE_USER: ${SUPABASE_DB_USER}
+      WAREHOUSE_PASSWORD: ${SUPABASE_DB_PASSWORD}
+      WAREHOUSE_SSL: "true"
+      METABASE_LINKS_PATH: /frontend-public/metabase-dashboards.json
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      - ./ingestion:/app
+      - ./frontend/public:/frontend-public
+    command: ["python", "-m", "arandu.metabase_setup"]
+    restart: "no"
+
+  frontend:
+    build:
+      context: ./frontend
+    restart: unless-stopped
+    depends_on:
+      - metabase
+    environment:
+      METABASE_INTERNAL_URL: http://metabase:3000
+      MB_EMAIL: ${MB_EMAIL}
+      MB_PASSWORD: ${MB_PASSWORD}
+    expose:
+      - "5173"
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+    command: ["sh", "-c", "npm run build && node server.mjs"]
+
+  # TLS + domain. Caddy fetches a Let's Encrypt cert automatically for ARANDU_DOMAIN
+  # and reverse-proxies to the frontend (which itself proxies /metabase to Metabase).
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - frontend
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      ARANDU_DOMAIN: ${ARANDU_DOMAIN}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  metabase_postgres_data:
+  frontend_node_modules:
+  caddy_data:
+  caddy_config:

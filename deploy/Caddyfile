@@ -1,0 +1,14 @@
+# Caddy serves HTTPS for the public domain and proxies everything to the frontend
+# Node server, which in turn proxies /metabase/* to Metabase (carrying the session
+# and injecting the modal/JS patch). Caddy auto-provisions a Let's Encrypt cert.
+{$ARANDU_DOMAIN} {
+	encode gzip
+	reverse_proxy frontend:5173
+}
+
+# The MCP server on its own subdomain (optional). Point mcp.<domain> DNS at this host.
+# Agents then connect to https://mcp.<domain>/mcp
+mcp.{$ARANDU_DOMAIN} {
+	encode gzip
+	reverse_proxy mcp:8808
+}

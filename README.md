@@ -70,6 +70,9 @@ When it's up:
 
 Useful targets: `make lint`, `make test`, `make ingest`, `make down`.
 
+To deploy (Supabase for the data + one small always-free host for the rest), see
+[DEPLOY.md](DEPLOY.md).
+
 ## The data standard
 
 Every card answers four questions:
