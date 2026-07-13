@@ -18,3 +18,6 @@ frontend/public/arandu-data.csv
 
 # Debug screenshots (root only — keep committed assets like frontend/public/*.png)
 /*.png
+
+# local-only compose override (port remaps, etc.)
+docker-compose.override.yml
