@@ -67,6 +67,7 @@ services:
     volumes:
       - ./ingestion:/app
       - ./frontend/public:/frontend-public
+      - ./warehouse/init:/warehouse-init:ro   # schema + views, needed by `arandu migrate`
     command: ["python", "-m", "arandu", "worker"]
 
   mcp:
